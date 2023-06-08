@@ -7,8 +7,10 @@
 extern "C"
 {
     typedef torch::Tensor *tensor;
+    typedef torch::optim::Optimizer *optimizer;
 #else
 typedef void *tensor;
+typedef void *optimizer;
 #endif
 
     // init
@@ -18,19 +20,14 @@ typedef void *tensor;
     tensor tensor_zeros(int64_t *shape, size_t shape_len, int dtype);
     tensor tensor_from_data(void *data, int64_t *shape, size_t shape_len, int dtype);
     void tensor_copy_data(tensor t, void *data);
+    tensor tensor_reshape(tensor t, int64_t *shape, size_t shape_len);
+    tensor tensor_transpose(tensor t, int64_t dim1, int64_t dim2);
     // property
     int tensor_elem_size(tensor t);
     int tensor_elem_count(tensor t);
     int tensor_scalar_type(tensor t);
-    tensor tensor_reshape(tensor t, int64_t *shape, size_t shape_len);
-    // operator
-    tensor tensor_matmul(tensor a, tensor b);
-    tensor tensor_add(tensor a, tensor b);
-    tensor tensor_sub(tensor a, tensor b);
-    tensor tensor_mul(tensor a, tensor b);
-    tensor tensor_div(tensor a, tensor b);
-    // loss
-    tensor tensor_mse_loss(tensor pred, tensor target, int64_t reduction);
+    size_t tensor_dims(tensor t);
+    void tensor_shapes(tensor t, int64_t *shapes);
 
 #ifdef __cplusplus
 }

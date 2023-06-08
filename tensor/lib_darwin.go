@@ -1,3 +1,6 @@
+//go:build darwin
+// +build darwin
+
 package tensor
 
 // #cgo CXXFLAGS: -std=c++17

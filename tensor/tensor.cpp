@@ -1,5 +1,4 @@
 #include <torch/torch.h>
-#include <stdio.h>
 #include "tensor.h"
 
 tensor new_tensor()
@@ -37,27 +36,41 @@ void tensor_copy_data(tensor t, void *data)
     memcpy(data, t->data_ptr(), t->numel() * t->element_size());
 }
 
-tensor tensor_matmul(tensor a, tensor b)
+int tensor_elem_size(tensor t)
 {
-    return new torch::Tensor(a->matmul(*b));
+    return t->element_size();
 }
 
-tensor tensor_add(tensor a, tensor b)
+int tensor_elem_count(tensor t)
 {
-    return new torch::Tensor(a->add(*b));
+    return t->numel();
 }
 
-tensor tensor_sub(tensor a, tensor b)
+int tensor_scalar_type(tensor t)
 {
-    return new torch::Tensor(a->sub(*b));
+    return int(t->scalar_type());
 }
 
-tensor tensor_mul(tensor a, tensor b)
+size_t tensor_dims(tensor t)
 {
-    return new torch::Tensor(a->mul(*b));
+    return t->dim();
 }
 
-tensor tensor_div(tensor a, tensor b)
+void tensor_shapes(tensor t, int64_t *shapes)
 {
-    return new torch::Tensor(a->div(*b));
+    size_t dim = t->dim();
+    for (size_t i = 0; i < dim; i++)
+    {
+        shapes[i] = t->size(i);
+    }
+}
+
+tensor tensor_reshape(tensor t, int64_t *shape, size_t shape_len)
+{
+    return new torch::Tensor(t->reshape(torch::IntArrayRef(shape, shape_len)));
+}
+
+tensor tensor_transpose(tensor t, int64_t dim1, int64_t dim2)
+{
+    return new torch::Tensor(t->transpose(dim1, dim2));
 }

@@ -2,6 +2,8 @@ package tensor
 
 import (
 	"sync"
+
+	"github.com/lwch/gotorch/consts"
 )
 
 // #include "tensor.h"
@@ -12,12 +14,7 @@ type Tensor struct {
 	data  C.tensor
 }
 
-func New() *Tensor {
-	ptr := C.new_tensor()
-	return &Tensor{data: ptr}
-}
-
-func ARange(n int, dtype ScalarType) *Tensor {
+func ARange(n int, dtype consts.ScalarType) *Tensor {
 	ptr := C.tensor_arange(C.int(n), C.int(dtype))
 	return &Tensor{data: ptr}
 }
@@ -33,7 +30,6 @@ func (t *Tensor) Free() {
 	t.data = nil
 }
 
-func (t *Tensor) MatMul(t2 *Tensor) *Tensor {
-	ptr := C.tensor_matmul(t.data, t2.data)
-	return &Tensor{data: ptr}
+func (t *Tensor) ScalarType() consts.ScalarType {
+	return consts.ScalarType(C.tensor_scalar_type(t.data))
 }

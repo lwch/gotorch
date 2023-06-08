@@ -1,4 +1,4 @@
-package tensor
+package consts
 
 type ScalarType byte
 
@@ -47,3 +47,12 @@ func (t ScalarType) String() string {
 		return "unknown"
 	}
 }
+
+type Reduction byte
+
+const (
+	ReductionNone Reduction = iota
+	ReductionMean
+	ReductionSum
+	ReductionEnd
+)
