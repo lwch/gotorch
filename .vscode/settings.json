@@ -1,0 +1,6 @@
+{
+    "C_Cpp.default.includePath": [
+        "/usr/local/lib/libtorch/include",
+        "/usr/local/lib/libtorch/include/torch/csrc/api/include"
+    ]
+}
