@@ -27,6 +27,10 @@ typedef void *tensor;
     tensor tensor_matmul(tensor a, tensor b);
     tensor tensor_add(tensor a, tensor b);
     tensor tensor_sub(tensor a, tensor b);
+    tensor tensor_mul(tensor a, tensor b);
+    tensor tensor_div(tensor a, tensor b);
+    // loss
+    tensor tensor_mse_loss(tensor pred, tensor target, int64_t reduction);
 
 #ifdef __cplusplus
 }

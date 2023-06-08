@@ -51,3 +51,13 @@ tensor tensor_sub(tensor a, tensor b)
 {
     return new torch::Tensor(a->sub(*b));
 }
+
+tensor tensor_mul(tensor a, tensor b)
+{
+    return new torch::Tensor(a->mul(*b));
+}
+
+tensor tensor_div(tensor a, tensor b)
+{
+    return new torch::Tensor(a->div(*b));
+}
