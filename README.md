@@ -14,10 +14,10 @@
 在.bashrc中添加以下内容
 
 ```
-export GOTORCH="此处修改为解压路径如：/usr/local/lib/libtorch"
-export LIBRARY_PATH="$LIBRARY_PATH:$GOTORCH/lib"
-export CPATH="$CPATH:$GOTORCH/lib:$GOTORCH/include:$GOTORCH/include/torch/csrc/api/include"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$GOTORCH/lib"
+export LIBTORCH="此处修改为解压路径如：/usr/local/lib/libtorch"
+export LIBRARY_PATH="$LIBRARY_PATH:$LIBTORCH/lib"
+export CPATH="$CPATH:$LIBTORCH/lib:$LIBTORCH/include:$LIBTORCH/include/torch/csrc/api/include"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$LIBTORCH/lib"
 ```
 
 ### macos
@@ -25,10 +25,10 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$GOTORCH/lib"
 在.bashrc中添加以下内容
 
 ```
-export GOTORCH="此处修改为解压路径如：/usr/local/lib/libtorch"
-export LIBRARY_PATH="$LIBRARY_PATH:$GOTORCH/lib"
-export CPATH="$CPATH:$GOTORCH/lib:$GOTORCH/include:$GOTORCH/include/torch/csrc/api/include"
-export DYLD_FALLBACK_LIBRARY_PATH="$DYLD_FALLBACK_LIBRARY_PATH:$GOTORCH/lib"
+export LIBTORCH="此处修改为解压路径如：/usr/local/lib/libtorch"
+export LIBRARY_PATH="$LIBRARY_PATH:$LIBTORCH/lib"
+export CPATH="$CPATH:$LIBTORCH/lib:$LIBTORCH/include:$LIBTORCH/include/torch/csrc/api/include"
+export DYLD_FALLBACK_LIBRARY_PATH="$DYLD_FALLBACK_LIBRARY_PATH:$LIBTORCH/lib"
 ```
 
 ## 使用
