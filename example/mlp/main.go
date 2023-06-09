@@ -13,8 +13,6 @@ import (
 
 const hiddenSize = 10
 
-var sUnfree = mmgr.New()
-
 var w1, b1 *tensor.Tensor
 var w2, b2 *tensor.Tensor
 
@@ -27,10 +25,10 @@ func randN(n int) []float32 {
 }
 
 func init() {
-	w1 = tensor.FromFloat32(sUnfree, randN(2*hiddenSize), 2, hiddenSize)
-	b1 = tensor.Zeros(sUnfree, consts.KFloat, 10)
-	w2 = tensor.FromFloat32(sUnfree, randN(hiddenSize*1), hiddenSize, 1)
-	b2 = tensor.Zeros(sUnfree, consts.KFloat, 1)
+	w1 = tensor.FromFloat32(nil, randN(2*hiddenSize), 2, hiddenSize)
+	b1 = tensor.Zeros(nil, consts.KFloat, hiddenSize)
+	w2 = tensor.FromFloat32(nil, randN(hiddenSize*1), hiddenSize, 1)
+	b2 = tensor.Zeros(nil, consts.KFloat, 1)
 	w1.SetRequiresGrad(true)
 	b1.SetRequiresGrad(true)
 	w2.SetRequiresGrad(true)
@@ -41,8 +39,8 @@ func main() {
 	s := mmgr.New()
 	defer s.GC()
 	optm := optimizer.NewAdam()
-	for i := 0; i < 5000; i++ {
-		x, y := getBatch(s)
+	for i := 0; i < 10000; i++ {
+		x, y := getBatch(s, true)
 		// forward
 		pred := forward(x)
 		loss := loss.NewMse(pred, y)
@@ -55,13 +53,9 @@ func main() {
 			s.GC()
 		}
 	}
-	fmt.Println("w1=", w1.Float32Value())
-	fmt.Println("b1=", b1.Float32Value())
-	fmt.Println("w2=", w2.Float32Value())
-	fmt.Println("b2=", b2.Float32Value())
-	x, _ := getBatch(s)
+	x, _ := getBatch(s, false)
 	pred := forward(x)
-	fmt.Println(pred.Float32Value())
+	fmt.Println("pred:", pred.Float32Value())
 }
 
 func forward(x *tensor.Tensor) *tensor.Tensor {
@@ -70,16 +64,26 @@ func forward(x *tensor.Tensor) *tensor.Tensor {
 	return y.MatMul(w2).Add(b2)
 }
 
-func getBatch(s *mmgr.Storage) (*tensor.Tensor, *tensor.Tensor) {
-	return tensor.FromFloat32(s, []float32{
-			0, 0,
-			0, 1,
-			1, 0,
-			1, 1,
-		}, 4, 2), tensor.FromFloat32(s, []float32{
-			0,
-			1,
-			1,
-			0,
-		}, 4, 1)
+func getBatch(s *mmgr.Storage, shuffle bool) (*tensor.Tensor, *tensor.Tensor) {
+	x := []float32{
+		0, 0,
+		0, 1,
+		1, 0,
+		1, 1,
+	}
+	y := []float32{
+		0,
+		1,
+		1,
+		0,
+	}
+	if shuffle {
+		rand.Shuffle(4, func(i, j int) {
+			x[i*2], x[j*2] = x[j*2], x[i*2]
+			x[i*2+1], x[j*2+1] = x[j*2+1], x[i*2+1]
+			y[i], y[j] = y[j], y[i]
+		})
+	}
+	return tensor.FromFloat32(s, x, 4, 2),
+		tensor.FromFloat32(s, y, 4, 1)
 }

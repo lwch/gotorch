@@ -20,7 +20,11 @@ func ARange(n int, dtype consts.ScalarType) *Tensor {
 }
 
 func Zeros(shape []int64, dtype consts.ScalarType) *Tensor {
-	ptr := C.tensor_zeros((*C.int64_t)(&shape[0]), C.size_t(len(shape)), C.int(dtype))
+	shapes := make([]C.int64_t, len(shape))
+	for i, s := range shape {
+		shapes[i] = C.int64_t(s)
+	}
+	ptr := C.tensor_zeros(&shapes[0], C.size_t(len(shape)), C.int(dtype))
 	return &Tensor{data: ptr}
 }
 

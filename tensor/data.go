@@ -8,61 +8,81 @@ import (
 
 func ARange(s *mmgr.Storage, n int, dtype consts.ScalarType) *Tensor {
 	t := torch.ARange(n, dtype)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func Zeros(s *mmgr.Storage, dtype consts.ScalarType, shape ...int64) *Tensor {
 	t := torch.Zeros(shape, dtype)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func FromUint8(s *mmgr.Storage, data []uint8, shape ...int64) *Tensor {
 	t := torch.FromUint8(data, shape)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func FromInt8(s *mmgr.Storage, data []int8, shape ...int64) *Tensor {
 	t := torch.FromInt8(data, shape)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func FromInt16(s *mmgr.Storage, data []int16, shape ...int64) *Tensor {
 	t := torch.FromInt16(data, shape)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func FromInt32(s *mmgr.Storage, data []int32, shape ...int64) *Tensor {
 	t := torch.FromInt32(data, shape)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func FromInt64(s *mmgr.Storage, data []int64, shape ...int64) *Tensor {
 	t := torch.FromInt64(data, shape)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func FromFloat32(s *mmgr.Storage, data []float32, shape ...int64) *Tensor {
 	t := torch.FromFloat32(data, shape)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func FromFloat64(s *mmgr.Storage, data []float64, shape ...int64) *Tensor {
 	t := torch.FromFloat64(data, shape)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 
 func FromBool(s *mmgr.Storage, data []bool, shape ...int64) *Tensor {
 	t := torch.FromBool(data, shape)
-	s.Put(t)
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{s: s, t: t}
 }
 

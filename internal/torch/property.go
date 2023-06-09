@@ -19,13 +19,13 @@ func (t *Tensor) Dims() int64 {
 
 func (t *Tensor) Shapes() []int64 {
 	size := t.Dims()
-	shapes := make([]int64, size)
+	shapes := make([]C.int64_t, size)
 	C.tensor_shapes(t.data, (*C.int64_t)(unsafe.Pointer(&shapes[0])))
-	return shapes
+	return fromCInts[C.int64_t, int64](shapes)
 }
 
 func (t *Tensor) Reshape(shape []int64) *Tensor {
-	shapes, size := cints(shape)
+	shapes, size := cInts[int64, C.int64_t](shape)
 	ptr := C.tensor_reshape(t.data, shapes, size)
 	return &Tensor{data: ptr}
 }

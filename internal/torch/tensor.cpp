@@ -25,10 +25,10 @@ tensor tensor_zeros(int64_t *shape, size_t shape_len, int dtype)
 
 tensor tensor_from_data(void *data, int64_t *shape, size_t shape_len, int dtype)
 {
-    return new torch::Tensor(
-        torch::from_blob(data,
-                         torch::IntArrayRef(shape, shape_len),
-                         torch::dtype(torch::ScalarType(dtype))));
+    torch::Tensor zeros = torch::zeros(torch::IntArrayRef(shape, shape_len),
+                                       torch::dtype(torch::ScalarType(dtype)));
+    memcpy(zeros.data_ptr(), data, zeros.numel() * zeros.element_size());
+    return new torch::Tensor(zeros);
 }
 
 void tensor_copy_data(tensor t, void *data)

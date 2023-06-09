@@ -27,5 +27,5 @@ func (s *Storage) GC() {
 	for _, t := range s.data {
 		t.Free()
 	}
-	s.data = nil
+	s.data = s.data[:0]
 }
