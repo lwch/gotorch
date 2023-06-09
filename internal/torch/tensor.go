@@ -19,6 +19,11 @@ func ARange(n int, dtype consts.ScalarType) *Tensor {
 	return &Tensor{data: ptr}
 }
 
+func Zeros(shape []int64, dtype consts.ScalarType) *Tensor {
+	ptr := C.tensor_zeros((*C.int64_t)(&shape[0]), C.size_t(len(shape)), C.int(dtype))
+	return &Tensor{data: ptr}
+}
+
 func (t *Tensor) Free() {
 	t.mFree.Lock()
 	defer t.mFree.Unlock()
@@ -32,4 +37,8 @@ func (t *Tensor) Free() {
 
 func (t *Tensor) ScalarType() consts.ScalarType {
 	return consts.ScalarType(C.tensor_scalar_type(t.data))
+}
+
+func (t *Tensor) SetRequiresGrad(b bool) {
+	C.tensor_set_requires_grad(t.data, C.bool(b))
 }

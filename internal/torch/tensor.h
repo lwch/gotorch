@@ -2,6 +2,7 @@
 #define __GOTORCH_TENSOR_H__
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -22,9 +23,10 @@ typedef void *optimizer;
     void tensor_copy_data(tensor t, void *data);
     tensor tensor_reshape(tensor t, int64_t *shape, size_t shape_len);
     tensor tensor_transpose(tensor t, int64_t dim1, int64_t dim2);
+    void tensor_set_requires_grad(tensor t, bool b);
     // property
-    int tensor_elem_size(tensor t);
-    int tensor_elem_count(tensor t);
+    size_t tensor_elem_size(tensor t);
+    size_t tensor_elem_count(tensor t);
     int tensor_scalar_type(tensor t);
     size_t tensor_dims(tensor t);
     void tensor_shapes(tensor t, int64_t *shapes);

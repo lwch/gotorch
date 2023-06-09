@@ -1,9 +1,22 @@
 package tensor
 
 import (
+	"github.com/lwch/gotorch/consts"
 	"github.com/lwch/gotorch/internal/torch"
 	"github.com/lwch/gotorch/mmgr"
 )
+
+func ARange(s *mmgr.Storage, n int, dtype consts.ScalarType) *Tensor {
+	t := torch.ARange(n, dtype)
+	s.Put(t)
+	return &Tensor{s: s, t: t}
+}
+
+func Zeros(s *mmgr.Storage, dtype consts.ScalarType, shape ...int64) *Tensor {
+	t := torch.Zeros(shape, dtype)
+	s.Put(t)
+	return &Tensor{s: s, t: t}
+}
 
 func FromUint8(s *mmgr.Storage, data []uint8, shape ...int64) *Tensor {
 	t := torch.FromUint8(data, shape)

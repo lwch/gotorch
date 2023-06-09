@@ -36,12 +36,12 @@ void tensor_copy_data(tensor t, void *data)
     memcpy(data, t->data_ptr(), t->numel() * t->element_size());
 }
 
-int tensor_elem_size(tensor t)
+size_t tensor_elem_size(tensor t)
 {
     return t->element_size();
 }
 
-int tensor_elem_count(tensor t)
+size_t tensor_elem_count(tensor t)
 {
     return t->numel();
 }
@@ -73,4 +73,9 @@ tensor tensor_reshape(tensor t, int64_t *shape, size_t shape_len)
 tensor tensor_transpose(tensor t, int64_t dim1, int64_t dim2)
 {
     return new torch::Tensor(t->transpose(dim1, dim2));
+}
+
+void tensor_set_requires_grad(tensor t, bool b)
+{
+    t->set_requires_grad(b);
 }

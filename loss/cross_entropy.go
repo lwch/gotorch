@@ -56,3 +56,14 @@ func NewCrossEntropy(pred, target *tensor.Tensor, opts ...CrossEntropyOpt) Loss 
 func (loss *CrossEntropy) Backward() {
 	loss.t.Backward()
 }
+
+func (loss *CrossEntropy) Value() float64 {
+	switch loss.t.ScalarType() {
+	case consts.KFloat:
+		return float64(loss.t.Float32Value()[0])
+	case consts.KDouble:
+		return loss.t.Float64Value()[0]
+	default:
+		panic("not implemented")
+	}
+}

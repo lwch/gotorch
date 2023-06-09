@@ -5,16 +5,16 @@ import "unsafe"
 // #include "tensor.h"
 import "C"
 
-func (t *Tensor) ElemSize() int {
-	return int(C.tensor_elem_size(t.data))
+func (t *Tensor) ElemSize() int64 {
+	return int64(C.tensor_elem_size(t.data))
 }
 
-func (t *Tensor) ElemCount() int {
-	return int(C.tensor_elem_count(t.data))
+func (t *Tensor) ElemCount() int64 {
+	return int64(C.tensor_elem_count(t.data))
 }
 
-func (t *Tensor) Dims() int {
-	return int(C.tensor_dims(t.data))
+func (t *Tensor) Dims() int64 {
+	return int64(C.tensor_dims(t.data))
 }
 
 func (t *Tensor) Shapes() []int64 {

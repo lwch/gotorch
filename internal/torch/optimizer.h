@@ -12,8 +12,10 @@ extern "C"
 typedef void *optimizer;
 #endif
 
-    optimizer new_adam_optimizer(double lr, double beta1, double beta2, double weight_decay);
+    optimizer new_adam_optimizer(double lr, double beta1, double beta2, double eps, double weight_decay);
     void optimizer_step(optimizer optm, tensor *params, size_t params_count);
+    double optimizer_get_lr(optimizer optm);
+    void optimizer_set_lr(optimizer optm, double lr);
 
 #ifdef __cplusplus
 }

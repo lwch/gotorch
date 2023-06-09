@@ -1,6 +1,7 @@
 package tensor
 
 import (
+	"github.com/lwch/gotorch/consts"
 	"github.com/lwch/gotorch/internal/torch"
 	"github.com/lwch/gotorch/mmgr"
 )
@@ -16,4 +17,44 @@ func (t *Tensor) Storage() *mmgr.Storage {
 
 func (t *Tensor) Tensor() *torch.Tensor {
 	return t.t
+}
+
+func (t *Tensor) Reshape(shape ...int64) *Tensor {
+	ret := t.t.Reshape(shape)
+	if t.s != nil {
+		t.s.Put(ret)
+	}
+	return &Tensor{s: t.s, t: ret}
+}
+
+func (t *Tensor) Transpose(dim1, dim2 int64) *Tensor {
+	ret := t.t.Transpose(dim1, dim2)
+	if t.s != nil {
+		t.s.Put(ret)
+	}
+	return &Tensor{s: t.s, t: ret}
+}
+
+func (t *Tensor) ElemSize() int64 {
+	return t.t.ElemSize()
+}
+
+func (t *Tensor) ElemCount() int64 {
+	return t.t.ElemCount()
+}
+
+func (t *Tensor) Dims() int64 {
+	return t.t.Dims()
+}
+
+func (t *Tensor) Shapes() []int64 {
+	return t.t.Shapes()
+}
+
+func (t *Tensor) ScalarType() consts.ScalarType {
+	return t.t.ScalarType()
+}
+
+func (t *Tensor) SetRequiresGrad(b bool) {
+	t.t.SetRequiresGrad(b)
 }
