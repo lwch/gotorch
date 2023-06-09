@@ -24,7 +24,7 @@ func (t *Tensor) Shapes() []int64 {
 	return shapes
 }
 
-func (t *Tensor) Reshape(shape []int) *Tensor {
+func (t *Tensor) Reshape(shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_reshape(t.data, shapes, size)
 	return &Tensor{data: ptr}

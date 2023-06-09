@@ -10,6 +10,7 @@ extern "C"
 {
 #endif
 
+    void tensor_backward(tensor a);
     tensor tensor_matmul(tensor a, tensor b);
     tensor tensor_add(tensor a, tensor b);
     tensor tensor_sub(tensor a, tensor b);

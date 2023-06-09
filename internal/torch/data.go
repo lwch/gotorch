@@ -10,49 +10,49 @@ import (
 // #include "tensor.h"
 import "C"
 
-func FromUint8(data []uint8, shape []int) *Tensor {
+func FromUint8(data []uint8, shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_from_data(unsafe.Pointer(&data[0]), shapes, size, C.int(consts.KUint8))
 	return &Tensor{data: ptr}
 }
 
-func FromInt8(data []int8, shape []int) *Tensor {
+func FromInt8(data []int8, shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_from_data(unsafe.Pointer(&data[0]), shapes, size, C.int(consts.KInt8))
 	return &Tensor{data: ptr}
 }
 
-func FromInt16(data []int16, shape []int) *Tensor {
+func FromInt16(data []int16, shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_from_data(unsafe.Pointer(&data[0]), shapes, size, C.int(consts.KInt16))
 	return &Tensor{data: ptr}
 }
 
-func FromInt32(data []int32, shape []int) *Tensor {
+func FromInt32(data []int32, shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_from_data(unsafe.Pointer(&data[0]), shapes, size, C.int(consts.KInt32))
 	return &Tensor{data: ptr}
 }
 
-func FromInt64(data []int64, shape []int) *Tensor {
+func FromInt64(data []int64, shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_from_data(unsafe.Pointer(&data[0]), shapes, size, C.int(consts.KInt64))
 	return &Tensor{data: ptr}
 }
 
-func FromFloat32(data []float32, shape []int) *Tensor {
+func FromFloat32(data []float32, shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_from_data(unsafe.Pointer(&data[0]), shapes, size, C.int(consts.KFloat))
 	return &Tensor{data: ptr}
 }
 
-func FromFloat64(data []float64, shape []int) *Tensor {
+func FromFloat64(data []float64, shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_from_data(unsafe.Pointer(&data[0]), shapes, size, C.int(consts.KDouble))
 	return &Tensor{data: ptr}
 }
 
-func FromBool(data []bool, shape []int) *Tensor {
+func FromBool(data []bool, shape []int64) *Tensor {
 	shapes, size := cints(shape)
 	ptr := C.tensor_from_data(unsafe.Pointer(&data[0]), shapes, size, C.int(consts.KBool))
 	return &Tensor{data: ptr}

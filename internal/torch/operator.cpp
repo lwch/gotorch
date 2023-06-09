@@ -1,6 +1,11 @@
 #include <torch/torch.h>
 #include "operator.h"
 
+void tensor_backward(tensor a)
+{
+    a->backward();
+}
+
 tensor tensor_matmul(tensor a, tensor b)
 {
     return new torch::Tensor(a->matmul(*b));

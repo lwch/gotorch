@@ -3,6 +3,10 @@ package torch
 // #include "operator.h"
 import "C"
 
+func (t *Tensor) Backward() {
+	C.tensor_backward(t.data)
+}
+
 func (t *Tensor) MatMul(t2 *Tensor) *Tensor {
 	ptr := C.tensor_matmul(t.data, t2.data)
 	return &Tensor{data: ptr}
