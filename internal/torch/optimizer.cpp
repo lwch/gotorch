@@ -17,6 +17,6 @@ void optimizer_step(optimizer optm, tensor *params, size_t params_count)
     {
         params_vec.push_back(*params[i]);
     }
-    optm->zero_grad();
     optm->step();
+    optm->zero_grad();
 }

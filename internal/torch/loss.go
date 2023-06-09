@@ -1,4 +1,4 @@
-package tensor
+package torch
 
 import (
 	"github.com/lwch/gotorch/consts"

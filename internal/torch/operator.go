@@ -1,4 +1,4 @@
-package tensor
+package torch
 
 // #include "operator.h"
 import "C"
@@ -95,5 +95,10 @@ func (t *Tensor) Tanh() *Tensor {
 
 func (t *Tensor) Softmax(dim int64) *Tensor {
 	ptr := C.tensor_softmax(t.data, C.int64_t(dim))
+	return &Tensor{data: ptr}
+}
+
+func (t *Tensor) Dropout(p float64, train bool) *Tensor {
+	ptr := C.tensor_dropout(t.data, C.double(p), C.bool(train))
 	return &Tensor{data: ptr}
 }

@@ -29,6 +29,7 @@ extern "C"
     tensor tensor_sigmoid(tensor a);
     tensor tensor_tanh(tensor a);
     tensor tensor_softmax(tensor a, int64_t dim);
+    tensor tensor_dropout(tensor a, double p, bool train);
 
 #ifdef __cplusplus
 }

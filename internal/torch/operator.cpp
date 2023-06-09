@@ -95,3 +95,8 @@ tensor tensor_softmax(tensor a, int64_t dim)
 {
     return new torch::Tensor(a->softmax(dim));
 }
+
+tensor tensor_dropout(tensor a, double p, bool train)
+{
+    return new torch::Tensor(torch::dropout(*a, p, train));
+}
