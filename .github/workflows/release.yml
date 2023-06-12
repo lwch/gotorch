@@ -17,7 +17,7 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-$libtorch_version%2Bcpu.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcpu.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
@@ -39,7 +39,7 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-macos-$libtorch_version.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-macos-${{ env.libtorch_version }}.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
@@ -62,7 +62,7 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          curl -o libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-$libtorch_version%2Bcpu.zip
+          curl -o libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-${{ env.libtorch_version }}%2Bcpu.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=${{ github.workspace }}\lib\libtorch .
           msbuild gotorch.sln -p:Configuration=Release
