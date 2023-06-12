@@ -24,4 +24,4 @@ jobs:
           artifacts: ./lib/libgotorch.so
           allowUpdates: true
           generateReleaseNotes: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
