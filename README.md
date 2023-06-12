@@ -9,7 +9,7 @@
 ## 安装
 
 1. 下载[libtorch](https://pytorch.org/get-started/locally/)，windows下解压到D盘，linux和mac下解压到/usr/local/lib目录下
-2. 下载[libgotorch](https://github.com/lwch/gotorch/releases/latest)并放置在libtorch的lib目录下，windows系统使用dll，linux系统使用so，macos系统使用dylib
+2. 下载[libgotorch](https://github.com/lwch/gotorch/releases/latest)并放置在libtorch的lib目录下，windows系统使用dll，linux系统使用so(请选择正确的glibc版本并将其更名为libgotorch.so)，macos系统使用dylib
 
 注：由于官方提供的windows版本libtorch使用msvc进行编译，通过mingw无法正常链接，因此增加libgotorch库来进行转换，有关libgotorch库的编译请看[libgotorch编译](docs/libgotorch.md)
 
