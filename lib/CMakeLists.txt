@@ -15,4 +15,7 @@ add_library(gotorch SHARED
 	../internal/torch/optimizer.h optimizer.cpp
 	../internal/torch/tensor.h tensor.cpp)
 target_link_libraries(gotorch "${TORCH_LIBRARIES}")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	target_link_libraries(gotorch -static-libgcc -static-libstdc++)
+endif()
 set_property(TARGET gotorch PROPERTY CXX_STANDARD 14)
