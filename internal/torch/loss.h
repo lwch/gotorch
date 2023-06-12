@@ -9,11 +9,11 @@ extern "C"
 {
 #endif
 
-    tensor new_mse_loss(tensor pred, tensor target, int64_t reduction);
-    tensor new_cross_entropy_loss(tensor pred, tensor target,
-                                  int64_t reduction,
-                                  int64_t ignore_index,
-                                  double label_smoothing);
+    GOTORCH_API tensor new_mse_loss(tensor pred, tensor target, int64_t reduction);
+    GOTORCH_API tensor new_cross_entropy_loss(tensor pred, tensor target,
+        int64_t reduction,
+        int64_t ignore_index,
+        double label_smoothing);
 
 #ifdef __cplusplus
 }
