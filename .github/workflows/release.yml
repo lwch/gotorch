@@ -43,7 +43,7 @@ jobs:
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch.so
+          artifacts: ./lib/libgotorch.dylib
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
