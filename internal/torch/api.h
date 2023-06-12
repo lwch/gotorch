@@ -4,14 +4,14 @@
 #ifdef __cplusplus
 extern "C"
 {
-	typedef torch::Tensor* tensor;
-	typedef torch::optim::Optimizer* optimizer;
+	typedef torch::Tensor *tensor;
+	typedef torch::optim::Optimizer *optimizer;
 #else
-	typedef void* tensor;
-	typedef void* optimizer;
+typedef void *tensor;
+typedef void *optimizer;
 #endif
 
-#ifdef GOTORCH_EXPORT
+#if defined(GOTORCH_EXPORT) && defined(_WIN32)
 #define GOTORCH_API __declspec(dllexport)
 #else
 #define GOTORCH_API
