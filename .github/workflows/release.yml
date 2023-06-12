@@ -56,7 +56,7 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.0.1%2Bcpu.zip
+          curl -o libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.0.1%2Bcpu.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch .
           msbuild gotorch.sln -p:Configuration=Release
