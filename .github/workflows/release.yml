@@ -22,12 +22,11 @@ jobs:
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
           mv libgotorch.so libgotorch.glibc2.32.so
-          ls
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch.2.32.so
+          artifacts: ./lib/libgotorch.glibc2.32.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
@@ -50,7 +49,7 @@ jobs:
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch.2.31.so
+          artifacts: ./lib/libgotorch.glibc2.31.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
