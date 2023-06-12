@@ -1,7 +1,8 @@
 {
     "C_Cpp.default.includePath": [
         "/usr/local/lib/libtorch/include",
-        "/usr/local/lib/libtorch/include/torch/csrc/api/include"
+        "/usr/local/lib/libtorch/include/torch/csrc/api/include",
+        "/home/lwch/src/gotorch/internal/torch"
     ],
     "files.associations": {
         "__bit_reference": "cpp",
