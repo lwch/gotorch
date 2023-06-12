@@ -21,5 +21,5 @@ jobs:
       - name: upload
         uses: softprops/action-gh-release@v1
         with:
-          files: libgotorch.so
+          files: ./lib/libgotorch.so
           generate_release_notes: true
