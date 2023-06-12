@@ -36,7 +36,11 @@ func NewMse(pred, target *tensor.Tensor, opts ...MseOpt) Loss {
 }
 
 func (loss *Mse) Backward() {
-	loss.t.Backward()
+	loss.t.Backward(false)
+}
+
+func (loss *Mse) BackwardRetained() {
+	loss.t.Backward(true)
 }
 
 func (loss *Mse) Value() float64 {

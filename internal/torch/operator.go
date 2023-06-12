@@ -3,8 +3,8 @@ package torch
 // #include "operator.h"
 import "C"
 
-func (t *Tensor) Backward() {
-	C.tensor_backward(t.data)
+func (t *Tensor) Backward(retain bool) {
+	C.tensor_backward(t.data, C.bool(retain))
 }
 
 func (t *Tensor) MatMul(t2 *Tensor) *Tensor {

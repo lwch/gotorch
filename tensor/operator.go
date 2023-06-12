@@ -6,7 +6,11 @@ import (
 )
 
 func (t *Tensor) Backward() {
-	t.t.Backward()
+	t.t.Backward(false)
+}
+
+func (t *Tensor) BackwardRetained() {
+	t.t.Backward(true)
 }
 
 func (t *Tensor) store1(ret *torch.Tensor) *mmgr.Storage {

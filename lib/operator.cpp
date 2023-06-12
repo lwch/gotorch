@@ -1,9 +1,10 @@
 #include <torch/torch.h>
 #include "operator.h"
 
-void tensor_backward(tensor a)
+void tensor_backward(tensor a, bool retain)
 {
-    a->backward();
+    torch::Tensor gradient;
+    a->backward(gradient, retain);
 }
 
 tensor tensor_matmul(tensor a, tensor b)

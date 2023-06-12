@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-    GOTORCH_API void tensor_backward(tensor a);
+    GOTORCH_API void tensor_backward(tensor a, bool retain);
     GOTORCH_API tensor tensor_matmul(tensor a, tensor b);
     GOTORCH_API tensor tensor_add(tensor a, tensor b);
     GOTORCH_API tensor tensor_sub(tensor a, tensor b);

@@ -54,7 +54,11 @@ func NewCrossEntropy(pred, target *tensor.Tensor, opts ...CrossEntropyOpt) Loss 
 }
 
 func (loss *CrossEntropy) Backward() {
-	loss.t.Backward()
+	loss.t.Backward(false)
+}
+
+func (loss *CrossEntropy) BackwardRetained() {
+	loss.t.Backward(true)
 }
 
 func (loss *CrossEntropy) Value() float64 {
