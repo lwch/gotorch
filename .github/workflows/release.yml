@@ -21,7 +21,8 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
-          mv ./lib/libgotorch.so ./lib/libgotorch.glibc2.32.so
+          mv libgotorch.so libgotorch.glibc2.32.so
+          ls
 
       - name: upload
         uses: ncipollo/release-action@v1
@@ -44,7 +45,7 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
-          mv ./lib/libgotorch.so ./lib/libgotorch.glibc2.31.so
+          mv libgotorch.so libgotorch.glibc2.31.so
 
       - name: upload
         uses: ncipollo/release-action@v1
