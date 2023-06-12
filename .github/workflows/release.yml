@@ -14,8 +14,8 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          wget -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip
-          unzip libtorch.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip
+          unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
 
@@ -35,8 +35,8 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          wget -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-macos-2.0.1.zip
-          unzip libtorch.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-macos-2.0.1.zip
+          unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
 
@@ -44,6 +44,27 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: ./lib/libgotorch.dylib
+          allowUpdates: true
+          generateReleaseNotes: true
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+
+  release_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: make
+        working-directory: ./lib
+        run: |
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.0.1%2Bcpu.zip
+          unzip -qq libtorch.zip
+          cmake -DCMAKE_PREFIX_PATH=./libtorch .
+          msbuild gotorch.sln -p:Configuration=Release
+
+      - name: upload
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./Release/gotorch.dll
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
