@@ -9,8 +9,8 @@ env:
   libtorch_version: 2.0.1
 
 jobs:
-  release_linux:
-    runs-on: ubuntu-latest
+  release_linux_glibc2_32:
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
@@ -21,11 +21,35 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
+          mv libgotorch.so libgotorch.glibc2.32.so
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch.so
+          artifacts: ./lib/libgotorch.2.32.so
+          allowUpdates: true
+          generateReleaseNotes: true
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          omitBody: true
+
+  release_linux_glibc2_31:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: make
+        working-directory: ./lib
+        run: |
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcpu.zip
+          unzip -qq libtorch.zip
+          cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
+          make
+          mv libgotorch.so libgotorch.glibc2.31.so
+
+      - name: upload
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./lib/libgotorch.2.31.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
