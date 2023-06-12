@@ -2,7 +2,8 @@ name: release
 
 on:
   push:
-    branches: [ master ]
+    tags:
+      - "v*.*.*"
 
 jobs:
   release_linux:
@@ -10,9 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: cmake
+      - name: make
         working-directory: ./lib
         run: |
           wget -qO- https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip|busybox unzip -
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
+
+      - name: upload
+        uses: softprops/action-gh-release@v1
+        with:
+          files: libgotorch.so
+          generate_release_notes: true
