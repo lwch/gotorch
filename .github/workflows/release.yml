@@ -19,7 +19,9 @@ jobs:
           make
 
       - name: upload
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         with:
-          files: ./lib/libgotorch.so
-          generate_release_notes: true
+          artifacts: ./lib/libgotorch.so
+          allowUpdates: true
+          generateReleaseNotes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
