@@ -5,6 +5,9 @@ on:
     tags:
       - "v*.*.*"
 
+env:
+  libtorch_version: 2.0.1
+
 jobs:
   release_linux:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-$libtorch_version%2Bcpu.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
@@ -26,6 +29,7 @@ jobs:
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
+          omitBody: true
 
   release_macos:
     runs-on: macos-latest
@@ -35,7 +39,7 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-macos-2.0.1.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-macos-$libtorch_version.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
@@ -47,6 +51,7 @@ jobs:
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
+          omitBody: true
 
   release_windows:
     runs-on: windows-latest
@@ -57,7 +62,7 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
-          curl -o libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.0.1%2Bcpu.zip
+          curl -o libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-$libtorch_version%2Bcpu.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=${{ github.workspace }}\lib\libtorch .
           msbuild gotorch.sln -p:Configuration=Release
@@ -69,3 +74,4 @@ jobs:
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
+          omitBody: true
