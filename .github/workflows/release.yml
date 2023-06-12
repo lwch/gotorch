@@ -13,4 +13,4 @@ jobs:
       - name: cmake
         working-directory: ./lib
         run: |
-          curl -L https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip|tar -vxf
+          curl -L https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip|tar -vx
