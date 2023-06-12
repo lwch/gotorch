@@ -86,6 +86,34 @@ func FromBool(s *mmgr.Storage, data []bool, shape ...int64) *Tensor {
 	return &Tensor{s: s, t: t}
 }
 
+func VStack(a, b *Tensor) *Tensor {
+	var s *mmgr.Storage
+	if a.s != nil {
+		s = a.s
+	} else if b.s != nil {
+		s = b.s
+	}
+	t := torch.VStack(a.t, b.t)
+	if s != nil {
+		s.Put(t)
+	}
+	return &Tensor{s: s, t: t}
+}
+
+func HStack(a, b *Tensor) *Tensor {
+	var s *mmgr.Storage
+	if a.s != nil {
+		s = a.s
+	} else if b.s != nil {
+		s = b.s
+	}
+	t := torch.HStack(a.t, b.t)
+	if s != nil {
+		s.Put(t)
+	}
+	return &Tensor{s: s, t: t}
+}
+
 func (t *Tensor) Uint8Value() []uint8 {
 	return t.t.Uint8Value()
 }
@@ -116,4 +144,12 @@ func (t *Tensor) Float64Value() []float64 {
 
 func (t *Tensor) BoolValue() []bool {
 	return t.t.BoolValue()
+}
+
+func (t *Tensor) NArrow(dim, start, length int64) *Tensor {
+	ptr := t.t.NArrow(dim, start, length)
+	if t.s != nil {
+		t.s.Put(ptr)
+	}
+	return &Tensor{s: t.s, t: ptr}
 }

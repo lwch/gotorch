@@ -20,6 +20,9 @@ extern "C"
     GOTORCH_API tensor tensor_reshape(tensor t, int64_t *shape, size_t shape_len);
     GOTORCH_API tensor tensor_transpose(tensor t, int64_t dim1, int64_t dim2);
     GOTORCH_API void tensor_set_requires_grad(tensor t, bool b);
+    GOTORCH_API tensor tensor_narrow(tensor t, int64_t dim, int64_t start, int64_t length);
+    GOTORCH_API tensor tensor_vstack(tensor a, tensor b);
+    GOTORCH_API tensor tensor_hstack(tensor a, tensor b);
     // property
     GOTORCH_API size_t tensor_elem_size(tensor t);
     GOTORCH_API size_t tensor_elem_count(tensor t);

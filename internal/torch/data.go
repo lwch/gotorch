@@ -145,3 +145,18 @@ func (t *Tensor) BoolValue() []bool {
 	C.tensor_copy_data(t.data, unsafe.Pointer(&value[0]))
 	return fromCBool(value)
 }
+
+func VStack(a, b *Tensor) *Tensor {
+	ptr := C.tensor_vstack(a.data, b.data)
+	return &Tensor{data: ptr}
+}
+
+func HStack(a, b *Tensor) *Tensor {
+	ptr := C.tensor_hstack(a.data, b.data)
+	return &Tensor{data: ptr}
+}
+
+func (t *Tensor) NArrow(dim, start, length int64) *Tensor {
+	ptr := C.tensor_narrow(t.data, C.int64_t(dim), C.int64_t(start), C.int64_t(length))
+	return &Tensor{data: ptr}
+}

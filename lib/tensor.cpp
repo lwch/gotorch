@@ -79,3 +79,24 @@ void tensor_set_requires_grad(tensor t, bool b)
 {
     t->set_requires_grad(b);
 }
+
+tensor tensor_narrow(tensor t, int64_t dim, int64_t start, int64_t length)
+{
+    return new torch::Tensor(t->narrow(dim, start, length));
+}
+
+tensor tensor_vstack(tensor a, tensor b)
+{
+    std::vector<torch::Tensor> list;
+    list.push_back(*a);
+    list.push_back(*b);
+    return new torch::Tensor(torch::vstack(torch::TensorList(list)));
+}
+
+tensor tensor_hstack(tensor a, tensor b)
+{
+    std::vector<torch::Tensor> list;
+    list.push_back(*a);
+    list.push_back(*b);
+    return new torch::Tensor(torch::hstack(torch::TensorList(list)));
+}
