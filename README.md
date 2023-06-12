@@ -2,22 +2,24 @@
 
 这是一个GO版本的libtorch封装库，通过该库可快速搭建torch的模型，目前已支持最新版本的libtorch(2.0.1)，支持的操作系统如下
 
+- windows
 - linux
 - macos
 
 ## 安装
 
-下载并解压[libtorch](https://pytorch.org/get-started/locally/)
+1. 下载[libtorch](https://pytorch.org/get-started/locally/)，windows下解压到D盘，linux和mac下解压到/usr/local/lib目录下
+2. 下载[libgotorch](https://drive.google.com/drive/folders/1u_j6JNvGcpxT2LALJOyvfKdG5BZ2JuR8?usp=sharing)并放置libtorch的lib目录下，windows系统使用dll，linux系统使用so，macos系统使用dylib
+
+注：由于官方提供的windows版本libtorch使用msvc进行编译，通过mingw无法正常链接，因此增加libgotorch库来进行转换，有关libgotorch库的编译请看[libgotorch](docs/libgotorch.md)
 
 ### linux
 
 在.bashrc中添加以下内容
 
 ```
-export LIBTORCH="此处修改为解压路径如：/usr/local/lib/libtorch"
-export LIBRARY_PATH="$LIBRARY_PATH:$LIBTORCH/lib"
-export CPATH="$CPATH:$LIBTORCH/lib:$LIBTORCH/include:$LIBTORCH/include/torch/csrc/api/include"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$LIBTORCH/lib"
+export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/lib/libtorch/lib"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib/libtorch/lib"
 ```
 
 ### macos
@@ -25,10 +27,17 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$LIBTORCH/lib"
 在.bashrc中添加以下内容
 
 ```
-export LIBTORCH="此处修改为解压路径如：/usr/local/lib/libtorch"
-export LIBRARY_PATH="$LIBRARY_PATH:$LIBTORCH/lib"
-export CPATH="$CPATH:$LIBTORCH/lib:$LIBTORCH/include:$LIBTORCH/include/torch/csrc/api/include"
-export DYLD_FALLBACK_LIBRARY_PATH="$DYLD_FALLBACK_LIBRARY_PATH:$LIBTORCH/lib"
+export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/lib/libtorch/lib"
+export DYLD_FALLBACK_LIBRARY_PATH="$DYLD_FALLBACK_LIBRARY_PATH:/usr/local/lib/libtorch/lib"
+```
+
+### windows
+
+windows系统下使用cgo需要依赖mingw，推荐使用[llvm-mingw](https://github.com/mstorsjo/llvm-mingw)，并添加以下环境变量
+
+```
+LIBRARY_PATH="D:\libtorch\lib"
+Path="D:\libtorch\lib;<mingw所在路径>\bin"
 ```
 
 ## 使用
