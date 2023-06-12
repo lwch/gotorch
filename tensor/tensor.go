@@ -19,6 +19,16 @@ func (t *Tensor) Tensor() *torch.Tensor {
 	return t.t
 }
 
+func (t *Tensor) UnFree() {
+	if t.s != nil {
+		t.s.Remove(t.t)
+	}
+}
+
+func (t *Tensor) Free() {
+	t.t.Free()
+}
+
 func (t *Tensor) Reshape(shape ...int64) *Tensor {
 	ret := t.t.Reshape(shape)
 	if t.s != nil {

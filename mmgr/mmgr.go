@@ -21,6 +21,17 @@ func (s *Storage) Put(t *torch.Tensor) {
 	s.data = append(s.data, t)
 }
 
+func (s *Storage) Remove(t *torch.Tensor) {
+	s.m.Lock()
+	defer s.m.Unlock()
+	for i, ts := range s.data {
+		if ts == t {
+			s.data = append(s.data[:i], s.data[i+1:]...)
+			return
+		}
+	}
+}
+
 func (s *Storage) GC() {
 	s.m.Lock()
 	defer s.m.Unlock()
