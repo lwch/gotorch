@@ -40,6 +40,9 @@ func WithCrossEntropyLabelSmoothing(smoothing float64) CrossEntropyOpt {
 //	labelSmoothing默认为0
 func NewCrossEntropy(pred, target *tensor.Tensor, opts ...CrossEntropyOpt) Loss {
 	var ret CrossEntropy
+	ret.reduction = consts.ReductionMean
+	ret.ignoreIdx = -100
+	ret.labelSmoothing = 0
 	for _, opt := range opts {
 		opt(&ret)
 	}
