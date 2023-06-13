@@ -26,6 +26,7 @@ extern "C"
     GOTORCH_API tensor tensor_min(tensor a, int64_t dim, bool keepdim);
     GOTORCH_API tensor tensor_sum(tensor a, int64_t dim, bool keepdim);
     GOTORCH_API tensor tensor_mean(tensor a, int64_t dim, bool keepdim);
+    GOTORCH_API tensor tensor_var(tensor a, int64_t dim, bool unbiased, bool keepdim);
     GOTORCH_API tensor tensor_relu(tensor a);
     GOTORCH_API tensor tensor_sigmoid(tensor a);
     GOTORCH_API tensor tensor_tanh(tensor a);

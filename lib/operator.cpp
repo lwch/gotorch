@@ -82,6 +82,11 @@ tensor tensor_mean(tensor a, int64_t dim, bool keepdim)
     return new torch::Tensor(a->mean(dim, keepdim));
 }
 
+tensor tensor_var(tensor a, int64_t dim, bool unbiased, bool keepdim)
+{
+    return new torch::Tensor(a->var(dim, unbiased, keepdim));
+}
+
 tensor tensor_relu(tensor a)
 {
     return new torch::Tensor(a->relu());

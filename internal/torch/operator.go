@@ -82,6 +82,11 @@ func (t *Tensor) Mean(dim int64, keepdim bool) *Tensor {
 	return &Tensor{data: ptr}
 }
 
+func (t *Tensor) Var(dim int64, unbiased, keepdim bool) *Tensor {
+	ptr := C.tensor_var(t.data, C.int64_t(dim), C.bool(unbiased), C.bool(keepdim))
+	return &Tensor{data: ptr}
+}
+
 func (t *Tensor) Relu() *Tensor {
 	ptr := C.tensor_relu(t.data)
 	return &Tensor{data: ptr}

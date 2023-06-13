@@ -112,6 +112,11 @@ func (t *Tensor) Mean(dim int64, keepdim bool) *Tensor {
 	return &Tensor{s: t.store1(ret), t: ret}
 }
 
+func (t *Tensor) Var(dim int64, unbiased, keepdim bool) *Tensor {
+	ret := t.t.Var(dim, unbiased, keepdim)
+	return &Tensor{s: t.store1(ret), t: ret}
+}
+
 func (t *Tensor) Relu() *Tensor {
 	ret := t.t.Relu()
 	return &Tensor{s: t.store1(ret), t: ret}
