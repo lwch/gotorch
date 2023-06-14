@@ -100,3 +100,13 @@ tensor tensor_hstack(tensor a, tensor b)
     list.push_back(*b);
     return new torch::Tensor(torch::hstack(torch::TensorList(list)));
 }
+
+tensor tensor_view(tensor a, int64_t *shape, size_t shape_len)
+{
+    return new torch::Tensor(a->view(torch::IntArrayRef(shape, shape_len)));
+}
+
+tensor tensor_permute(tensor a, int64_t *dims, size_t dims_len)
+{
+    return new torch::Tensor(a->permute(torch::IntArrayRef(dims, dims_len)));
+}

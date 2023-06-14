@@ -153,3 +153,19 @@ func (t *Tensor) NArrow(dim, start, length int64) *Tensor {
 	}
 	return &Tensor{s: t.s, t: ptr}
 }
+
+func (t *Tensor) View(shapes ...int64) *Tensor {
+	ptr := t.t.View(shapes)
+	if t.s != nil {
+		t.s.Put(ptr)
+	}
+	return &Tensor{s: t.s, t: ptr}
+}
+
+func (t *Tensor) Permute(dims ...int64) *Tensor {
+	ptr := t.t.Permute(dims)
+	if t.s != nil {
+		t.s.Put(ptr)
+	}
+	return &Tensor{s: t.s, t: ptr}
+}
