@@ -10,28 +10,28 @@ extern "C"
 {
 #endif
 
-    GOTORCH_API void tensor_backward(tensor a, bool retain);
-    GOTORCH_API tensor tensor_matmul(tensor a, tensor b);
-    GOTORCH_API tensor tensor_add(tensor a, tensor b);
-    GOTORCH_API tensor tensor_sub(tensor a, tensor b);
-    GOTORCH_API tensor tensor_mul(tensor a, tensor b);
-    GOTORCH_API tensor tensor_div(tensor a, tensor b);
-    GOTORCH_API tensor tensor_pow(tensor a, double n);
-    GOTORCH_API tensor tensor_sqrt(tensor a);
-    GOTORCH_API tensor tensor_log(tensor a);
-    GOTORCH_API tensor tensor_exp(tensor a);
-    GOTORCH_API tensor tensor_neg(tensor a);
-    GOTORCH_API tensor tensor_abs(tensor a);
-    GOTORCH_API tensor tensor_max(tensor a, int64_t dim, bool keepdim);
-    GOTORCH_API tensor tensor_min(tensor a, int64_t dim, bool keepdim);
-    GOTORCH_API tensor tensor_sum(tensor a, int64_t dim, bool keepdim);
-    GOTORCH_API tensor tensor_mean(tensor a, int64_t dim, bool keepdim);
-    GOTORCH_API tensor tensor_var(tensor a, int64_t dim, bool unbiased, bool keepdim);
-    GOTORCH_API tensor tensor_relu(tensor a);
-    GOTORCH_API tensor tensor_sigmoid(tensor a);
-    GOTORCH_API tensor tensor_tanh(tensor a);
-    GOTORCH_API tensor tensor_softmax(tensor a, int64_t dim);
-    GOTORCH_API tensor tensor_dropout(tensor a, double p, bool train);
+    GOTORCH_API void tensor_backward(char **err, tensor a, bool retain);
+    GOTORCH_API tensor tensor_matmul(char **err, tensor a, tensor b);
+    GOTORCH_API tensor tensor_add(char **err, tensor a, tensor b);
+    GOTORCH_API tensor tensor_sub(char **err, tensor a, tensor b);
+    GOTORCH_API tensor tensor_mul(char **err, tensor a, tensor b);
+    GOTORCH_API tensor tensor_div(char **err, tensor a, tensor b);
+    GOTORCH_API tensor tensor_pow(char **err, tensor a, double n);
+    GOTORCH_API tensor tensor_sqrt(char **err, tensor a);
+    GOTORCH_API tensor tensor_log(char **err, tensor a);
+    GOTORCH_API tensor tensor_exp(char **err, tensor a);
+    GOTORCH_API tensor tensor_neg(char **err, tensor a);
+    GOTORCH_API tensor tensor_abs(char **err, tensor a);
+    GOTORCH_API tensor tensor_max(char **err, tensor a, int64_t dim, bool keepdim);
+    GOTORCH_API tensor tensor_min(char **err, tensor a, int64_t dim, bool keepdim);
+    GOTORCH_API tensor tensor_sum(char **err, tensor a, int64_t dim, bool keepdim);
+    GOTORCH_API tensor tensor_mean(char **err, tensor a, int64_t dim, bool keepdim);
+    GOTORCH_API tensor tensor_var(char **err, tensor a, int64_t dim, bool unbiased, bool keepdim);
+    GOTORCH_API tensor tensor_relu(char **err, tensor a);
+    GOTORCH_API tensor tensor_sigmoid(char **err, tensor a);
+    GOTORCH_API tensor tensor_tanh(char **err, tensor a);
+    GOTORCH_API tensor tensor_softmax(char **err, tensor a, int64_t dim);
+    GOTORCH_API tensor tensor_dropout(char **err, tensor a, double p, bool train);
 
 #ifdef __cplusplus
 }

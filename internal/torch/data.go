@@ -13,56 +13,88 @@ import "C"
 func FromUint8(data []uint8, shape []int64) *Tensor {
 	pointer, _ := cInts[uint8, C.uint8_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
-	ptr := C.tensor_from_data(unsafe.Pointer(pointer), shapes, size, C.int(consts.KUint8))
+	var err *C.char
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KUint8))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
 func FromInt8(data []int8, shape []int64) *Tensor {
 	pointer, _ := cInts[int8, C.int8_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
-	ptr := C.tensor_from_data(unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt8))
+	var err *C.char
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt8))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
 func FromInt16(data []int16, shape []int64) *Tensor {
 	pointer, _ := cInts[int16, C.int16_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
-	ptr := C.tensor_from_data(unsafe.Pointer(&pointer), shapes, size, C.int(consts.KInt16))
+	var err *C.char
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(&pointer), shapes, size, C.int(consts.KInt16))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
 func FromInt32(data []int32, shape []int64) *Tensor {
 	pointer, _ := cInts[int32, C.int32_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
-	ptr := C.tensor_from_data(unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt32))
+	var err *C.char
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt32))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
 func FromInt64(data []int64, shape []int64) *Tensor {
 	pointer, _ := cInts[int64, C.int64_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
-	ptr := C.tensor_from_data(unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt64))
+	var err *C.char
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt64))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
 func FromFloat32(data []float32, shape []int64) *Tensor {
 	pointer, _ := cFloats[float32, C.float](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
-	ptr := C.tensor_from_data(unsafe.Pointer(pointer), shapes, size, C.int(consts.KFloat))
+	var err *C.char
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KFloat))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
 func FromFloat64(data []float64, shape []int64) *Tensor {
 	pointer, _ := cFloats[float64, C.double](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
-	ptr := C.tensor_from_data(unsafe.Pointer(pointer), shapes, size, C.int(consts.KDouble))
+	var err *C.char
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KDouble))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
 func FromBool(data []bool, shape []int64) *Tensor {
 	pointer, _ := cBool(data)
 	shapes, size := cInts[int64, C.int64_t](shape)
-	ptr := C.tensor_from_data(unsafe.Pointer(pointer), shapes, size, C.int(consts.KBool))
+	var err *C.char
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KBool))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 

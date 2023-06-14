@@ -15,7 +15,11 @@ type Tensor struct {
 }
 
 func ARange(n int, dtype consts.ScalarType) *Tensor {
-	ptr := C.tensor_arange(C.int(n), C.int(dtype))
+	var err *C.char
+	ptr := C.tensor_arange(&err, C.int(n), C.int(dtype))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
@@ -24,7 +28,11 @@ func Zeros(shape []int64, dtype consts.ScalarType) *Tensor {
 	for i, s := range shape {
 		shapes[i] = C.int64_t(s)
 	}
-	ptr := C.tensor_zeros(&shapes[0], C.size_t(len(shape)), C.int(dtype))
+	var err *C.char
+	ptr := C.tensor_zeros(&err, &shapes[0], C.size_t(len(shape)), C.int(dtype))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 	return &Tensor{data: ptr}
 }
 
@@ -44,5 +52,9 @@ func (t *Tensor) ScalarType() consts.ScalarType {
 }
 
 func (t *Tensor) SetRequiresGrad(b bool) {
-	C.tensor_set_requires_grad(t.data, C.bool(b))
+	var err *C.char
+	C.tensor_set_requires_grad(&err, t.data, C.bool(b))
+	if err != nil {
+		panic(C.GoString(err))
+	}
 }

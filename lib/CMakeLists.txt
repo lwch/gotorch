@@ -9,7 +9,7 @@ add_definitions(-DGOTORCH_EXPORT)
 include_directories(../internal/torch)
 
 add_library(gotorch SHARED
-	../internal/torch/api.h
+	../internal/torch/api.h ../internal/torch/exception.h
 	../internal/torch/loss.h loss.cpp
 	../internal/torch/operator.h operator.cpp
 	../internal/torch/optimizer.h optimizer.cpp

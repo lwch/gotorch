@@ -1,9 +1,12 @@
 #include <torch/torch.h>
+#include "exception.hpp"
 #include "tensor.h"
 
-tensor new_tensor()
+tensor new_tensor(char **err)
 {
-    return new torch::Tensor();
+    return auto_catch_tensor([]()
+                             { return new torch::Tensor(); },
+                             err);
 }
 
 void free_tensor(tensor t)
@@ -11,29 +14,43 @@ void free_tensor(tensor t)
     delete t;
 }
 
-tensor tensor_arange(int end, int dtype)
+tensor tensor_arange(char **err, int end, int dtype)
 {
-    return new torch::Tensor(torch::arange(end, torch::dtype(torch::ScalarType(dtype))));
+    return auto_catch_tensor([end, dtype]()
+                             { return new torch::Tensor(torch::arange(end, torch::dtype(torch::ScalarType(dtype)))); },
+                             err);
 }
 
-tensor tensor_zeros(int64_t *shape, size_t shape_len, int dtype)
+tensor tensor_zeros(char **err, int64_t *shape, size_t shape_len, int dtype)
 {
-    return new torch::Tensor(
-        torch::zeros(torch::IntArrayRef(shape, shape_len),
-                     torch::dtype(torch::ScalarType(dtype))));
+    return auto_catch_tensor([shape, shape_len, dtype]()
+                             { return new torch::Tensor(
+                                   torch::zeros(torch::IntArrayRef(shape, shape_len),
+                                                torch::dtype(torch::ScalarType(dtype)))); },
+                             err);
 }
 
-tensor tensor_from_data(void *data, int64_t *shape, size_t shape_len, int dtype)
+tensor tensor_from_data(char **err, void *data, int64_t *shape, size_t shape_len, int dtype)
 {
-    torch::Tensor zeros = torch::zeros(torch::IntArrayRef(shape, shape_len),
+    return auto_catch_tensor([data, shape, shape_len, dtype]()
+                             {
+                        torch::Tensor zeros = torch::zeros(torch::IntArrayRef(shape, shape_len),
                                        torch::dtype(torch::ScalarType(dtype)));
-    memcpy(zeros.data_ptr(), data, zeros.numel() * zeros.element_size());
-    return new torch::Tensor(zeros);
+                        memcpy(zeros.data_ptr(), data, zeros.numel() * zeros.element_size());
+                        return new torch::Tensor(zeros); },
+                             err);
 }
 
 void tensor_copy_data(tensor t, void *data)
 {
     memcpy(data, t->data_ptr(), t->numel() * t->element_size());
+}
+
+void tensor_set_requires_grad(char **err, tensor t, bool b)
+{
+    return auto_catch_void([t, b]()
+                           { t->set_requires_grad(b); },
+                           err);
 }
 
 size_t tensor_elem_size(tensor t)
@@ -65,48 +82,51 @@ void tensor_shapes(tensor t, int64_t *shapes)
     }
 }
 
-tensor tensor_reshape(tensor t, int64_t *shape, size_t shape_len)
+tensor tensor_reshape(char **err, tensor t, int64_t *shape, size_t shape_len)
 {
-    return new torch::Tensor(t->reshape(torch::IntArrayRef(shape, shape_len)));
+    return auto_catch_tensor([t, shape, shape_len]()
+                             { return new torch::Tensor(t->reshape(torch::IntArrayRef(shape, shape_len))); },
+                             err);
 }
 
-tensor tensor_transpose(tensor t, int64_t dim1, int64_t dim2)
+tensor tensor_transpose(char **err, tensor t, int64_t dim1, int64_t dim2)
 {
-    return new torch::Tensor(t->transpose(dim1, dim2));
+    return auto_catch_tensor([t, dim1, dim2]()
+                             { return new torch::Tensor(t->transpose(dim1, dim2)); },
+                             err);
 }
 
-void tensor_set_requires_grad(tensor t, bool b)
+tensor tensor_narrow(char **err, tensor t, int64_t dim, int64_t start, int64_t length)
 {
-    t->set_requires_grad(b);
+    return auto_catch_tensor([t, dim, start, length]()
+                             { return new torch::Tensor(t->narrow(dim, start, length)); },
+                             err);
 }
 
-tensor tensor_narrow(tensor t, int64_t dim, int64_t start, int64_t length)
+tensor tensor_vstack(char **err, tensor a, tensor b)
 {
-    return new torch::Tensor(t->narrow(dim, start, length));
+    return auto_catch_tensor([a, b]()
+                             { return new torch::Tensor(torch::vstack(torch::TensorList({*a, *b}))); },
+                             err);
 }
 
-tensor tensor_vstack(tensor a, tensor b)
+tensor tensor_hstack(char **err, tensor a, tensor b)
 {
-    std::vector<torch::Tensor> list;
-    list.push_back(*a);
-    list.push_back(*b);
-    return new torch::Tensor(torch::vstack(torch::TensorList(list)));
+    return auto_catch_tensor([a, b]()
+                             { return new torch::Tensor(torch::hstack(torch::TensorList({*a, *b}))); },
+                             err);
 }
 
-tensor tensor_hstack(tensor a, tensor b)
+tensor tensor_view(char **err, tensor a, int64_t *shape, size_t shape_len)
 {
-    std::vector<torch::Tensor> list;
-    list.push_back(*a);
-    list.push_back(*b);
-    return new torch::Tensor(torch::hstack(torch::TensorList(list)));
+    return auto_catch_tensor([a, shape, shape_len]()
+                             { return new torch::Tensor(a->view(torch::IntArrayRef(shape, shape_len))); },
+                             err);
 }
 
-tensor tensor_view(tensor a, int64_t *shape, size_t shape_len)
+tensor tensor_permute(char **err, tensor a, int64_t *dims, size_t dims_len)
 {
-    return new torch::Tensor(a->view(torch::IntArrayRef(shape, shape_len)));
-}
-
-tensor tensor_permute(tensor a, int64_t *dims, size_t dims_len)
-{
-    return new torch::Tensor(a->permute(torch::IntArrayRef(dims, dims_len)));
+    return auto_catch_tensor([a, dims, dims_len]()
+                             { return new torch::Tensor(a->permute(torch::IntArrayRef(dims, dims_len))); },
+                             err);
 }
