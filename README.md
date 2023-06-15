@@ -1,5 +1,8 @@
 # gotorch
 
+[![gotorch](https://github.com/lwch/gotorch/actions/workflows/release.yml/badge.svg)](https://github.com/lwch/gotorch/actions/workflows/release.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/lwch/gotorch.svg)](https://pkg.go.dev/github.com/lwch/gotorch)
+
 这是一个GO版本的libtorch封装库，通过该库可快速搭建torch的模型，目前已支持最新版本的libtorch(2.0.1)，支持的操作系统如下
 
 - windows
