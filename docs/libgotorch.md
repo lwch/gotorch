@@ -1,6 +1,6 @@
 # libgotorch编译
 
-由于管饭给出的windows版本的libtorch库使用msvc编译器，因此使用mingw编译器无法正常链接，因此在windows下编译libgotorch库需要先安装vs2019以及c++编译器。
+由于管饭给出的windows版本的libtorch库使用msvc编译器，因此使用mingw编译器无法正常链接，因此在windows下编译libgotorch库需要先安装visual studio以及c++编译器。
 
 ## windows系统
 
