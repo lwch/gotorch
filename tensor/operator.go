@@ -122,6 +122,11 @@ func (t *Tensor) Relu() *Tensor {
 	return &Tensor{s: t.store1(ret), t: ret}
 }
 
+func (t *Tensor) Gelu(tanh bool) *Tensor {
+	ret := t.t.Gelu(tanh)
+	return &Tensor{s: t.store1(ret), t: ret}
+}
+
 func (t *Tensor) Sigmoid() *Tensor {
 	ret := t.t.Sigmoid()
 	return &Tensor{s: t.store1(ret), t: ret}

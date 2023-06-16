@@ -130,6 +130,18 @@ tensor tensor_relu(char **err, tensor a)
                              err);
 }
 
+tensor tensor_gelu(char **err, tensor a, bool tanh)
+{
+    return auto_catch_tensor([a, tanh]()
+                             {
+                                if (tanh)
+                                {
+                                    return new torch::Tensor(torch::gelu(*a, "tanh"));
+                                }
+                                return new torch::Tensor(torch::gelu(*a)); },
+                             err);
+}
+
 tensor tensor_sigmoid(char **err, tensor a)
 {
     return auto_catch_tensor([a]()

@@ -164,6 +164,15 @@ func (t *Tensor) Relu() *Tensor {
 	return &Tensor{data: ptr}
 }
 
+func (t *Tensor) Gelu(tanh bool) *Tensor {
+	var err *C.char
+	ptr := C.tensor_gelu(&err, t.data, C.bool(tanh))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
+
 func (t *Tensor) Sigmoid() *Tensor {
 	var err *C.char
 	ptr := C.tensor_sigmoid(&err, t.data)
