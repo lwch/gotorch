@@ -25,10 +25,10 @@ func randN(n int) []float32 {
 }
 
 func init() {
-	w1 = tensor.FromFloat32(nil, randN(2*hiddenSize), 2, hiddenSize)
-	b1 = tensor.Zeros(nil, consts.KFloat, hiddenSize)
-	w2 = tensor.FromFloat32(nil, randN(hiddenSize*1), hiddenSize, 1)
-	b2 = tensor.Zeros(nil, consts.KFloat, 1)
+	w1 = tensor.FromFloat32(nil, randN(2*hiddenSize), tensor.WithShapes(2, hiddenSize))
+	b1 = tensor.Zeros(nil, consts.KFloat, tensor.WithShapes(hiddenSize))
+	w2 = tensor.FromFloat32(nil, randN(hiddenSize*1), tensor.WithShapes(hiddenSize, 1))
+	b2 = tensor.Zeros(nil, consts.KFloat, tensor.WithShapes(1))
 	w1.SetRequiresGrad(true)
 	b1.SetRequiresGrad(true)
 	w2.SetRequiresGrad(true)
@@ -84,6 +84,6 @@ func getBatch(s *mmgr.Storage, shuffle bool) (*tensor.Tensor, *tensor.Tensor) {
 			y[i], y[j] = y[j], y[i]
 		})
 	}
-	return tensor.FromFloat32(s, x, 4, 2),
-		tensor.FromFloat32(s, y, 4, 1)
+	return tensor.FromFloat32(s, x, tensor.WithShapes(4, 2)),
+		tensor.FromFloat32(s, y, tensor.WithShapes(4, 1))
 }

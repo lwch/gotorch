@@ -14,28 +14,42 @@ void free_tensor(tensor t)
     delete t;
 }
 
-tensor tensor_arange(char **err, int end, int dtype)
+tensor tensor_to_device(char **err, tensor t, int8_t device)
 {
-    return auto_catch_tensor([end, dtype]()
-                             { return new torch::Tensor(torch::arange(end, torch::dtype(torch::ScalarType(dtype)))); },
+    return auto_catch_tensor([t, device]()
+                             { return new torch::Tensor(t->to(torch::DeviceType(device))); },
                              err);
 }
 
-tensor tensor_zeros(char **err, int64_t *shape, size_t shape_len, int dtype)
+tensor tensor_arange(char **err, int end, int8_t dtype, int8_t device)
 {
-    return auto_catch_tensor([shape, shape_len, dtype]()
+    return auto_catch_tensor([end, dtype, device]()
+                             { return new torch::Tensor(torch::arange(end,
+                                                                      torch::TensorOptions()
+                                                                          .dtype(torch::ScalarType(dtype))
+                                                                          .device(torch::DeviceType(device)))); },
+                             err);
+}
+
+tensor tensor_zeros(char **err, int64_t *shape, size_t shape_len, int8_t dtype, int8_t device)
+{
+    return auto_catch_tensor([shape, shape_len, dtype, device]()
                              { return new torch::Tensor(
                                    torch::zeros(torch::IntArrayRef(shape, shape_len),
-                                                torch::dtype(torch::ScalarType(dtype)))); },
+                                                torch::TensorOptions()
+                                                    .dtype(torch::ScalarType(dtype))
+                                                    .device(torch::DeviceType(device)))); },
                              err);
 }
 
-tensor tensor_from_data(char **err, void *data, int64_t *shape, size_t shape_len, int dtype)
+tensor tensor_from_data(char **err, void *data, int64_t *shape, size_t shape_len, int8_t dtype, int8_t device)
 {
-    return auto_catch_tensor([data, shape, shape_len, dtype]()
+    return auto_catch_tensor([data, shape, shape_len, dtype, device]()
                              {
                         torch::Tensor zeros = torch::zeros(torch::IntArrayRef(shape, shape_len),
-                                       torch::dtype(torch::ScalarType(dtype)));
+                                       torch::TensorOptions()
+                                       .dtype(torch::ScalarType(dtype))
+                                       .device(torch::DeviceType(device)));
                         memcpy(zeros.data_ptr(), data, zeros.numel() * zeros.element_size());
                         return new torch::Tensor(zeros); },
                              err);

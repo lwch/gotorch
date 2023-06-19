@@ -36,7 +36,7 @@ func compareFloats[T float32 | float64](a []T) bool {
 func TestUint8(t *testing.T) {
 	s := mmgr.New()
 	defer s.GC()
-	ts := FromUint8(s, buildInts[uint8](), 2, 2)
+	ts := FromUint8(s, buildInts[uint8](), WithShapes(2, 2))
 	v := ts.Uint8Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -46,7 +46,7 @@ func TestUint8(t *testing.T) {
 func TestInt8(t *testing.T) {
 	s := mmgr.New()
 	defer s.GC()
-	ts := FromInt8(s, buildInts[int8](), 2, 2)
+	ts := FromInt8(s, buildInts[int8](), WithShapes(2, 2))
 	v := ts.Int8Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -56,7 +56,7 @@ func TestInt8(t *testing.T) {
 func TestInt16(t *testing.T) {
 	s := mmgr.New()
 	defer s.GC()
-	ts := FromInt16(s, buildInts[int16](), 2, 2)
+	ts := FromInt16(s, buildInts[int16](), WithShapes(2, 2))
 	v := ts.Int16Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -66,7 +66,7 @@ func TestInt16(t *testing.T) {
 func TestInt32(t *testing.T) {
 	s := mmgr.New()
 	defer s.GC()
-	ts := FromInt32(s, buildInts[int32](), 2, 2)
+	ts := FromInt32(s, buildInts[int32](), WithShapes(2, 2))
 	v := ts.Int32Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -76,7 +76,7 @@ func TestInt32(t *testing.T) {
 func TestInt64(t *testing.T) {
 	s := mmgr.New()
 	defer s.GC()
-	ts := FromInt64(s, buildInts[int64](), 2, 2)
+	ts := FromInt64(s, buildInts[int64](), WithShapes(2, 2))
 	v := ts.Int64Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -86,7 +86,7 @@ func TestInt64(t *testing.T) {
 func TestFloat32(t *testing.T) {
 	s := mmgr.New()
 	defer s.GC()
-	ts := FromFloat32(s, buildFloats[float32](), 2, 2)
+	ts := FromFloat32(s, buildFloats[float32](), WithShapes(2, 2))
 	v := ts.Float32Value()
 	if !compareFloats(v) {
 		t.Fail()
@@ -96,7 +96,7 @@ func TestFloat32(t *testing.T) {
 func TestFloat64(t *testing.T) {
 	s := mmgr.New()
 	defer s.GC()
-	ts := FromFloat64(s, buildFloats[float64](), 2, 2)
+	ts := FromFloat64(s, buildFloats[float64](), WithShapes(2, 2))
 	v := ts.Float64Value()
 	if !compareFloats(v) {
 		t.Fail()
@@ -106,7 +106,7 @@ func TestFloat64(t *testing.T) {
 func TestBool(t *testing.T) {
 	s := mmgr.New()
 	defer s.GC()
-	ts := FromBool(s, []bool{true, true, false, false}, 2, 2)
+	ts := FromBool(s, []bool{true, true, false, false}, WithShapes(2, 2))
 	v := ts.BoolValue()
 	if v[0] != true ||
 		v[1] != true ||

@@ -6,80 +6,120 @@ import (
 	"github.com/lwch/gotorch/mmgr"
 )
 
-func ARange(s *mmgr.Storage, n int, dtype consts.ScalarType) *Tensor {
-	t := torch.ARange(n, dtype)
+func ARange(s *mmgr.Storage, n int, dtype consts.ScalarType, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.ARange(n, dtype, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func Zeros(s *mmgr.Storage, dtype consts.ScalarType, shape ...int64) *Tensor {
-	t := torch.Zeros(shape, dtype)
+func Zeros(s *mmgr.Storage, dtype consts.ScalarType, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.Zeros(args.shapes, dtype, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func FromUint8(s *mmgr.Storage, data []uint8, shape ...int64) *Tensor {
-	t := torch.FromUint8(data, shape)
+func FromUint8(s *mmgr.Storage, data []uint8, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromUint8(data, args.shapes, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func FromInt8(s *mmgr.Storage, data []int8, shape ...int64) *Tensor {
-	t := torch.FromInt8(data, shape)
+func FromInt8(s *mmgr.Storage, data []int8, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromInt8(data, args.shapes, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func FromInt16(s *mmgr.Storage, data []int16, shape ...int64) *Tensor {
-	t := torch.FromInt16(data, shape)
+func FromInt16(s *mmgr.Storage, data []int16, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromInt16(data, args.shapes, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func FromInt32(s *mmgr.Storage, data []int32, shape ...int64) *Tensor {
-	t := torch.FromInt32(data, shape)
+func FromInt32(s *mmgr.Storage, data []int32, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromInt32(data, args.shapes, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func FromInt64(s *mmgr.Storage, data []int64, shape ...int64) *Tensor {
-	t := torch.FromInt64(data, shape)
+func FromInt64(s *mmgr.Storage, data []int64, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromInt64(data, args.shapes, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func FromFloat32(s *mmgr.Storage, data []float32, shape ...int64) *Tensor {
-	t := torch.FromFloat32(data, shape)
+func FromFloat32(s *mmgr.Storage, data []float32, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromFloat32(data, args.shapes, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func FromFloat64(s *mmgr.Storage, data []float64, shape ...int64) *Tensor {
-	t := torch.FromFloat64(data, shape)
+func FromFloat64(s *mmgr.Storage, data []float64, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromFloat64(data, args.shapes, args.device)
 	if s != nil {
 		s.Put(t)
 	}
 	return &Tensor{s: s, t: t}
 }
 
-func FromBool(s *mmgr.Storage, data []bool, shape ...int64) *Tensor {
-	t := torch.FromBool(data, shape)
+func FromBool(s *mmgr.Storage, data []bool, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromBool(data, args.shapes, args.device)
 	if s != nil {
 		s.Put(t)
 	}

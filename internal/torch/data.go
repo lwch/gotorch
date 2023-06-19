@@ -10,88 +10,96 @@ import (
 // #include "tensor.h"
 import "C"
 
-func FromUint8(data []uint8, shape []int64) *Tensor {
+func FromUint8(data []uint8, shape []int64, device consts.DeviceType) *Tensor {
 	pointer, _ := cInts[uint8, C.uint8_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KUint8))
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size,
+		C.int8_t(consts.KUint8), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return &Tensor{data: ptr}
 }
 
-func FromInt8(data []int8, shape []int64) *Tensor {
+func FromInt8(data []int8, shape []int64, device consts.DeviceType) *Tensor {
 	pointer, _ := cInts[int8, C.int8_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt8))
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size,
+		C.int8_t(consts.KInt8), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return &Tensor{data: ptr}
 }
 
-func FromInt16(data []int16, shape []int64) *Tensor {
+func FromInt16(data []int16, shape []int64, device consts.DeviceType) *Tensor {
 	pointer, _ := cInts[int16, C.int16_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_from_data(&err, unsafe.Pointer(&pointer), shapes, size, C.int(consts.KInt16))
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(&pointer), shapes, size,
+		C.int8_t(consts.KInt16), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return &Tensor{data: ptr}
 }
 
-func FromInt32(data []int32, shape []int64) *Tensor {
+func FromInt32(data []int32, shape []int64, device consts.DeviceType) *Tensor {
 	pointer, _ := cInts[int32, C.int32_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt32))
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size,
+		C.int8_t(consts.KInt32), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return &Tensor{data: ptr}
 }
 
-func FromInt64(data []int64, shape []int64) *Tensor {
+func FromInt64(data []int64, shape []int64, device consts.DeviceType) *Tensor {
 	pointer, _ := cInts[int64, C.int64_t](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KInt64))
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size,
+		C.int8_t(consts.KInt64), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return &Tensor{data: ptr}
 }
 
-func FromFloat32(data []float32, shape []int64) *Tensor {
+func FromFloat32(data []float32, shape []int64, device consts.DeviceType) *Tensor {
 	pointer, _ := cFloats[float32, C.float](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KFloat))
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size,
+		C.int8_t(consts.KFloat), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return &Tensor{data: ptr}
 }
 
-func FromFloat64(data []float64, shape []int64) *Tensor {
+func FromFloat64(data []float64, shape []int64, device consts.DeviceType) *Tensor {
 	pointer, _ := cFloats[float64, C.double](data)
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KDouble))
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size,
+		C.int8_t(consts.KDouble), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return &Tensor{data: ptr}
 }
 
-func FromBool(data []bool, shape []int64) *Tensor {
+func FromBool(data []bool, shape []int64, device consts.DeviceType) *Tensor {
 	pointer, _ := cBool(data)
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size, C.int(consts.KBool))
+	ptr := C.tensor_from_data(&err, unsafe.Pointer(pointer), shapes, size,
+		C.int8_t(consts.KBool), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
