@@ -17,6 +17,7 @@ jobs:
         uses: Jimver/cuda-toolkit@v0.2.10
         with:
             cuda: '11.8.0'
+            method: network
 
       - name: make
         working-directory: ./lib
