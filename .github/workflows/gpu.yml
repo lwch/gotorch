@@ -9,10 +9,36 @@ env:
   libtorch_version: 2.0.1
 
 jobs:
-  release_linux:
-    strategy:
-      matrix:
-        cu_version: [117, 118]
+  release_linux_118:
+    runs-on: self-ubuntu20
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup cuda
+        uses: Jimver/cuda-toolkit@v0.2.10
+        with:
+            cuda: '11.7.1'
+            method: network
+
+      - name: make
+        working-directory: ./lib
+        run: |
+          apt-get install -y cmake
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu117/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu117.zip
+          unzip -qq libtorch.zip
+          cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
+          make
+          mv libgotorch.so libgotorch_gpu.cu117.so
+
+      - name: upload
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./lib/libgotorch_gpu.cu117.so
+          allowUpdates: true
+          generateReleaseNotes: true
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          omitBody: true
+
+  release_linux_118:
     runs-on: self-ubuntu20
     steps:
       - uses: actions/checkout@v3
@@ -26,16 +52,16 @@ jobs:
         working-directory: ./lib
         run: |
           apt-get install -y cmake
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu${{ matrix.cu_version }}/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu${{ matrix.cu_version }}.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu118.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
-          mv libgotorch.so libgotorch_gpu.cu${{ matrix.cu_version }}.so
+          mv libgotorch.so libgotorch_gpu.cu118.so
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch_gpu.cu${{ matrix.cu_version }}.so
+          artifacts: ./lib/libgotorch_gpu.cu118.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
