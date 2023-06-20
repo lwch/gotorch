@@ -10,7 +10,7 @@ env:
 
 jobs:
   release_linux_11_8:
-    runs-on: ubuntu-22.04
+    runs-on: debian12
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
