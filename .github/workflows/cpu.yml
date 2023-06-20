@@ -1,4 +1,4 @@
-name: release
+name: cpu_release
 
 on:
   push:
@@ -21,12 +21,12 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
-          mv libgotorch.so libgotorch.glibc2.32.so
+          mv libgotorch.so libgotorch_cpu.glibc2.32.so
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch.glibc2.32.so
+          artifacts: ./lib/libgotorch_cpu.glibc2.32.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
@@ -44,12 +44,12 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
-          mv libgotorch.so libgotorch.glibc2.31.so
+          mv libgotorch.so libgotorch_cpu.glibc2.31.so
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch.glibc2.31.so
+          artifacts: ./lib/libgotorch_cpu.glibc2.31.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
@@ -67,11 +67,12 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
+          mv libgotorch.dylib libgotorch_cpu.dylib
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch.dylib
+          artifacts: ./lib/libgotorch_cpu.dylib
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
@@ -90,11 +91,12 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=${{ github.workspace }}\lib\libtorch .
           msbuild gotorch.sln -p:Configuration=Release
+          mv Release\gotorch.dll Release\gotorch_cpu.dll
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/Release/gotorch.dll
+          artifacts: ./lib/Release/gotorch_cpu.dll
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}

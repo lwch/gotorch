@@ -48,6 +48,31 @@ func (t ScalarType) String() string {
 	}
 }
 
+type DeviceType byte
+
+const (
+	KCPU DeviceType = iota
+	KCUDA
+	KMKLDNN
+	KOPENGL
+	KOPENCL
+	KIDEEP
+	KHIP
+	KFPGA
+	KORT
+	KXLA
+	KVulkan
+	KMetal
+	KXPU
+	KMPS
+	KMeta
+	KHPU
+	KVE
+	KLazy
+	KIPU
+	KMTIA
+)
+
 type Reduction byte
 
 const (
