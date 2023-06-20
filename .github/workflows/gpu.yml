@@ -22,6 +22,7 @@ jobs:
       - name: make
         working-directory: ./lib
         run: |
+          apt-get install -y cmake
           wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu118.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
