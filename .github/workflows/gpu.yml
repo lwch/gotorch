@@ -10,7 +10,7 @@ env:
 
 jobs:
   release_linux_11_8:
-    runs-on: debian12
+    runs-on: ubuntu20
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
