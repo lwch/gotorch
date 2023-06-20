@@ -1,0 +1,37 @@
+name: gpu_release
+
+on:
+  push:
+    branches:
+      - gpu
+
+env:
+  libtorch_version: 2.0.1
+
+jobs:
+  release_linux_11_8:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup cuda
+        uses: Jimver/cuda-toolkit@v0.2.10
+        with:
+            cuda: '11.8.0'
+
+      - name: make
+        working-directory: ./lib
+        run: |
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu118.zip
+          unzip -qq libtorch.zip
+          cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
+          make
+          mv libgotorch.so libgotorch_gpu.cuda11.8.so
+
+      - name: upload
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./lib/libgotorch_gpu.cuda11.8.so
+          allowUpdates: true
+          generateReleaseNotes: true
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          omitBody: true

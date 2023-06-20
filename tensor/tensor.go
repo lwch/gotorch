@@ -68,3 +68,11 @@ func (t *Tensor) ScalarType() consts.ScalarType {
 func (t *Tensor) SetRequiresGrad(b bool) {
 	t.t.SetRequiresGrad(b)
 }
+
+func (t *Tensor) ToDevice(device consts.DeviceType) *Tensor {
+	ret := t.t.ToDevice(device)
+	if t.s != nil {
+		t.s.Put(ret)
+	}
+	return &Tensor{s: t.s, t: ret}
+}
