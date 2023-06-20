@@ -9,7 +9,10 @@ env:
   libtorch_version: 2.0.1
 
 jobs:
-  release_linux_11_8:
+  release_linux:
+    strategy:
+      matrix:
+        cu_version: [117, 118]
     runs-on: self-ubuntu20
     steps:
       - uses: actions/checkout@v3
@@ -23,16 +26,16 @@ jobs:
         working-directory: ./lib
         run: |
           apt-get install -y cmake
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu118.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu${{ matrix.cu_version }}/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu${{ matrix.cu_version }}.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
-          mv libgotorch.so libgotorch_gpu.cuda11.8.so
+          mv libgotorch.so libgotorch_gpu.cu${{ matrix.cu_version }}.so
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch_gpu.cuda11.8.so
+          artifacts: ./lib/libgotorch_gpu.cu${{ matrix.cu_version }}.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
