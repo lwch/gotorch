@@ -2,15 +2,15 @@ name: gpu_release
 
 on:
   push:
-    branches:
-      - gpu
+    tags:
+      - "v*.*.*"
 
 env:
   libtorch_version: 2.0.1
 
 jobs:
   release_linux_117:
-    runs-on: self-ubuntu20
+    runs-on: self-ubuntu22
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
@@ -39,7 +39,7 @@ jobs:
           omitBody: true
 
   release_linux_118:
-    runs-on: self-ubuntu20
+    runs-on: self-ubuntu22
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
