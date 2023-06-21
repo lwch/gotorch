@@ -11,6 +11,7 @@ extern "C"
 
     GOTORCH_API tensor new_mse_loss(char **err, tensor pred, tensor target, int64_t reduction);
     GOTORCH_API tensor new_cross_entropy_loss(char **err, tensor pred, tensor target,
+                                              tensor weight,
                                               int64_t reduction,
                                               int64_t ignore_index,
                                               double label_smoothing);
