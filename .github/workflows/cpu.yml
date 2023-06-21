@@ -9,7 +9,7 @@ env:
   libtorch_version: 2.0.1
 
 jobs:
-  release_linux_glibc2_32:
+  release_linux_glibc232:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -21,18 +21,18 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
-          mv libgotorch.so libgotorch_cpu.glibc2.32.so
+          mv libgotorch.so libgotorch_cpu.glibc232.so
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch_cpu.glibc2.32.so
+          artifacts: ./lib/libgotorch_cpu.glibc232.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
           omitBody: true
 
-  release_linux_glibc2_31:
+  release_linux_glibc231:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -44,12 +44,12 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make
-          mv libgotorch.so libgotorch_cpu.glibc2.31.so
+          mv libgotorch.so libgotorch_cpu.glibc231.so
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch_cpu.glibc2.31.so
+          artifacts: ./lib/libgotorch_cpu.glibc231.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
