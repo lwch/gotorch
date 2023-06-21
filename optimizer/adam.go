@@ -22,7 +22,7 @@ func WithAdamLr(lr float64) AdamOpt {
 	}
 }
 
-func WithWeightDecay(weightDecay float64) AdamOpt {
+func WithAdamWeightDecay(weightDecay float64) AdamOpt {
 	return func(adam *Adam) {
 		adam.weightDecay = weightDecay
 	}
