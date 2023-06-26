@@ -78,9 +78,9 @@ func (loss *CrossEntropy) BackwardRetained() {
 func (loss *CrossEntropy) Value() float64 {
 	switch loss.t.ScalarType() {
 	case consts.KFloat:
-		return float64(loss.t.Float32Value()[0])
+		return float64(loss.t.ToDevice(consts.KCPU).Float32Value()[0])
 	case consts.KDouble:
-		return loss.t.Float64Value()[0]
+		return loss.t.ToDevice(consts.KCPU).Float64Value()[0]
 	default:
 		panic("not implemented")
 	}

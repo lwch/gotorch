@@ -48,10 +48,9 @@ tensor tensor_from_data(char **err, void *data, int64_t *shape, size_t shape_len
                              {
                         torch::Tensor zeros = torch::zeros(torch::IntArrayRef(shape, shape_len),
                                        torch::TensorOptions()
-                                       .dtype(torch::ScalarType(dtype))
-                                       .device(torch::DeviceType(device)));
+                                       .dtype(torch::ScalarType(dtype)));
                         memcpy(zeros.data_ptr(), data, zeros.numel() * zeros.element_size());
-                        return new torch::Tensor(zeros); },
+                        return new torch::Tensor(zeros.to(torch::DeviceType(device))); },
                              err);
 }
 
