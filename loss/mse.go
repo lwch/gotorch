@@ -44,11 +44,13 @@ func (loss *Mse) BackwardRetained() {
 }
 
 func (loss *Mse) Value() float64 {
+	l := loss.t.ToDevice(consts.KCPU)
+	defer l.Free()
 	switch loss.t.ScalarType() {
 	case consts.KFloat:
-		return float64(loss.t.Float32Value()[0])
+		return float64(l.Float32Value()[0])
 	case consts.KDouble:
-		return loss.t.Float64Value()[0]
+		return l.Float64Value()[0]
 	default:
 		panic("not implemented")
 	}

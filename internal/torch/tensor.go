@@ -58,3 +58,12 @@ func (t *Tensor) SetRequiresGrad(b bool) {
 		panic(C.GoString(err))
 	}
 }
+
+func (t *Tensor) ToDevice(device consts.DeviceType) *Tensor {
+	var err *C.char
+	ptr := C.tensor_to_device(&err, t.data, C.int8_t(device))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}

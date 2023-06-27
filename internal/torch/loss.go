@@ -16,9 +16,13 @@ func NewMseLoss(pred, target *Tensor, reduction consts.Reduction) *Tensor {
 	return &Tensor{data: ptr}
 }
 
-func NewCrossEntropyLoss(pred, target *Tensor, reduction consts.Reduction, ignoreIdx int, labelSmoothing float64) *Tensor {
+func NewCrossEntropyLoss(pred, target, weight *Tensor, reduction consts.Reduction, ignoreIdx int, labelSmoothing float64) *Tensor {
 	var err *C.char
-	ptr := C.new_cross_entropy_loss(&err, pred.data, target.data, C.int64_t(reduction), C.int64_t(ignoreIdx), C.double(labelSmoothing))
+	var ptrWeight C.tensor
+	if weight != nil {
+		ptrWeight = weight.data
+	}
+	ptr := C.new_cross_entropy_loss(&err, pred.data, target.data, ptrWeight, C.int64_t(reduction), C.int64_t(ignoreIdx), C.double(labelSmoothing))
 	if err != nil {
 		panic(C.GoString(err))
 	}

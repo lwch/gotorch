@@ -7,6 +7,7 @@ import (
 )
 
 type CrossEntropy struct {
+	weight         *tensor.Tensor
 	ignoreIdx      int
 	labelSmoothing float64
 	reduction      consts.Reduction
@@ -14,6 +15,12 @@ type CrossEntropy struct {
 }
 
 type CrossEntropyOpt func(*CrossEntropy)
+
+func WithCrossEntropyWeight(w *tensor.Tensor) CrossEntropyOpt {
+	return func(loss *CrossEntropy) {
+		loss.weight = w
+	}
+}
 
 func WithCrossEntropyReduction(reduction consts.Reduction) CrossEntropyOpt {
 	return func(loss *CrossEntropy) {
@@ -46,8 +53,12 @@ func NewCrossEntropy(pred, target *tensor.Tensor, opts ...CrossEntropyOpt) Loss 
 	for _, opt := range opts {
 		opt(&ret)
 	}
+	var weight *torch.Tensor
+	if ret.weight != nil {
+		weight = ret.weight.Tensor()
+	}
 	ret.t = torch.NewCrossEntropyLoss(pred.Tensor(), target.Tensor(),
-		ret.reduction, ret.ignoreIdx, ret.labelSmoothing)
+		weight, ret.reduction, ret.ignoreIdx, ret.labelSmoothing)
 	if pred.Storage() != nil {
 		pred.Storage().Put(ret.t)
 	} else if target.Storage() != nil {
@@ -65,11 +76,13 @@ func (loss *CrossEntropy) BackwardRetained() {
 }
 
 func (loss *CrossEntropy) Value() float64 {
+	l := loss.t.ToDevice(consts.KCPU)
+	defer l.Free()
 	switch loss.t.ScalarType() {
 	case consts.KFloat:
-		return float64(loss.t.Float32Value()[0])
+		return float64(l.Float32Value()[0])
 	case consts.KDouble:
-		return loss.t.Float64Value()[0]
+		return l.Float64Value()[0]
 	default:
 		panic("not implemented")
 	}

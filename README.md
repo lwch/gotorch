@@ -1,6 +1,7 @@
 # gotorch
 
-[![gotorch](https://github.com/lwch/gotorch/actions/workflows/release.yml/badge.svg)](https://github.com/lwch/gotorch/actions/workflows/release.yml)
+[![gotorch](https://github.com/lwch/gotorch/actions/workflows/cpu.yml/badge.svg)](https://github.com/lwch/gotorch/actions/workflows/cpu.yml)
+[![gotorch](https://github.com/lwch/gotorch/actions/workflows/gpu.yml/badge.svg)](https://github.com/lwch/gotorch/actions/workflows/gpu.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/lwch/gotorch.svg)](https://pkg.go.dev/github.com/lwch/gotorch)
 
 这是一个GO版本的libtorch封装库，通过该库可快速搭建torch的模型，目前已支持最新版本的libtorch(2.0.1)，支持的操作系统如下
@@ -8,6 +9,8 @@
 - windows
 - linux
 - macos
+
+已支持*CPU*和*GPU*运算
 
 ## 安装
 
@@ -49,6 +52,19 @@ Path="D:\libtorch\lib;<mingw所在路径>\bin"
 
 注意：由于cgo中创建的对象无法被go GC所捕获并释放，因此在实际使用过程中需要通过[mmgr](mmgr)库来捕获创建的tensor对象并通过GC接口来手动释放内存，在From系列接口中生成tensor对象允许给定空的storage对象，该对象一般被用来作为模型参数，因此不会被GC所释放。运算过程中产生的新tensor对象会继承自他的子集的storage，因此在运算工程中生成的临时对象可被storage所捕获并释放。
 
-## feature
+```go
+a := tensor.ARange(nil, 6, consts.KFloat,
+    tensor.WithShape(2, 3),
+    tensor.WithDevice(consts.KCUDA))
+b := tensor.ARange(nil, 6, consts.KFloat,
+    tensor.WithShape(3, 2),
+    tensor.WithDevice(consts.KCUDA))
+c := a.MatMul(b)
+fmt.Println(c.ToDevice(consts.KCPU).Float32Value()) // 注意：显存中的数据无法直接读取，需将其转换到CPU后才可读取
+```
 
-- 支持GPU
+## 版本维护
+
+| gotorch版本 | libtorch版本 |
+| --- | --- |
+| v1.0.0~X | v2.0.1 |

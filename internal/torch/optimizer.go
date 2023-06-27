@@ -22,6 +22,15 @@ func NewAdamOptimizer(lr, beta1, beta2, eps, weightDecay float64) *Optimizer {
 	return &Optimizer{data: ptr}
 }
 
+func NewAdamWOptimizer(lr, beta1, beta2, eps, weightDecay float64, amsgrad bool) *Optimizer {
+	var err *C.char
+	ptr := C.new_adamw_optimizer(&err, C.double(lr), C.double(beta1), C.double(beta2), C.double(eps), C.bool(amsgrad), C.double(weightDecay))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Optimizer{data: ptr}
+}
+
 func (optm *Optimizer) Step(params []*Tensor) {
 	list := make([]C.tensor, len(params))
 	for i, p := range params {
