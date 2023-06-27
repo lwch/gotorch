@@ -45,6 +45,7 @@ func (loss *Mse) BackwardRetained() {
 
 func (loss *Mse) Value() float64 {
 	l := loss.t.ToDevice(consts.KCPU)
+	defer l.Free()
 	switch loss.t.ScalarType() {
 	case consts.KFloat:
 		return float64(l.Float32Value()[0])
