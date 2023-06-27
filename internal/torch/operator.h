@@ -33,6 +33,9 @@ extern "C"
     GOTORCH_API tensor tensor_tanh(char **err, tensor a);
     GOTORCH_API tensor tensor_softmax(char **err, tensor a, int64_t dim);
     GOTORCH_API tensor tensor_dropout(char **err, tensor a, double p, bool train);
+    GOTORCH_API tensor scaled_dot_product_attention(char **err,
+                                                    tensor q, tensor k, tensor v,
+                                                    tensor mask, double dropout, bool is_causal);
 
 #ifdef __cplusplus
 }
