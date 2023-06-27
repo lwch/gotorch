@@ -208,3 +208,16 @@ func (t *Tensor) Dropout(p float64, train bool) *Tensor {
 	}
 	return &Tensor{data: ptr}
 }
+
+func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal bool) *Tensor {
+	var err *C.char
+	var maskPtr C.tensor
+	if mask != nil {
+		maskPtr = mask.data
+	}
+	ptr := C.scaled_dot_product_attention(&err, q.data, k.data, v.data, maskPtr, C.double(drouput), C.bool(isCausal))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
