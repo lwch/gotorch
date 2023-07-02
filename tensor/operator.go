@@ -160,7 +160,7 @@ func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal 
 		store = k.s
 	} else if v.s != nil {
 		store = v.s
-	} else if mask.s != nil {
+	} else if mask != nil && mask.s != nil {
 		store = mask.s
 	}
 	if store != nil {
