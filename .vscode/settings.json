@@ -95,5 +95,5 @@
         "stop_token": "cpp",
         "thread": "cpp"
     },
-    "cmake.sourceDirectory": "/Users/lwch/src/gotorch/lib"
+    "cmake.sourceDirectory": "./lib"
 }
