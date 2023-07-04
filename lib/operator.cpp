@@ -170,19 +170,3 @@ tensor tensor_dropout(char **err, tensor a, double p, bool train)
                              err);
 }
 
-tensor scaled_dot_product_attention(char **err,
-                                    tensor q, tensor k, tensor v,
-                                    tensor mask, double dropout, bool is_causal)
-{
-    return auto_catch_tensor([q, k, v, mask, dropout, is_causal]()
-                             {
-                                if (mask)
-                                {
-                                    return new torch::Tensor(torch::scaled_dot_product_attention(*q, *k, *v, *mask, dropout, is_causal));
-                                }
-                                else
-                                {
-                                    return new torch::Tensor(torch::scaled_dot_product_attention(*q, *k, *v, torch::nullopt, dropout, is_causal));
-                                } },
-                             err);
-}

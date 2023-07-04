@@ -146,25 +146,3 @@ func (t *Tensor) Dropout(p float64, train bool) *Tensor {
 	ret := t.t.Dropout(p, train)
 	return &Tensor{s: t.store1(ret), t: ret}
 }
-
-func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal bool) *Tensor {
-	var mt *torch.Tensor
-	if mask != nil {
-		mt = mask.t
-	}
-	ret := torch.ScaledDotProductAttention(q.t, k.t, v.t, mt, drouput, isCausal)
-	var store *mmgr.Storage
-	if q.s != nil {
-		store = q.s
-	} else if k.s != nil {
-		store = k.s
-	} else if v.s != nil {
-		store = v.s
-	} else if mask != nil && mask.s != nil {
-		store = mask.s
-	}
-	if store != nil {
-		store.Put(ret)
-	}
-	return &Tensor{s: store, t: ret}
-}
