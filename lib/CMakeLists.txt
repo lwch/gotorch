@@ -14,6 +14,7 @@ add_library(gotorch SHARED
 	../internal/torch/operator.h operator.cpp
 	../internal/torch/optimizer.h optimizer.cpp
 	../internal/torch/tensor.h tensor.cpp
+	conv.cpp
 	utils.cpp)
 target_link_libraries(gotorch "${TORCH_LIBRARIES}")
 set_property(TARGET gotorch PROPERTY CXX_STANDARD 14)
