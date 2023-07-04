@@ -35,11 +35,30 @@ extern "C"
     GOTORCH_API tensor tensor_dropout(char **err, tensor a, double p, bool train);
     // conv
     GOTORCH_API tensor tensor_conv1d(char **err, tensor input, tensor weight, tensor bias,
-                              int64_t stride, int64_t padding, int64_t dilation, int64_t groups);
+                                     int64_t stride, int64_t padding, int64_t dilation, int64_t groups);
     GOTORCH_API tensor tensor_conv2d(char **err, tensor input, tensor weight, tensor bias,
-                              int64_t stride, int64_t padding, int64_t dilation, int64_t groups);
+                                     int64_t stride, int64_t padding, int64_t dilation, int64_t groups);
     GOTORCH_API tensor tensor_conv3d(char **err, tensor input, tensor weight, tensor bias,
-                              int64_t stride, int64_t padding, int64_t dilation, int64_t groups);
+                                     int64_t stride, int64_t padding, int64_t dilation, int64_t groups);
+    // pool
+    GOTORCH_API tensor tensor_max_pool1d(char **err, tensor self,
+                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
+                                         bool ceil_mode);
+    GOTORCH_API tensor tensor_max_pool2d(char **err, tensor self,
+                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
+                                         bool ceil_mode);
+    GOTORCH_API tensor tensor_max_pool3d(char **err, tensor self,
+                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
+                                         bool ceil_mode);
+    GOTORCH_API tensor tensor_avg_pool1d(char **err, tensor self,
+                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
+                                         bool ceil_mode);
+    GOTORCH_API tensor tensor_avg_pool2d(char **err, tensor self,
+                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
+                                         bool ceil_mode);
+    GOTORCH_API tensor tensor_avg_pool3d(char **err, tensor self,
+                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
+                                         bool ceil_mode);
 
 #ifdef __cplusplus
 }
