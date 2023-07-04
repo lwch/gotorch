@@ -28,8 +28,23 @@ func (t *Tensor) store2(t2 *Tensor, ret *torch.Tensor) *mmgr.Storage {
 	var s *mmgr.Storage
 	if t.s != nil {
 		s = t.s
-	} else if t2.s != nil {
+	} else if t2 != nil && t2.s != nil {
 		s = t2.s
+	}
+	if s != nil {
+		s.Put(ret)
+	}
+	return s
+}
+
+func (t *Tensor) store3(t2, t3 *Tensor, ret *torch.Tensor) *mmgr.Storage {
+	var s *mmgr.Storage
+	if t.s != nil {
+		s = t.s
+	} else if t2 != nil && t2.s != nil {
+		s = t2.s
+	} else if t3 != nil && t3.s != nil {
+		s = t3.s
 	}
 	if s != nil {
 		s.Put(ret)
