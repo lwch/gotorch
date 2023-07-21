@@ -5,12 +5,12 @@ import (
 	"github.com/lwch/gotorch/mmgr"
 )
 
-func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal bool) *Tensor {
+func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal bool) (*Tensor, *Tensor) {
 	var mt *torch.Tensor
 	if mask != nil {
 		mt = mask.t
 	}
-	ret := torch.ScaledDotProductAttention(q.t, k.t, v.t, mt, drouput, isCausal)
+	ret, score := torch.ScaledDotProductAttention(q.t, k.t, v.t, mt, drouput, isCausal)
 	var store *mmgr.Storage
 	if q.s != nil {
 		store = q.s
@@ -23,8 +23,9 @@ func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal 
 	}
 	if store != nil {
 		store.Put(ret)
+		store.Put(score)
 	}
-	return &Tensor{s: store, t: ret}
+	return &Tensor{s: store, t: ret}, &Tensor{s: store, t: score}
 }
 
 func ClipGradNorm(params []*Tensor, max, t float64) {
@@ -33,4 +34,8 @@ func ClipGradNorm(params []*Tensor, max, t float64) {
 		list[i] = p.t
 	}
 	torch.ClipGradNorm(list, max, t)
+}
+
+func (t *Tensor) Print() {
+	t.t.Print()
 }

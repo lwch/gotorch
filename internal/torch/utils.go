@@ -6,17 +6,18 @@ package torch
 import "C"
 import "unsafe"
 
-func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal bool) *Tensor {
+func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal bool) (*Tensor, *Tensor) {
 	var err *C.char
 	var maskPtr C.tensor
 	if mask != nil {
 		maskPtr = mask.data
 	}
-	ptr := C.scaled_dot_product_attention(&err, q.data, k.data, v.data, maskPtr, C.double(drouput), C.bool(isCausal))
+	var score C.tensor
+	ptr := C.scaled_dot_product_attention(&err, q.data, k.data, v.data, maskPtr, C.double(drouput), C.bool(isCausal), &score)
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return &Tensor{data: ptr}, &Tensor{data: score}
 }
 
 func ClipGradNorm(params []*Tensor, max, t float64) {
@@ -26,6 +27,10 @@ func ClipGradNorm(params []*Tensor, max, t float64) {
 	}
 	var err *C.char
 	C.clip_grad_norm(&err, (*C.tensor)(unsafe.Pointer(&cParams[0])), C.size_t(len(cParams)), C.double(max), C.double(t))
+}
+
+func (t *Tensor) Print() {
+	C.tensor_print(t.data)
 }
 
 func fromCInts[T1 C.uint8_t | C.int8_t | C.int16_t | C.int32_t | C.int64_t,
