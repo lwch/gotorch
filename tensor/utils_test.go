@@ -13,3 +13,8 @@ func TestScaledDotProductAttention(t *testing.T) {
 	fmt.Println(y.Float32Value())
 	fmt.Println(score.Float32Value())
 }
+
+func TestPrint(t *testing.T) {
+	x := ARange(nil, 1*3*4, consts.KFloat).Reshape(1, 3, 4)
+	x.Print()
+}

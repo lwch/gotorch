@@ -29,6 +29,10 @@ func ClipGradNorm(params []*Tensor, max, t float64) {
 	C.clip_grad_norm(&err, (*C.tensor)(unsafe.Pointer(&cParams[0])), C.size_t(len(cParams)), C.double(max), C.double(t))
 }
 
+func (t *Tensor) Print() {
+	C.tensor_print(t.data)
+}
+
 func fromCInts[T1 C.uint8_t | C.int8_t | C.int16_t | C.int32_t | C.int64_t,
 	T2 uint8 | int8 | int16 | int32 | int64,
 ](arr []T1) []T2 {

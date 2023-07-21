@@ -37,3 +37,8 @@ void clip_grad_norm(char **err,
                         torch::nn::utils::clip_grad_norm_(list, max_norm, norm_type); },
                     err);
 }
+
+void tensor_print(tensor t)
+{
+    t->print();
+}

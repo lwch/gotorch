@@ -35,3 +35,7 @@ func ClipGradNorm(params []*Tensor, max, t float64) {
 	}
 	torch.ClipGradNorm(list, max, t)
 }
+
+func (t *Tensor) Print() {
+	t.t.Print()
+}
