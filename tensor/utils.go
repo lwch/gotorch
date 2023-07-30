@@ -39,3 +39,22 @@ func ClipGradNorm(params []*Tensor, max, t float64) {
 func (t *Tensor) Print() {
 	t.t.Print()
 }
+
+func Cat(tensors []*Tensor, dim int) *Tensor {
+	list := make([]*torch.Tensor, len(tensors))
+	for i, t := range tensors {
+		list[i] = t.t
+	}
+	ret := torch.Cat(list, dim)
+	var store *mmgr.Storage
+	for _, t := range tensors {
+		if t.s != nil {
+			store = t.s
+			break
+		}
+	}
+	if store != nil {
+		store.Put(ret)
+	}
+	return &Tensor{s: store, t: ret}
+}

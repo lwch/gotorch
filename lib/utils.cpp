@@ -42,3 +42,16 @@ void tensor_print(tensor t)
 {
     t->print();
 }
+
+tensor tensor_cat(char **err, tensor *tensors, size_t tensors_len, int64_t dim)
+{
+    return auto_catch_tensor([tensors, tensors_len, dim]()
+                             {
+                                 std::vector<torch::Tensor> list;
+                                 for (size_t i = 0; i < tensors_len; i++)
+                                 {
+                                     list.push_back(*tensors[i]);
+                                 }
+                                 return new torch::Tensor(torch::cat(list, dim)); },
+                             err);
+}

@@ -33,6 +33,19 @@ func (t *Tensor) Print() {
 	C.tensor_print(t.data)
 }
 
+func Cat(tensors []*Tensor, dim int) *Tensor {
+	cTensors := make([]C.tensor, len(tensors))
+	for i, t := range tensors {
+		cTensors[i] = t.data
+	}
+	var err *C.char
+	ret := C.tensor_cat(&err, (*C.tensor)(unsafe.Pointer(&cTensors[0])), C.size_t(len(cTensors)), C.int64_t(dim))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ret}
+}
+
 func fromCInts[T1 C.uint8_t | C.int8_t | C.int16_t | C.int32_t | C.int64_t,
 	T2 uint8 | int8 | int16 | int32 | int64,
 ](arr []T1) []T2 {

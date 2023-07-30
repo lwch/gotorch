@@ -42,6 +42,7 @@ extern "C"
                                     tensor *params, size_t params_count,
                                     double max_norm, double norm_type);
     GOTORCH_API void tensor_print(tensor t);
+    GOTORCH_API tensor tensor_cat(char **err, tensor *tensors, size_t tensors_len, int64_t dim);
 
 #ifdef __cplusplus
 }
