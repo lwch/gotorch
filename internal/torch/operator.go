@@ -217,3 +217,12 @@ func (t *Tensor) Unsqueeze(dim int64) *Tensor {
 	}
 	return &Tensor{data: ptr}
 }
+
+func (t *Tensor) Contiguous() *Tensor {
+	var err *C.char
+	ptr := C.tensor_contiguous(&err, t.data)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
