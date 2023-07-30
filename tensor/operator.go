@@ -167,6 +167,11 @@ func (t *Tensor) Unsqueeze(dim int64) *Tensor {
 	return &Tensor{s: t.store1(ret), t: ret}
 }
 
+func (t *Tensor) Squeeze(dim int64) *Tensor {
+	ret := t.t.Squeeze(dim)
+	return &Tensor{s: t.store1(ret), t: ret}
+}
+
 func (t *Tensor) Contiguous() *Tensor {
 	ret := t.t.Contiguous()
 	return &Tensor{s: t.store1(ret), t: ret}

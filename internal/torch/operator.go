@@ -218,6 +218,15 @@ func (t *Tensor) Unsqueeze(dim int64) *Tensor {
 	return &Tensor{data: ptr}
 }
 
+func (t *Tensor) Squeeze(dim int64) *Tensor {
+	var err *C.char
+	ptr := C.tensor_squeeze(&err, t.data, C.int64_t(dim))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
+
 func (t *Tensor) Contiguous() *Tensor {
 	var err *C.char
 	ptr := C.tensor_contiguous(&err, t.data)

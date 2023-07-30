@@ -177,6 +177,13 @@ tensor tensor_unsqueeze(char **err, tensor a, int64_t dim)
                              err);
 }
 
+tensor tensor_squeeze(char **err, tensor a, int64_t dim)
+{
+    return auto_catch_tensor([a, dim]()
+                             { return new torch::Tensor(a->squeeze(dim)); },
+                             err);
+}
+
 tensor tensor_contiguous(char **err, tensor a)
 {
     return auto_catch_tensor([a]()
