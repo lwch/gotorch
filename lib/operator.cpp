@@ -170,3 +170,9 @@ tensor tensor_dropout(char **err, tensor a, double p, bool train)
                              err);
 }
 
+tensor tensor_unsqueeze(char **err, tensor a, int64_t dim)
+{
+    return auto_catch_tensor([a, dim]()
+                             { return new torch::Tensor(a->unsqueeze(dim)); },
+                             err);
+}

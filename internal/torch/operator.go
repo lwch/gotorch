@@ -208,3 +208,12 @@ func (t *Tensor) Dropout(p float64, train bool) *Tensor {
 	}
 	return &Tensor{data: ptr}
 }
+
+func (t *Tensor) Unsqueeze(dim int64) *Tensor {
+	var err *C.char
+	ptr := C.tensor_unsqueeze(&err, t.data, C.int64_t(dim))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
