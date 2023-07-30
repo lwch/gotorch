@@ -226,3 +226,13 @@ func (t *Tensor) Contiguous() *Tensor {
 	}
 	return &Tensor{data: ptr}
 }
+
+func (t *Tensor) Expand(sizes []int64) *Tensor {
+	var err *C.char
+	sz, size := cInts[int64, C.int64_t](sizes)
+	ptr := C.tensor_expand(&err, t.data, sz, size)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}

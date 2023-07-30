@@ -183,3 +183,10 @@ tensor tensor_contiguous(char **err, tensor a)
                              { return new torch::Tensor(a->contiguous()); },
                              err);
 }
+
+tensor tensor_expand(char **err, tensor a, int64_t *sizes, size_t len)
+{
+    return auto_catch_tensor([a, sizes, len]()
+                             { return new torch::Tensor(a->expand(torch::IntArrayRef(sizes, len))); },
+                             err);
+}

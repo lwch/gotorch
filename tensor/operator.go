@@ -171,3 +171,8 @@ func (t *Tensor) Contiguous() *Tensor {
 	ret := t.t.Contiguous()
 	return &Tensor{s: t.store1(ret), t: ret}
 }
+
+func (t *Tensor) Expand(sizes ...int64) *Tensor {
+	ret := t.t.Expand(sizes)
+	return &Tensor{s: t.store1(ret), t: ret}
+}
