@@ -62,6 +62,14 @@ func XaiverUniform(t *Tensor, gain float64) {
 	}
 }
 
+func Normal(t *Tensor, mean, std float64) {
+	var err *C.char
+	C.normal(&err, t.data, C.double(mean), C.double(std))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+}
+
 func fromCInts[T1 C.uint8_t | C.int8_t | C.int16_t | C.int32_t | C.int64_t,
 	T2 uint8 | int8 | int16 | int32 | int64,
 ](arr []T1) []T2 {

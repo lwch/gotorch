@@ -66,3 +66,7 @@ func KaimingUniform(t *Tensor, a float64) {
 func XaiverUniform(t *Tensor, gain float64) {
 	torch.XaiverUniform(t.t, gain)
 }
+
+func Normal(t *Tensor, mean, std float64) {
+	torch.Normal(t.t, mean, std)
+}

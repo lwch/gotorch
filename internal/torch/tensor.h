@@ -45,6 +45,7 @@ extern "C"
     GOTORCH_API tensor tensor_cat(char **err, tensor *tensors, size_t tensors_len, int64_t dim);
     GOTORCH_API void kaiming_uniform(char **err, tensor t, double a);
     GOTORCH_API void xaiver_uniform(char **err, tensor t, double gain);
+    GOTORCH_API void normal(char **err, tensor t, double mean, double std);
 
 #ifdef __cplusplus
 }

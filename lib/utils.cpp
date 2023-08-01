@@ -71,3 +71,11 @@ void xaiver_uniform(char **err, tensor t, double gain)
                                 torch::nn::init::xavier_uniform_(*t, gain); },
                             err);
 }
+
+void normal(char **err, tensor t, double mean, double std)
+{
+    return auto_catch_void([t, mean, std]()
+                            {
+                                torch::nn::init::normal_(*t, mean, std); },
+                            err);
+}
