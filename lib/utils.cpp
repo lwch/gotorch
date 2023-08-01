@@ -55,3 +55,11 @@ tensor tensor_cat(char **err, tensor *tensors, size_t tensors_len, int64_t dim)
                                  return new torch::Tensor(torch::cat(list, dim)); },
                              err);
 }
+
+void kaiming_uniform(char **err, tensor t, double a)
+{
+    return auto_catch_void([t, a]()
+                            {
+                                torch::nn::init::kaiming_uniform_(*t, a); },
+                            err);
+}

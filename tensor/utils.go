@@ -58,3 +58,7 @@ func Cat(tensors []*Tensor, dim int) *Tensor {
 	}
 	return &Tensor{s: store, t: ret}
 }
+
+func KaimingUniform(t *Tensor, a float64) {
+	torch.KaimingUniform(t.t, a)
+}

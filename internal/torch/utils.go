@@ -46,6 +46,14 @@ func Cat(tensors []*Tensor, dim int) *Tensor {
 	return &Tensor{data: ret}
 }
 
+func KaimingUniform(t *Tensor, a float64) {
+	var err *C.char
+	C.kaiming_uniform(&err, t.data, C.double(a))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+}
+
 func fromCInts[T1 C.uint8_t | C.int8_t | C.int16_t | C.int32_t | C.int64_t,
 	T2 uint8 | int8 | int16 | int32 | int64,
 ](arr []T1) []T2 {
