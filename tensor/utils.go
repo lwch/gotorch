@@ -62,3 +62,7 @@ func Cat(tensors []*Tensor, dim int) *Tensor {
 func KaimingUniform(t *Tensor, a float64) {
 	torch.KaimingUniform(t.t, a)
 }
+
+func XaiverUniform(t *Tensor, gain float64) {
+	torch.XaiverUniform(t.t, gain)
+}

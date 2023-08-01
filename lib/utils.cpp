@@ -63,3 +63,11 @@ void kaiming_uniform(char **err, tensor t, double a)
                                 torch::nn::init::kaiming_uniform_(*t, a); },
                             err);
 }
+
+void xaiver_uniform(char **err, tensor t, double gain)
+{
+    return auto_catch_void([t, gain]()
+                            {
+                                torch::nn::init::xavier_uniform_(*t, gain); },
+                            err);
+}
