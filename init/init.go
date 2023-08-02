@@ -6,13 +6,17 @@ import (
 )
 
 func KaimingUniform(t *tensor.Tensor, a float64) {
-	torch.KaimingUniform(t.Tensor(), a)
+	torch.InitKaimingUniform(t.Tensor(), a)
 }
 
 func XaiverUniform(t *tensor.Tensor, gain float64) {
-	torch.XaiverUniform(t.Tensor(), gain)
+	torch.InitXaiverUniform(t.Tensor(), gain)
 }
 
 func Normal(t *tensor.Tensor, mean, std float64) {
-	torch.Normal(t.Tensor(), mean, std)
+	torch.InitNormal(t.Tensor(), mean, std)
+}
+
+func Zeros(t *tensor.Tensor) {
+	torch.InitZeros(t.Tensor())
 }

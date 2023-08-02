@@ -76,3 +76,10 @@ void init_normal(char **err, tensor t, double mean, double std)
                            { torch::nn::init::normal_(*t, mean, std); },
                            err);
 }
+
+void init_zeros(char **err, tensor t)
+{
+    return auto_catch_void([t]()
+                           { torch::nn::init::zeros_(*t); },
+                           err);
+}
