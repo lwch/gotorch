@@ -48,7 +48,7 @@ func Cat(tensors []*Tensor, dim int) *Tensor {
 
 func Embedding(input *Tensor, weight *Tensor, paddingIdx int64) *Tensor {
 	var err *C.char
-	ret := C.tensor_embedding(&err, input.data, weight.data, C.int64_t(paddingIdx))
+	ret := C.tensor_embedding(&err, weight.data, input.data, C.int64_t(paddingIdx))
 	if err != nil {
 		panic(C.GoString(err))
 	}
