@@ -58,15 +58,3 @@ func Cat(tensors []*Tensor, dim int) *Tensor {
 	}
 	return &Tensor{s: store, t: ret}
 }
-
-func KaimingUniform(t *Tensor, a float64) {
-	torch.KaimingUniform(t.t, a)
-}
-
-func XaiverUniform(t *Tensor, gain float64) {
-	torch.XaiverUniform(t.t, gain)
-}
-
-func Normal(t *Tensor, mean, std float64) {
-	torch.Normal(t.t, mean, std)
-}

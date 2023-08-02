@@ -56,26 +56,23 @@ tensor tensor_cat(char **err, tensor *tensors, size_t tensors_len, int64_t dim)
                              err);
 }
 
-void kaiming_uniform(char **err, tensor t, double a)
+void init_kaiming_uniform(char **err, tensor t, double a)
 {
     return auto_catch_void([t, a]()
-                            {
-                                torch::nn::init::kaiming_uniform_(*t, a); },
-                            err);
+                           { torch::nn::init::kaiming_uniform_(*t, a); },
+                           err);
 }
 
-void xaiver_uniform(char **err, tensor t, double gain)
+void init_xaiver_uniform(char **err, tensor t, double gain)
 {
     return auto_catch_void([t, gain]()
-                            {
-                                torch::nn::init::xavier_uniform_(*t, gain); },
-                            err);
+                           { torch::nn::init::xavier_uniform_(*t, gain); },
+                           err);
 }
 
-void normal(char **err, tensor t, double mean, double std)
+void init_normal(char **err, tensor t, double mean, double std)
 {
     return auto_catch_void([t, mean, std]()
-                            {
-                                torch::nn::init::normal_(*t, mean, std); },
-                            err);
+                           { torch::nn::init::normal_(*t, mean, std); },
+                           err);
 }
