@@ -46,6 +46,15 @@ func Cat(tensors []*Tensor, dim int) *Tensor {
 	return &Tensor{data: ret}
 }
 
+func Embedding(input *Tensor, weight *Tensor, paddingIdx int64) *Tensor {
+	var err *C.char
+	ret := C.tensor_embedding(&err, input.data, weight.data, C.int64_t(paddingIdx))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ret}
+}
+
 func fromCInts[T1 C.uint8_t | C.int8_t | C.int16_t | C.int32_t | C.int64_t,
 	T2 uint8 | int8 | int16 | int32 | int64,
 ](arr []T1) []T2 {

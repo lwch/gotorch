@@ -56,6 +56,13 @@ tensor tensor_cat(char **err, tensor *tensors, size_t tensors_len, int64_t dim)
                              err);
 }
 
+tensor tensor_embedding(char **err, tensor weight, tensor indices, int64_t padding_idx)
+{
+    return auto_catch_tensor([weight, indices, padding_idx]()
+                             { return new torch::Tensor(torch::embedding(*weight, *indices, padding_idx)); },
+                             err);
+}
+
 void init_kaiming_uniform(char **err, tensor t, double a)
 {
     return auto_catch_void([t, a]()
