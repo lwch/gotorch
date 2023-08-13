@@ -23,14 +23,10 @@ tensor tensor_conv2d(char **err, tensor input, tensor weight, tensor bias,
                            {
                               std::vector<int64_t> stride;
                               stride.push_back(stride1);
-                              if (stride2) {
-                                stride.push_back(stride2);
-                              }
+                              stride.push_back(stride2);
                               std::vector<int64_t> padding;
                               padding.push_back(padding1);
-                              if (padding2) {
-                                padding.push_back(padding2);
-                              }
+                              padding.push_back(padding2);
                               if (bias) {
                                 return new torch::Tensor(torch::conv2d(*input, *weight, *bias, stride, padding, dilation, groups));
                               } else{
@@ -48,20 +44,12 @@ tensor tensor_conv3d(char **err, tensor input, tensor weight, tensor bias,
                            {
                               std::vector<int64_t> stride;
                               stride.push_back(stride1);
-                              if (stride2) {
-                                stride.push_back(stride2);
-                              }
-                              if (stride3) {
-                                stride.push_back(stride3);
-                              }
+                              stride.push_back(stride2);
+                              stride.push_back(stride3);
                               std::vector<int64_t> padding;
                               padding.push_back(padding1);
-                              if (padding2) {
-                                padding.push_back(padding2);
-                              }
-                              if (padding3) {
-                                padding.push_back(padding3);
-                              }
+                              padding.push_back(padding2);
+                              padding.push_back(padding3);
                               if (bias) {
                                 return new torch::Tensor(torch::conv3d(*input, *weight, *bias, stride, padding, dilation, groups));
                               } else{

@@ -95,31 +95,19 @@ func Conv2DGroups(v int) Conv2DOptFunc {
 	}
 }
 
-func (opt *conv2DOpt) Stride() []int {
-	if opt.stride2 > 0 {
-		return []int{opt.stride1, opt.stride2}
-	}
-	return []int{opt.stride1}
-}
-
-func (opt *conv2DOpt) Padding() []int {
-	if opt.padding2 > 0 {
-		return []int{opt.padding1, opt.padding2}
-	}
-	return []int{opt.padding1}
-}
-
 // Conv2D 2D convolution
 // weight: [out_channels, in_channels/groups, kernel_size, kernel_size]
 // bias: [out_channels]
-// stride: stride, default 1
-// padding: padding, default 0
+// stride: stride, default (1, 1)
+// padding: padding, default (0, 0)
 // dilation: dilation, default 1
 // groups: groups, default 1
 func (t *Tensor) Conv2D(weight, bias *Tensor, opts ...Conv2DOptFunc) *Tensor {
 	opt := &conv2DOpt{
 		stride1:  1,
+		stride2:  1,
 		padding1: 0,
+		padding2: 0,
 		dilation: 1,
 		groups:   1,
 	}
@@ -130,7 +118,10 @@ func (t *Tensor) Conv2D(weight, bias *Tensor, opts ...Conv2DOptFunc) *Tensor {
 	if bias != nil {
 		b = bias.t
 	}
-	ret := t.t.Conv2D(weight.t, b, opt.Stride(), opt.Padding(), opt.dilation, opt.groups)
+	ret := t.t.Conv2D(weight.t, b,
+		[2]int{opt.stride1, opt.stride2},
+		[2]int{opt.padding1, opt.padding2},
+		opt.dilation, opt.groups)
 	return &Tensor{s: t.store3(weight, bias, ret), t: ret}
 }
 
@@ -171,37 +162,21 @@ func Conv3DGroups(v int) Conv3DOptFunc {
 	}
 }
 
-func (opt *conv3DOpt) Stride() []int {
-	if opt.stride2 > 0 && opt.stride3 > 0 {
-		return []int{opt.stride1, opt.stride2, opt.stride3}
-	}
-	if opt.stride2 > 0 {
-		return []int{opt.stride1, opt.stride2}
-	}
-	return []int{opt.stride1}
-}
-
-func (opt *conv3DOpt) Padding() []int {
-	if opt.padding2 > 0 && opt.padding3 > 0 {
-		return []int{opt.padding1, opt.padding2, opt.padding3}
-	}
-	if opt.padding2 > 0 {
-		return []int{opt.padding1, opt.padding2}
-	}
-	return []int{opt.padding1}
-}
-
 // Conv3D 3D convolution
 // weight: [out_channels, in_channels/groups, kernel_size, kernel_size, kernel_size]
 // bias: [out_channels]
-// stride: stride, default 1
-// padding: padding, default 0
+// stride: stride, default (1, 1, 1)
+// padding: padding, default (0, 0, 0)
 // dilation: dilation, default 1
 // groups: groups, default 1
 func (t *Tensor) Conv3D(weight, bias *Tensor, opts ...Conv3DOptFunc) *Tensor {
 	opt := &conv3DOpt{
 		stride1:  1,
+		stride2:  1,
+		stride3:  1,
 		padding1: 0,
+		padding2: 0,
+		padding3: 0,
 		dilation: 1,
 		groups:   1,
 	}
@@ -212,6 +187,9 @@ func (t *Tensor) Conv3D(weight, bias *Tensor, opts ...Conv3DOptFunc) *Tensor {
 	if bias != nil {
 		b = bias.t
 	}
-	ret := t.t.Conv3D(weight.t, b, opt.Stride(), opt.Padding(), opt.dilation, opt.groups)
+	ret := t.t.Conv3D(weight.t, b,
+		[3]int{opt.stride1, opt.stride2, opt.stride3},
+		[3]int{opt.padding1, opt.padding2, opt.padding3},
+		opt.dilation, opt.groups)
 	return &Tensor{s: t.store3(weight, bias, ret), t: ret}
 }
