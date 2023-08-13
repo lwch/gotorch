@@ -15,10 +15,23 @@ tensor tensor_conv1d(char **err, tensor input, tensor weight, tensor bias,
 }
 
 tensor tensor_conv2d(char **err, tensor input, tensor weight, tensor bias,
-                     int64_t stride, int64_t padding, int64_t dilation, int64_t groups)
+                     int64_t stride1, int64_t stride2,
+                     int64_t padding1, int64_t padding2,
+                     int64_t dilation, int64_t groups)
 {
-  return auto_catch_tensor([input, weight, bias, stride, padding, dilation, groups]()
-                           { if (bias) {
+  return auto_catch_tensor([input, weight, bias, stride1, stride2, padding1, padding2, dilation, groups]()
+                           {
+                              std::vector<int64_t> stride;
+                              stride.push_back(stride1);
+                              if (stride2) {
+                                stride.push_back(stride2);
+                              }
+                              std::vector<int64_t> padding;
+                              padding.push_back(padding1);
+                              if (padding2) {
+                                padding.push_back(padding2);
+                              }
+                              if (bias) {
                                 return new torch::Tensor(torch::conv2d(*input, *weight, *bias, stride, padding, dilation, groups));
                               } else{
                                 return new torch::Tensor(torch::conv2d(*input, *weight, torch::nullopt, stride, padding, dilation, groups));
@@ -27,10 +40,29 @@ tensor tensor_conv2d(char **err, tensor input, tensor weight, tensor bias,
 }
 
 tensor tensor_conv3d(char **err, tensor input, tensor weight, tensor bias,
-                     int64_t stride, int64_t padding, int64_t dilation, int64_t groups)
+                     int64_t stride1, int64_t stride2, int64_t stride3,
+                     int64_t padding1, int64_t padding2, int64_t padding3,
+                     int64_t dilation, int64_t groups)
 {
-  return auto_catch_tensor([input, weight, bias, stride, padding, dilation, groups]()
-                           { if (bias) {
+  return auto_catch_tensor([input, weight, bias, stride1, stride2, stride3, padding1, padding2, padding3, dilation, groups]()
+                           {
+                              std::vector<int64_t> stride;
+                              stride.push_back(stride1);
+                              if (stride2) {
+                                stride.push_back(stride2);
+                              }
+                              if (stride3) {
+                                stride.push_back(stride3);
+                              }
+                              std::vector<int64_t> padding;
+                              padding.push_back(padding1);
+                              if (padding2) {
+                                padding.push_back(padding2);
+                              }
+                              if (padding3) {
+                                padding.push_back(padding3);
+                              }
+                              if (bias) {
                                 return new torch::Tensor(torch::conv3d(*input, *weight, *bias, stride, padding, dilation, groups));
                               } else{
                                 return new torch::Tensor(torch::conv3d(*input, *weight, torch::nullopt, stride, padding, dilation, groups));
