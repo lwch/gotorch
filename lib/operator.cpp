@@ -163,6 +163,16 @@ tensor tensor_softmax(char **err, tensor a, int64_t dim)
                              err);
 }
 
+tensor tensor_softmax1(char **err, tensor a, int64_t dim)
+{
+    return auto_catch_tensor([a, dim]()
+                             {
+                                torch::Tensor x = *a - std::get<0>(a->max(dim, true));
+                                torch::Tensor exp_x = torch::exp(x);
+                                return new torch::Tensor(exp_x / (1 + exp_x.sum(dim,true))); },
+                             err);
+}
+
 tensor tensor_dropout(char **err, tensor a, double p, bool train)
 {
     return auto_catch_tensor([a, p, train]()

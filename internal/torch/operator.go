@@ -200,6 +200,15 @@ func (t *Tensor) Softmax(dim int64) *Tensor {
 	return &Tensor{data: ptr}
 }
 
+func (t *Tensor) Softmax1(dim int64) *Tensor {
+	var err *C.char
+	ptr := C.tensor_softmax1(&err, t.data, C.int64_t(dim))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
+
 func (t *Tensor) Dropout(p float64, train bool) *Tensor {
 	var err *C.char
 	ptr := C.tensor_dropout(&err, t.data, C.double(p), C.bool(train))

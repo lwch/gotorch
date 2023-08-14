@@ -157,6 +157,11 @@ func (t *Tensor) Softmax(dim int64) *Tensor {
 	return &Tensor{s: t.store1(ret), t: ret}
 }
 
+func (t *Tensor) Softmax1(dim int64) *Tensor {
+	ret := t.t.Softmax1(dim)
+	return &Tensor{s: t.store1(ret), t: ret}
+}
+
 func (t *Tensor) Dropout(p float64, train bool) *Tensor {
 	ret := t.t.Dropout(p, train)
 	return &Tensor{s: t.store1(ret), t: ret}
