@@ -20,3 +20,13 @@ func TestLinear(t *testing.T) {
 		fmt.Println(p.Float32Value())
 	}
 }
+
+func TestLinearTo(t *testing.T) {
+	s := mmgr.New()
+	defer s.GC()
+	l := NewLinear(2, 3)
+	l.ToScalarType(consts.KDouble)
+	for _, p := range l.Parameters(s) {
+		fmt.Println(p.Float64Value())
+	}
+}

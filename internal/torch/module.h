@@ -14,6 +14,8 @@ extern "C"
     GOTORCH_API module new_layer_norm(char **err, int64_t *shape, size_t shape_len);
     GOTORCH_API tensor layer_norm_forward(char **err, module m, tensor x);
 
+    GOTORCH_API void module_to_device(char** err, module m, int8_t device);
+    GOTORCH_API void module_to_scalar_type(char** err,module m, int8_t type);
     GOTORCH_API size_t module_parameters(char **err, module m, tensor *parameters);
 
 #ifdef __cplusplus

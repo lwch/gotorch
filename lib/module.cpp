@@ -38,6 +38,20 @@ tensor layer_norm_forward(char **err, module m, tensor x)
                            err);
 }
 
+void module_to_device(char **err, module m, int8_t device)
+{
+  auto_catch_void([m, device]()
+                  { m->to(torch::DeviceType(device)); },
+                  err);
+}
+
+void module_to_scalar_type(char **err, module m, int8_t type)
+{
+  auto_catch_void([m, type]()
+                  { m->to(torch::Dtype(type)); },
+                  err);
+}
+
 size_t module_parameters(char **err, module m, tensor *parameters)
 {
   return auto_catch_size_t([m, parameters]()
