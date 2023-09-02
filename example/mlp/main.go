@@ -7,6 +7,7 @@ import (
 	"github.com/lwch/gotorch/consts"
 	"github.com/lwch/gotorch/loss"
 	"github.com/lwch/gotorch/mmgr"
+	"github.com/lwch/gotorch/nn"
 	"github.com/lwch/gotorch/optimizer"
 	"github.com/lwch/gotorch/tensor"
 )
@@ -14,34 +15,12 @@ import (
 const hiddenSize = 10
 const device = consts.KCPU
 
-var w1, b1 *tensor.Tensor
-var w2, b2 *tensor.Tensor
-
-func randN(n int) []float32 {
-	ret := make([]float32, n)
-	for i := 0; i < n; i++ {
-		ret[i] = rand.Float32()
-	}
-	return ret
-}
+var l1 = nn.NewLinear(2, hiddenSize)
+var l2 = nn.NewLinear(hiddenSize, 1)
 
 func init() {
-	w1 = tensor.FromFloat32(nil, randN(2*hiddenSize),
-		tensor.WithShapes(2, hiddenSize),
-		tensor.WithDevice(device))
-	b1 = tensor.Zeros(nil, consts.KFloat,
-		tensor.WithShapes(hiddenSize),
-		tensor.WithDevice(device))
-	w2 = tensor.FromFloat32(nil, randN(hiddenSize*1),
-		tensor.WithShapes(hiddenSize, 1),
-		tensor.WithDevice(device))
-	b2 = tensor.Zeros(nil, consts.KFloat,
-		tensor.WithShapes(1),
-		tensor.WithDevice(device))
-	w1.SetRequiresGrad(true)
-	b1.SetRequiresGrad(true)
-	w2.SetRequiresGrad(true)
-	b2.SetRequiresGrad(true)
+	l1.ToDevice(device)
+	l2.ToDevice(device)
 }
 
 func main() {
@@ -56,7 +35,7 @@ func main() {
 		// backward
 		loss.Backward()
 		// update
-		optm.Step([]*tensor.Tensor{w1, b1, w2, b2})
+		optm.Step(append(l1.Parameters(s), l2.Parameters(s)...))
 		if i%100 == 0 {
 			fmt.Printf("epoch: %d loss: %f\n", i, loss.Value())
 			s.GC()
@@ -68,9 +47,9 @@ func main() {
 }
 
 func forward(x *tensor.Tensor) *tensor.Tensor {
-	y := x.MatMul(w1).Add(b1)
+	y := l1.Forward(x)
 	y = y.Relu()
-	return y.MatMul(w2).Add(b2)
+	return l2.Forward(y)
 }
 
 func getBatch(s *mmgr.Storage, shuffle bool) (*tensor.Tensor, *tensor.Tensor) {
