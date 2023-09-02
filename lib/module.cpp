@@ -18,6 +18,26 @@ tensor linear_forward(char **err, module m, tensor x)
                            err);
 }
 
+module new_layer_norm(char **err, int64_t *shape, size_t shape_len)
+{
+  return auto_catch_module([shape, shape_len]()
+                           { std::vector<int64_t> shapes;
+                             for (size_t i = 0; i < shape_len; i++) {
+                                shapes.push_back(shape[i]);
+                             }
+                             return new torch::nn::LayerNormImpl(shapes); },
+                           err);
+}
+
+tensor layer_norm_forward(char **err, module m, tensor x)
+{
+  return auto_catch_tensor([m, x]()
+                           {
+                            torch::nn::LayerNormImpl* mm = dynamic_cast<torch::nn::LayerNormImpl*>(m);
+                            return new torch::Tensor(mm->forward(*x)); },
+                           err);
+}
+
 size_t module_parameters(char **err, module m, tensor *parameters)
 {
   return auto_catch_size_t([m, parameters]()
