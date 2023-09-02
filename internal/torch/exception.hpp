@@ -75,6 +75,42 @@ double auto_catch_double(Function f, char **err)
     return 0;
 }
 
+template <typename Function>
+module auto_catch_module(Function f, char **err)
+{
+    try
+    {
+        return f();
+    }
+    catch (const torch::Error &e)
+    {
+        *err = strdup(e.what());
+    }
+    catch (const std::exception &e)
+    {
+        *err = strdup(e.what());
+    }
+    return nullptr;
+}
+
+template <typename Function>
+size_t auto_catch_size_t(Function f, char **err)
+{
+    try
+    {
+        return f();
+    }
+    catch (const torch::Error &e)
+    {
+        *err = strdup(e.what());
+    }
+    catch (const std::exception &e)
+    {
+        *err = strdup(e.what());
+    }
+    return 0;
+}
+
 #endif
 
 #endif // __GOTORCH_EXCEPTION_H__

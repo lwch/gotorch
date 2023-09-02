@@ -6,9 +6,11 @@ extern "C"
 {
 	typedef torch::Tensor *tensor;
 	typedef torch::optim::Optimizer *optimizer;
+	typedef torch::nn::Module *module;
 #else
 typedef void *tensor;
 typedef void *optimizer;
+typedef void *module;
 #endif
 
 #if defined(GOTORCH_EXPORT) && defined(_WIN32)

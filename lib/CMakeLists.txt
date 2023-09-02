@@ -13,6 +13,7 @@ add_library(gotorch SHARED
 	../internal/torch/loss.h loss.cpp
 	../internal/torch/operator.h operator.cpp
 	../internal/torch/optimizer.h optimizer.cpp
+	../internal/torch/module.h module.cpp
 	../internal/torch/tensor.h tensor.cpp
 	conv.cpp
 	utils.cpp)

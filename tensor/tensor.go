@@ -11,6 +11,13 @@ type Tensor struct {
 	t *torch.Tensor
 }
 
+func New(t *torch.Tensor, s *mmgr.Storage) *Tensor {
+	return &Tensor{
+		t: t,
+		s: s,
+	}
+}
+
 func (t *Tensor) Storage() *mmgr.Storage {
 	return t.s
 }
