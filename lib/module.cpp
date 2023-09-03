@@ -60,6 +60,24 @@ tensor attention_forward(char **err, module m, tensor q, tensor k, tensor v, ten
                            err);
 }
 
+module new_embedding(char **err, int64_t num_embeddings, int64_t embedding_dim, int64_t padding_idx)
+{
+  return auto_catch_module([num_embeddings, embedding_dim, padding_idx]()
+                           { return new torch::nn::EmbeddingImpl(
+                                 torch::nn::EmbeddingOptions(num_embeddings, embedding_dim)
+                                     .padding_idx(padding_idx)); },
+                           err);
+}
+
+tensor embedding_forward(char **err, module m, tensor x)
+{
+  return auto_catch_tensor([m, x]()
+                           {
+                              torch::nn::EmbeddingImpl* mm = dynamic_cast<torch::nn::EmbeddingImpl*>(m);
+                              return new torch::Tensor(mm->forward(*x)); },
+                           err);
+}
+
 void module_to_device(char **err, module m, int8_t device)
 {
   auto_catch_void([m, device]()

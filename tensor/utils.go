@@ -58,17 +58,3 @@ func Cat(tensors []*Tensor, dim int) *Tensor {
 	}
 	return &Tensor{s: store, t: ret}
 }
-
-func Embedding(input *Tensor, weight *Tensor, paddingIdx int64) *Tensor {
-	ret := torch.Embedding(input.t, weight.t, paddingIdx)
-	var store *mmgr.Storage
-	if input.s != nil {
-		store = input.s
-	} else if weight.s != nil {
-		store = weight.s
-	}
-	if store != nil {
-		store.Put(ret)
-	}
-	return &Tensor{s: store, t: ret}
-}

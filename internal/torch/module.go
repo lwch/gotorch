@@ -66,7 +66,7 @@ func NewLinear(inFeatures, outFeatures int64) *Linear {
 	return &Linear{module{l}}
 }
 
-func (l *module) Forward(x *Tensor) *Tensor {
+func (l *Linear) Forward(x *Tensor) *Tensor {
 	var err *C.char
 	ptr := C.linear_forward(&err, l.m, x.data)
 	if err != nil {
@@ -157,4 +157,30 @@ func (*Attention) buildCausal(q, k *Tensor) *Tensor {
 
 func (l *Attention) Parameters() []*Tensor {
 	return l.parameters(4)
+}
+
+type Embedding struct {
+	module
+}
+
+func NewEmbedding(numEmbeddings, embeddingDim, paddingIdx int64) *Embedding {
+	var err *C.char
+	l := C.new_embedding(&err, C.int64_t(numEmbeddings), C.int64_t(embeddingDim), C.int64_t(paddingIdx))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Embedding{module{l}}
+}
+
+func (l *Embedding) Forward(x *Tensor) *Tensor {
+	var err *C.char
+	ptr := C.embedding_forward(&err, l.m, x.data)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
+
+func (l *Embedding) Parameters() []*Tensor {
+	return l.parameters(1)
 }
