@@ -33,6 +33,7 @@ extern "C"
     GOTORCH_API int tensor_scalar_type(tensor t);
     GOTORCH_API size_t tensor_dims(tensor t);
     GOTORCH_API void tensor_shapes(tensor t, int64_t *shapes);
+    GOTORCH_API int8_t tensor_device_type(tensor t);
     // utils
     GOTORCH_API tensor scaled_dot_product_attention(char **err,
                                                     tensor q, tensor k, tensor v,

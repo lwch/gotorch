@@ -152,7 +152,7 @@ func (*Attention) buildCausal(q, k *Tensor) *Tensor {
 			}
 		}
 	}
-	return FromFloat32(mask, []int64{l, s}, consts.KCPU) // TODO: get device from q
+	return FromFloat32(mask, []int64{l, s}, q.DeviceType())
 }
 
 func (l *Attention) Parameters() []*Tensor {

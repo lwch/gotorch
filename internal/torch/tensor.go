@@ -51,6 +51,10 @@ func (t *Tensor) ScalarType() consts.ScalarType {
 	return consts.ScalarType(C.tensor_scalar_type(t.data))
 }
 
+func (t *Tensor) DeviceType() consts.DeviceType {
+	return consts.DeviceType(C.tensor_device_type(t.data))
+}
+
 func (t *Tensor) SetRequiresGrad(b bool) {
 	var err *C.char
 	C.tensor_set_requires_grad(&err, t.data, C.bool(b))

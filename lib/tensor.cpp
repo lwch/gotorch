@@ -95,6 +95,11 @@ void tensor_shapes(tensor t, int64_t *shapes)
     }
 }
 
+int8_t tensor_device_type(tensor t)
+{
+    return int8_t(t->device().type());
+}
+
 tensor tensor_reshape(char **err, tensor t, int64_t *shape, size_t shape_len)
 {
     return auto_catch_tensor([t, shape, shape_len]()
