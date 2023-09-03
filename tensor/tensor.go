@@ -12,6 +12,9 @@ type Tensor struct {
 }
 
 func New(t *torch.Tensor, s *mmgr.Storage) *Tensor {
+	if s != nil {
+		s.Put(t)
+	}
 	return &Tensor{
 		t: t,
 		s: s,
