@@ -4,12 +4,17 @@ package torch
 // #include "module.h"
 import "C"
 import (
+	"math"
+
 	"github.com/lwch/gotorch/consts"
 )
 
+type NormalForward interface {
+	Forward(*Tensor) *Tensor
+}
+
 type Module interface {
 	Parameters() []*Tensor
-	Forward(*Tensor) *Tensor
 	ToDevice(consts.DeviceType)
 	ToScalarType(consts.ScalarType)
 }
@@ -99,4 +104,57 @@ func (l *LayerNorm) Forward(x *Tensor) *Tensor {
 
 func (l *LayerNorm) Parameters() []*Tensor {
 	return l.parameters(2)
+}
+
+type AttentionForward interface {
+	Forward(*Tensor, *Tensor, *Tensor, *Tensor, bool) (*Tensor, *Tensor)
+}
+
+type Attention struct {
+	module
+}
+
+func NewAttention(embedDim, numHeads int64, dropout float64) *Attention {
+	var err *C.char
+	l := C.new_attention(&err, C.int64_t(embedDim), C.int64_t(numHeads), C.double(dropout))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Attention{module{l}}
+}
+
+func (l *Attention) Forward(q, k, v, mask *Tensor, isCausal bool) (*Tensor, *Tensor) {
+	if isCausal {
+		mask = l.buildCausal(q, k)
+		defer mask.Free()
+	}
+	var err *C.char
+	var score C.tensor
+	var m C.tensor
+	if mask != nil {
+		m = mask.data
+	}
+	ptr := C.attention_forward(&err, l.m, q.data, k.data, v.data, m, &score)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}, &Tensor{data: score}
+}
+
+func (*Attention) buildCausal(q, k *Tensor) *Tensor {
+	l := q.Shapes()[q.Dims()-2]
+	s := k.Shapes()[k.Dims()-2]
+	mask := make([]float32, l*s)
+	for i := int64(0); i < l; i++ {
+		for j := int64(0); j < s; j++ {
+			if j > i {
+				mask[i*s+j] = float32(math.Inf(-1))
+			}
+		}
+	}
+	return FromFloat32(mask, []int64{l, s}, consts.KCPU) // TODO: get device from q
+}
+
+func (l *Attention) Parameters() []*Tensor {
+	return l.parameters(4)
 }

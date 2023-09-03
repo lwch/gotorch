@@ -21,7 +21,7 @@ func (m *module) Parameters(s *mmgr.Storage) []*tensor.Tensor {
 }
 
 func (m *module) Forward(x *tensor.Tensor) *tensor.Tensor {
-	t := m.m.Forward(x.Tensor())
+	t := m.m.(torch.NormalForward).Forward(x.Tensor())
 	return tensor.New(t, x.Storage())
 }
 
