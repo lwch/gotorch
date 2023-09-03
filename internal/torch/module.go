@@ -142,8 +142,8 @@ func (l *Attention) Forward(q, k, v, mask *Tensor, isCausal bool) (*Tensor, *Ten
 }
 
 func (*Attention) buildCausal(q, k *Tensor) *Tensor {
-	l := q.Shapes()[q.Dims()-2]
-	s := k.Shapes()[k.Dims()-2]
+	l := q.Shapes()[0]
+	s := k.Shapes()[0]
 	mask := make([]float32, l*s)
 	for i := int64(0); i < l; i++ {
 		for j := int64(0); j < s; j++ {
