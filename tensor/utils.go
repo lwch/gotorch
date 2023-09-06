@@ -28,6 +28,20 @@ func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal 
 	return &Tensor{s: store, t: ret}, &Tensor{s: store, t: score}
 }
 
+func Embedding(input *Tensor, weight *Tensor, paddingIdx int64) *Tensor {
+	ret := torch.TEmbedding(input.t, weight.t, paddingIdx)
+	var store *mmgr.Storage
+	if input.s != nil {
+		store = input.s
+	} else if weight.s != nil {
+		store = weight.s
+	}
+	if store != nil {
+		store.Put(ret)
+	}
+	return &Tensor{s: store, t: ret}
+}
+
 func ClipGradNorm(params []*Tensor, max, t float64) {
 	list := make([]*torch.Tensor, len(params))
 	for i, p := range params {

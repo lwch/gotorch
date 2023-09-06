@@ -20,6 +20,15 @@ func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal 
 	return &Tensor{data: ptr}, &Tensor{data: score}
 }
 
+func TEmbedding(input *Tensor, weight *Tensor, paddingIdx int64) *Tensor {
+	var err *C.char
+	ret := C.tensor_embedding(&err, weight.data, input.data, C.int64_t(paddingIdx))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ret}
+}
+
 func ClipGradNorm(params []*Tensor, max, t float64) {
 	cParams := make([]C.tensor, len(params))
 	for i, p := range params {
