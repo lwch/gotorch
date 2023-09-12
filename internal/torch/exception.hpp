@@ -13,7 +13,7 @@ tensor auto_catch_tensor(Function f, char **err)
     }
     catch (const torch::Error &e)
     {
-        *err = strdup(e.what());
+        *err = strdup(e.msg().c_str());
     }
     catch (const std::exception &e)
     {
@@ -31,7 +31,7 @@ void auto_catch_void(Function f, char **err)
     }
     catch (const torch::Error &e)
     {
-        *err = strdup(e.what());
+        *err = strdup(e.msg().c_str());
     }
     catch (const std::exception &e)
     {
@@ -48,7 +48,7 @@ optimizer auto_catch_optimizer(Function f, char **err)
     }
     catch (const torch::Error &e)
     {
-        *err = strdup(e.what());
+        *err = strdup(e.msg().c_str());
     }
     catch (const std::exception &e)
     {
@@ -66,7 +66,7 @@ double auto_catch_double(Function f, char **err)
     }
     catch (const torch::Error &e)
     {
-        *err = strdup(e.what());
+        *err = strdup(e.msg().c_str());
     }
     catch (const std::exception &e)
     {
@@ -84,7 +84,7 @@ module auto_catch_module(Function f, char **err)
     }
     catch (const torch::Error &e)
     {
-        *err = strdup(e.what());
+        *err = strdup(e.msg().c_str());
     }
     catch (const std::exception &e)
     {
@@ -102,7 +102,7 @@ size_t auto_catch_size_t(Function f, char **err)
     }
     catch (const torch::Error &e)
     {
-        *err = strdup(e.what());
+        *err = strdup(e.msg().c_str());
     }
     catch (const std::exception &e)
     {
