@@ -31,3 +31,7 @@ func (*Long) New(size int, file *zip.File) (Storage, error) {
 func (l *Long) Get() interface{} {
 	return l.data
 }
+
+func (*Long) Type() StorageType {
+	return TypeLong
+}

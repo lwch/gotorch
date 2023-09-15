@@ -7,8 +7,9 @@ import (
 	"github.com/nlpodyssey/gopickle/types"
 )
 
-type RebuildParameter struct {
-}
+// https://github.com/pytorch/pytorch/blob/main/torch/_utils.py
+
+type RebuildParameter struct{}
 
 var _ types.Callable = &RebuildParameter{}
 

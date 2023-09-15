@@ -31,3 +31,7 @@ func (*Short) New(size int, file *zip.File) (Storage, error) {
 func (s *Short) Get() interface{} {
 	return s.data
 }
+
+func (*Short) Type() StorageType {
+	return TypeShort
+}

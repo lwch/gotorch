@@ -17,3 +17,7 @@ func (*BFloat16) New(size int, file *zip.File) (Storage, error) {
 func (f *BFloat16) Get() interface{} {
 	return f.data
 }
+
+func (*BFloat16) Type() StorageType {
+	return TypeBFloat16
+}

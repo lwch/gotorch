@@ -37,6 +37,10 @@ func (f *Half) Get() interface{} {
 	return f.data
 }
 
+func (*Half) Type() StorageType {
+	return TypeHalf
+}
+
 // http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
 func u16toFloat(u16 uint16) float32 {
 	n := hfMantissaTable[hfOffsetTable[u16>>10]+uint32(u16&0x3ff)] + hfExponentTable[u16>>10]

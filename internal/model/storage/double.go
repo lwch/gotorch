@@ -31,3 +31,7 @@ func (*Double) New(size int, file *zip.File) (Storage, error) {
 func (f *Double) Get() interface{} {
 	return f.data
 }
+
+func (*Double) Type() StorageType {
+	return TypeDouble
+}
