@@ -63,6 +63,15 @@ c := a.MatMul(b)
 fmt.Println(c.ToDevice(consts.KCPU).Float32Value()) // 注意：显存中的数据无法直接读取，需将其转换到CPU后才可读取
 ```
 
+## 模型的checkpoint加载
+
+```go
+m, _ := model.Load("yolo_tiny.pt", nil)
+for name, t := m.Params() {
+    fmt.Println(name, t.Shapes())
+}
+```
+
 ## 版本维护
 
 | gotorch版本 | libtorch版本 |
