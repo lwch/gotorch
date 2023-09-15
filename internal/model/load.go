@@ -41,6 +41,7 @@ func Load(dir string) (*Model, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer data.Close()
 	pkl := pickle.NewUnpickler(data)
 	var m Model
 	m.storages = make(map[string]storage.Storage)
@@ -81,10 +82,26 @@ func (m *Model) buildFindClass(cb findClassFunc) findClassFunc {
 		switch module + "." + name {
 		case "torch._utils._rebuild_tensor_v2":
 			return &torch.RebuildTensorV2{}, nil
-		case "torch.FloatStorage":
-			return &storage.Float{}, nil
-		case "torch.BFloat16Storage":
+		case "torch._utils._rebuild_parameter":
+			return &torch.RebuildParameter{}, nil
+		case "torch.HalfStorage": // half, float16
+			return &storage.Half{}, nil
+		case "torch.BFloat16Storage": // bfloat16
 			return &storage.BFloat16{}, nil
+		case "torch.FloatStorage": // float32, float
+			return &storage.Float{}, nil
+		case "torch.DoubleStorage": // float64, double
+			return &storage.Double{}, nil
+		case "torch.ByteStorage": // uint8
+			return &storage.Byte{}, nil
+		case "torch.CharStorage": // int8
+			return &storage.Char{}, nil
+		case "torch.ShortStorage": // int16, short
+			return &storage.Short{}, nil
+		case "torch.IntStorage": // int32, int
+			return &storage.Int{}, nil
+		case "torch.LongStorage": // int64, long
+			return &storage.Long{}, nil
 		default:
 			if cb == nil {
 				return nil, fmt.Errorf("class not found: %s %s", module, name)
@@ -111,16 +128,19 @@ func (m *Model) persistentLoad(id interface{}) (interface{}, error) {
 	}
 	storageType, storageTypeOk := tuple.Get(1).(storage.Storage)
 	key, keyOk := tuple.Get(2).(string)
-	location, locationOk := tuple.Get(3).(string)
 	size, sizeOk := tuple.Get(4).(int)
-	if !storageTypeOk || !keyOk || !locationOk || !sizeOk {
+	if !storageTypeOk || !keyOk || !sizeOk {
 		return nil, fmt.Errorf("PersistentLoad: unexpected data types")
 	}
 
 	storage, ok := m.storages[key]
 	if !ok {
+		file, ok := m.files[key]
+		if !ok {
+			return nil, fmt.Errorf("PersistentLoad: file not found: %s", key)
+		}
 		var err error
-		storage, err = storageType.New(size, location)
+		storage, err = storageType.New(size, file)
 		if err != nil {
 			return nil, err
 		}
@@ -130,18 +150,44 @@ func (m *Model) persistentLoad(id interface{}) (interface{}, error) {
 }
 
 func (m *Model) loadParams(params interface{}) error {
-	dict, ok := params.(*types.Dict)
-	if !ok {
-		return fmt.Errorf("params is not a dict")
+	switch params.(type) {
+	case *types.OrderedDict:
+		return m.loadParamsOrderedDict(params)
+	case *types.Dict:
+		return m.loadParamsDict(params)
+	default:
+		return fmt.Errorf("loadParams: unexpected data type: %#v", params)
 	}
+}
+
+func (m *Model) loadParamsOrderedDict(params interface{}) error {
+	dict := params.(*types.OrderedDict)
+	m.params = make(map[string]storage.Storage)
+	for _, entry := range dict.Map {
+		key, keyOk := entry.Key.(string)
+		value, valueOk := entry.Value.(storage.Storage)
+		if !keyOk || !valueOk {
+			return fmt.Errorf("loadParamsOrderedDict: unexpected data types, key: %#v, value: %#v", keyOk, valueOk)
+		}
+		m.params[key] = value
+	}
+	return nil
+}
+
+func (m *Model) loadParamsDict(params interface{}) error {
+	dict := params.(*types.Dict)
 	m.params = make(map[string]storage.Storage)
 	for _, entry := range *dict {
 		key, keyOk := entry.Key.(string)
 		value, valueOk := entry.Value.(storage.Storage)
 		if !keyOk || !valueOk {
-			return fmt.Errorf("loadParams: unexpected data types, key: %#v, value: %#v", keyOk, valueOk)
+			return fmt.Errorf("loadParamsDict: unexpected data types, key: %#v, value: %#v", keyOk, valueOk)
 		}
 		m.params[key] = value
 	}
 	return nil
+}
+
+func (m *Model) Params() map[string]storage.Storage {
+	return m.params
 }

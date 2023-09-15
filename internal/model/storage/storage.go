@@ -1,8 +1,11 @@
 package storage
 
+import "archive/zip"
+
 type Storage interface {
-	New(size int, location string) (Storage, error)
+	New(size int, file *zip.File) (Storage, error)
 	SetRequiresGrad(requiresGrad bool)
+	Get() interface{}
 }
 
 type base struct {

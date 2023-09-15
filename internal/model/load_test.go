@@ -6,9 +6,9 @@ import (
 )
 
 func TestLoad(t *testing.T) {
-	m, err := Load("yolo_tiny.pt")
+	m, err := Load("./test/linear.pt")
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(m.params)
+	fmt.Println(m.params["linear.linear"].Get())
 }
