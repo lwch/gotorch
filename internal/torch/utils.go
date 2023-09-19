@@ -65,8 +65,8 @@ func fromCInts[T1 C.uint8_t | C.int8_t | C.int16_t | C.int32_t | C.int64_t,
 	return ret
 }
 
-func cInts[T1 uint8 | int8 | int16 | int32 | int64,
-	T2 C.uint8_t | C.int8_t | C.int16_t | C.int32_t | C.int64_t,
+func cInts[T1 uint8 | int8 | int16 | uint16 | int32 | int64,
+	T2 C.uint8_t | C.int8_t | C.int16_t | C.uint16_t | C.int32_t | C.int64_t,
 ](arr []T1) (*T2, C.size_t) {
 	ret := make([]T2, len(arr))
 	for i, v := range arr {
