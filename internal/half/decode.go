@@ -2,8 +2,8 @@ package half
 
 import "unsafe"
 
-// Decode http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
-func Decode(u16 uint16) float32 {
+// DecodeHalf http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
+func DecodeHalf(u16 uint16) float32 {
 	n := mantissaTable[offsetTable[u16>>10]+uint32(u16&0x3ff)] + exponentTable[u16>>10]
 	return *(*float32)(unsafe.Pointer(&n))
 }

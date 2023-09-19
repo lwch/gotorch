@@ -14,7 +14,7 @@ import "C"
 func FromHalf(data []float32, shape []int64, device consts.DeviceType) *Tensor {
 	pointer := make([]uint16, len(data))
 	for i, v := range data {
-		pointer[i] = half.Encode(v)
+		pointer[i] = half.EncodeHalf(v)
 	}
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
@@ -35,7 +35,7 @@ func (t *Tensor) HalfValue() []float32 {
 	C.tensor_copy_data(t.data, unsafe.Pointer(&value[0]))
 	ret := make([]float32, len(value))
 	for i, v := range value {
-		ret[i] = half.Decode(uint16(v))
+		ret[i] = half.DecodeHalf(uint16(v))
 	}
 	return ret
 }

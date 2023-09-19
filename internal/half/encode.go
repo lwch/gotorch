@@ -2,8 +2,8 @@ package half
 
 import "unsafe"
 
-// Encode http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
-func Encode(f float32) uint16 {
+// EncodeHalf http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
+func EncodeHalf(f float32) uint16 {
 	n := *(*uint32)(unsafe.Pointer(&f))
 	return baseTable[(n>>23)&0x1ff] + uint16((n&0x007fffff)>>shiftTable[(n>>23)&0x1ff])
 }

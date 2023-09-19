@@ -5,13 +5,11 @@ import (
 	"encoding/binary"
 	"fmt"
 	"sync"
-
-	"github.com/lwch/gotorch/internal/half"
 )
 
 type Half struct {
 	base
-	data []float32
+	data []uint16
 }
 
 var _ Storage = &Half{}
@@ -23,17 +21,13 @@ func (*Half) New(wg *sync.WaitGroup, size int, file *zip.File) (Storage, error) 
 	}
 	defer fs.Close()
 	var ret Half
-	ret.data = make([]float32, size)
+	ret.data = make([]uint16, size)
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		for i := 0; i < size; i++ {
-			var u uint16
-			err = binary.Read(fs, binary.LittleEndian, &u)
-			if err != nil {
-				panic(fmt.Errorf("Half.New: can not read file %s: %v", file.Name, err))
-			}
-			ret.data[i] = half.Decode(u)
+		err = binary.Read(fs, binary.LittleEndian, ret.data)
+		if err != nil {
+			panic(fmt.Errorf("Half.New: can not read file %s: %v", file.Name, err))
 		}
 	}()
 	return &ret, nil
