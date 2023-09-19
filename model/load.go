@@ -1,6 +1,8 @@
 package model
 
 import (
+	"sync"
+
 	"github.com/lwch/gotorch/internal/model"
 	"github.com/lwch/gotorch/internal/model/storage"
 	"github.com/lwch/gotorch/mmgr"
@@ -17,9 +19,15 @@ func Load(dir string, s *mmgr.Storage) (*Model, error) {
 		return nil, err
 	}
 	params := make(map[string]*tensor.Tensor)
+	var wg sync.WaitGroup
+	wg.Add(len(m.Params()))
 	for k, v := range m.Params() {
-		params[k] = buildTensor(v, s)
+		go func(k string, v storage.Storage) {
+			defer wg.Done()
+			params[k] = buildTensor(v, s)
+		}(k, v)
 	}
+	wg.Wait()
 	return &Model{params: params}, nil
 }
 
