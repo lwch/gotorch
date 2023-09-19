@@ -33,8 +33,16 @@ func Load(dir string, s *mmgr.Storage) (*Model, error) {
 
 func buildTensor(t storage.Storage, s *mmgr.Storage) *tensor.Tensor {
 	switch t.Type() {
-	// bfloat16, half, float to float32 tensor
-	case storage.TypeBFloat16, storage.TypeHalf, storage.TypeFloat:
+	// float to bfloat16 tensor
+	case storage.TypeBFloat16:
+		return tensor.FromBFloat16(s, t.Get().([]float32),
+			tensor.WithShapes(t.GetShape()...))
+	// float to half tensor
+	case storage.TypeHalf:
+		return tensor.FromFloat32(s, t.Get().([]float32),
+			tensor.WithShapes(t.GetShape()...))
+	// float to float32 tensor
+	case storage.TypeFloat:
 		return tensor.FromFloat32(s, t.Get().([]float32),
 			tensor.WithShapes(t.GetShape()...))
 	// double to float64 tensor
