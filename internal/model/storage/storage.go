@@ -1,6 +1,9 @@
 package storage
 
-import "archive/zip"
+import (
+	"archive/zip"
+	"sync"
+)
 
 type StorageType byte
 
@@ -17,7 +20,7 @@ const (
 )
 
 type Storage interface {
-	New(size int, file *zip.File) (Storage, error)
+	New(wg *sync.WaitGroup, size int, file *zip.File) (Storage, error)
 	SetShape(shape []int64)
 	GetShape() []int64
 	SetRequiresGrad(requiresGrad bool)

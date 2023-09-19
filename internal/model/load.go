@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sync"
 
 	"github.com/lwch/gotorch/internal/model/storage"
 	"github.com/lwch/gotorch/internal/model/torch"
@@ -18,6 +19,7 @@ import (
 type findClassFunc func(module, name string) (interface{}, error)
 
 type Model struct {
+	wg       sync.WaitGroup
 	storages map[string]storage.Storage
 	files    map[string]*zip.File
 	params   map[string]storage.Storage
@@ -52,6 +54,7 @@ func Load(dir string) (*Model, error) {
 	if err != nil {
 		return nil, err
 	}
+	m.wg.Wait()
 	err = m.loadParams(params)
 	if err != nil {
 		return nil, err
@@ -140,7 +143,7 @@ func (m *Model) persistentLoad(id interface{}) (interface{}, error) {
 			return nil, fmt.Errorf("PersistentLoad: file not found: %s", key)
 		}
 		var err error
-		storage, err = storageType.New(size, file)
+		storage, err = storageType.New(&m.wg, size, file)
 		if err != nil {
 			return nil, err
 		}

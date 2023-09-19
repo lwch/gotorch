@@ -10,5 +10,7 @@ func TestLoad(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(m.params["linear.linear"].Get())
+	for i := 0; i < 1000; i++ {
+		fmt.Println(m.params[fmt.Sprintf("linear.%d.linear", i)].Get())
+	}
 }

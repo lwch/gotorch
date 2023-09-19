@@ -17,10 +17,14 @@ class Linear(nn.Module):
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.linear = Linear()
+        self.linear = nn.ModuleList()
+        for _ in range(1000):
+            self.linear.append(Linear())
 
     def forward(self, x):
-        return self.linear(x)
+        for linear in self.linear:
+            x = linear(x)
+        return x
 
 model = Model()
 

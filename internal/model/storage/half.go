@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"encoding/binary"
 	"fmt"
+	"sync"
 	"unsafe"
 )
 
@@ -14,7 +15,7 @@ type Half struct {
 
 var _ Storage = &Half{}
 
-func (*Half) New(size int, file *zip.File) (Storage, error) {
+func (*Half) New(wg *sync.WaitGroup, size int, file *zip.File) (Storage, error) {
 	fs, err := file.Open()
 	if err != nil {
 		return nil, fmt.Errorf("Half.New: can not open file %s: %v", file.Name, err)
@@ -22,14 +23,18 @@ func (*Half) New(size int, file *zip.File) (Storage, error) {
 	defer fs.Close()
 	var ret Half
 	ret.data = make([]float32, size)
-	for i := 0; i < size; i++ {
-		var u uint16
-		err = binary.Read(fs, binary.LittleEndian, &u)
-		if err != nil {
-			return nil, fmt.Errorf("Half.New: can not read file %s: %v", file.Name, err)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for i := 0; i < size; i++ {
+			var u uint16
+			err = binary.Read(fs, binary.LittleEndian, &u)
+			if err != nil {
+				panic(fmt.Errorf("Half.New: can not read file %s: %v", file.Name, err))
+			}
+			ret.data[i] = u16toFloat(u)
 		}
-		ret.data[i] = u16toFloat(u)
-	}
+	}()
 	return &ret, nil
 }
 
