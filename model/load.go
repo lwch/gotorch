@@ -18,13 +18,17 @@ func Load(dir string, s *mmgr.Storage) (*Model, error) {
 	if err != nil {
 		return nil, err
 	}
+	var mu sync.Mutex
 	params := make(map[string]*tensor.Tensor)
 	var wg sync.WaitGroup
 	wg.Add(len(m.Params()))
 	for k, v := range m.Params() {
 		go func(k string, v storage.Storage) {
 			defer wg.Done()
-			params[k] = buildTensor(v, s)
+			t := buildTensor(v, s)
+			mu.Lock()
+			params[k] = t
+			mu.Unlock()
 		}(k, v)
 	}
 	wg.Wait()
