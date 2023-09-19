@@ -35,11 +35,11 @@ func buildTensor(t storage.Storage, s *mmgr.Storage) *tensor.Tensor {
 	switch t.Type() {
 	// float to bfloat16 tensor
 	case storage.TypeBFloat16:
-		return tensor.FromBFloat16(s, t.Get().([]float32),
+		return tensor.FromBFloat16Raw(s, t.Get().([]uint16),
 			tensor.WithShapes(t.GetShape()...))
 	// float to half tensor
 	case storage.TypeHalf:
-		return tensor.FromFloat32(s, t.Get().([]float32),
+		return tensor.FromHalfRaw(s, t.Get().([]uint16),
 			tensor.WithShapes(t.GetShape()...))
 	// float to float32 tensor
 	case storage.TypeFloat:
