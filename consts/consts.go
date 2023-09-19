@@ -15,6 +15,10 @@ const (
 	KComplexFloat
 	KComplexDouble
 	KBool
+	KQInt8
+	KQUInt8
+	KQInt32
+	KBFloat16
 )
 
 func (t ScalarType) String() string {
@@ -43,6 +47,14 @@ func (t ScalarType) String() string {
 		return "complex double"
 	case KBool:
 		return "bool"
+	case KQInt8:
+		return "qint8"
+	case KQUInt8:
+		return "quint8"
+	case KQInt32:
+		return "qint32"
+	case KBFloat16:
+		return "bfloat16"
 	default:
 		return "unknown"
 	}

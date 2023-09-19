@@ -90,6 +90,30 @@ func FromInt64(s *mmgr.Storage, data []int64, opts ...Option) *Tensor {
 	return &Tensor{s: s, t: t}
 }
 
+func FromHalf(s *mmgr.Storage, data []float32, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromHalf(data, args.shapes, args.device)
+	if s != nil {
+		s.Put(t)
+	}
+	return &Tensor{s: s, t: t}
+}
+
+func FromBFloat16(s *mmgr.Storage, data []float32, opts ...Option) *Tensor {
+	args := defaultOptions()
+	for _, opt := range opts {
+		opt(args)
+	}
+	t := torch.FromBFloat16(data, args.shapes, args.device)
+	if s != nil {
+		s.Put(t)
+	}
+	return &Tensor{s: s, t: t}
+}
+
 func FromFloat32(s *mmgr.Storage, data []float32, opts ...Option) *Tensor {
 	args := defaultOptions()
 	for _, opt := range opts {
@@ -172,6 +196,14 @@ func (t *Tensor) Int32Value() []int32 {
 
 func (t *Tensor) Int64Value() []int64 {
 	return t.t.Int64Value()
+}
+
+func (t *Tensor) HalfValue() []float32 {
+	return t.t.HalfValue()
+}
+
+func (t *Tensor) BFloat16Value() []float32 {
+	return t.t.BFloat16Value()
 }
 
 func (t *Tensor) Float32Value() []float32 {
