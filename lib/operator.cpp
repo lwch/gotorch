@@ -60,6 +60,13 @@ tensor tensor_sqrt(char **err, tensor a)
                              err);
 }
 
+tensor tensor_rsqrt(char **err, tensor a)
+{
+    return auto_catch_tensor([a]()
+                             { return new torch::Tensor(a->rsqrt()); },
+                             err);
+}
+
 tensor tensor_log(char **err, tensor a)
 {
     return auto_catch_tensor([a]()

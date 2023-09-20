@@ -87,6 +87,11 @@ func (t *Tensor) Sqrt() *Tensor {
 	return &Tensor{s: t.store1(ret), t: ret}
 }
 
+func (t *Tensor) RSqrt() *Tensor {
+	ret := t.t.RSqrt()
+	return &Tensor{s: t.store1(ret), t: ret}
+}
+
 func (t *Tensor) Log() *Tensor {
 	ret := t.t.Log()
 	return &Tensor{s: t.store1(ret), t: ret}

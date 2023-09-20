@@ -74,6 +74,15 @@ func (t *Tensor) Sqrt() *Tensor {
 	return &Tensor{data: ptr}
 }
 
+func (t *Tensor) RSqrt() *Tensor {
+	var err *C.char
+	ptr := C.tensor_rsqrt(&err, t.data)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
+
 func (t *Tensor) Log() *Tensor {
 	var err *C.char
 	ptr := C.tensor_log(&err, t.data)

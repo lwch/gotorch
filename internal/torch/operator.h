@@ -18,6 +18,7 @@ extern "C"
     GOTORCH_API tensor tensor_div(char **err, tensor a, tensor b);
     GOTORCH_API tensor tensor_pow(char **err, tensor a, double n);
     GOTORCH_API tensor tensor_sqrt(char **err, tensor a);
+    GOTORCH_API tensor tensor_rsqrt(char **err, tensor a);
     GOTORCH_API tensor tensor_log(char **err, tensor a);
     GOTORCH_API tensor tensor_exp(char **err, tensor a);
     GOTORCH_API tensor tensor_neg(char **err, tensor a);
