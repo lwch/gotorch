@@ -71,3 +71,12 @@ func (t *Tensor) ToDevice(device consts.DeviceType) *Tensor {
 	}
 	return &Tensor{data: ptr}
 }
+
+func (t *Tensor) ToScalarType(dtype consts.ScalarType) *Tensor {
+	var err *C.char
+	ptr := C.tensor_to_scalar_type(&err, t.data, C.int8_t(dtype))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}

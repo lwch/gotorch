@@ -90,3 +90,11 @@ func (t *Tensor) ToDevice(device consts.DeviceType) *Tensor {
 	}
 	return &Tensor{s: t.s, t: ret}
 }
+
+func (t *Tensor) ToScalarType(scalarType consts.ScalarType) *Tensor {
+	ret := t.t.ToScalarType(scalarType)
+	if t.s != nil {
+		t.s.Put(ret)
+	}
+	return &Tensor{s: t.s, t: ret}
+}

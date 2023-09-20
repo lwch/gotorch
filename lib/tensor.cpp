@@ -21,6 +21,13 @@ tensor tensor_to_device(char **err, tensor t, int8_t device)
                              err);
 }
 
+tensor tensor_to_scalar_type(char **err, tensor t, int8_t scalar_type)
+{
+    return auto_catch_tensor([t, scalar_type]()
+                             { return new torch::Tensor(t->to(torch::ScalarType(scalar_type))); },
+                             err);
+}
+
 tensor tensor_arange(char **err, int end, int8_t dtype, int8_t device)
 {
     return auto_catch_tensor([end, dtype, device]()

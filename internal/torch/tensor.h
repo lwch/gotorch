@@ -19,6 +19,7 @@ extern "C"
     GOTORCH_API void tensor_copy_data(tensor t, void *data);
     GOTORCH_API void tensor_set_requires_grad(char **err, tensor t, bool b);
     GOTORCH_API tensor tensor_to_device(char **err, tensor t, int8_t device);
+    GOTORCH_API tensor tensor_to_scalar_type(char **err, tensor t, int8_t scalar_type);
     // shapes
     GOTORCH_API tensor tensor_reshape(char **err, tensor t, int64_t *shape, size_t shape_len);
     GOTORCH_API tensor tensor_transpose(char **err, tensor t, int64_t dim1, int64_t dim2);
