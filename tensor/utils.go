@@ -71,3 +71,17 @@ func Cat(tensors []*Tensor, dim int) *Tensor {
 	}
 	return &Tensor{s: store, t: ret}
 }
+
+func SVD(t *Tensor) (*Tensor, *Tensor, *Tensor) {
+	u, s, v := torch.SVD(t.t)
+	var store *mmgr.Storage
+	if t.s != nil {
+		store = t.s
+	}
+	if store != nil {
+		store.Put(u)
+		store.Put(s)
+		store.Put(v)
+	}
+	return &Tensor{s: store, t: u}, &Tensor{s: store, t: s}, &Tensor{s: store, t: v}
+}

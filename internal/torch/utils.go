@@ -19,6 +19,16 @@ func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal 
 	return &Tensor{data: ptr}
 }
 
+func SVD(t *Tensor) (*Tensor, *Tensor, *Tensor) {
+	var err *C.char
+	var u, s, v C.tensor
+	C.svd(&err, t.data, &u, &s, &v)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: u}, &Tensor{data: s}, &Tensor{data: v}
+}
+
 func TEmbedding(input *Tensor, weight *Tensor, paddingIdx int64) *Tensor {
 	var err *C.char
 	ret := C.tensor_embedding(&err, weight.data, input.data, C.int64_t(paddingIdx))

@@ -84,3 +84,14 @@ void init_zeros(char **err, tensor t)
                            { torch::nn::init::zeros_(*t); },
                            err);
 }
+
+void svd(char **err, tensor t, tensor *u, tensor *s, tensor *v)
+{
+    return auto_catch_void([t, u, s, v]()
+                           {
+                               std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> result = torch::svd(*t);
+                               *u = new torch::Tensor(std::get<0>(result));
+                               *s = new torch::Tensor(std::get<1>(result));
+                               *v = new torch::Tensor(std::get<2>(result)); },
+                           err);
+}
