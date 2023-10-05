@@ -5,12 +5,12 @@ import (
 	"github.com/lwch/gotorch/mmgr"
 )
 
-func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal bool) (*Tensor, *Tensor) {
+func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal bool) *Tensor {
 	var mt *torch.Tensor
 	if mask != nil {
 		mt = mask.t
 	}
-	ret, score := torch.ScaledDotProductAttention(q.t, k.t, v.t, mt, drouput, isCausal)
+	ret := torch.ScaledDotProductAttention(q.t, k.t, v.t, mt, drouput, isCausal)
 	var store *mmgr.Storage
 	if q.s != nil {
 		store = q.s
@@ -23,9 +23,8 @@ func ScaledDotProductAttention(q, k, v, mask *Tensor, drouput float64, isCausal 
 	}
 	if store != nil {
 		store.Put(ret)
-		store.Put(score)
 	}
-	return &Tensor{s: store, t: ret}, &Tensor{s: store, t: score}
+	return &Tensor{s: store, t: ret}
 }
 
 func Embedding(input *Tensor, weight *Tensor, paddingIdx int64) *Tensor {

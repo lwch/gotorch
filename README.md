@@ -76,4 +76,5 @@ for name, t := m.Params() {
 
 | gotorch版本 | libtorch版本 |
 | --- | --- |
-| v1.0.0~X | v2.0.1 |
+| v1.0.0~v1.5.7 | v2.0.1 |
+| v1.6.0~X | v2.1 |

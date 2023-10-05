@@ -4,22 +4,16 @@
 
 tensor scaled_dot_product_attention(char **err,
                                     tensor q, tensor k, tensor v,
-                                    tensor mask, double dropout, bool is_causal,
-                                    tensor *score)
+                                    tensor mask, double dropout, bool is_causal)
 {
-    return auto_catch_tensor([q, k, v, mask, dropout, is_causal, score]()
+    return auto_catch_tensor([q, k, v, mask, dropout, is_causal]()
                              {
-                                std::tuple<torch::Tensor, torch::Tensor> result;
-                                if (mask)
-                                {
-                                    result = torch::_scaled_dot_product_attention(*q, *k, *v, *mask, dropout, true, is_causal);
+                                c10::optional<at::Tensor> mask_opt = c10::nullopt;
+                                if (mask) {
+                                    mask_opt = *mask;
                                 }
-                                else
-                                {
-                                    result = torch::_scaled_dot_product_attention(*q, *k, *v, torch::nullopt, dropout, true, is_causal);
-                                }
-                                *score = new torch::Tensor(std::get<1>(result));
-                                return new torch::Tensor(std::get<0>(result)); },
+                                return new torch::Tensor(
+                                    torch::scaled_dot_product_attention(*q, *k, *v, mask_opt, dropout, is_causal)); },
                              err);
 }
 
