@@ -147,6 +147,11 @@ func (t *Tensor) Gelu(tanh bool) *Tensor {
 	return &Tensor{s: t.store1(ret), t: ret}
 }
 
+func (t *Tensor) LeakyRelu(negSlope float64) *Tensor {
+	ret := t.t.LeakyRelu(negSlope)
+	return &Tensor{s: t.store1(ret), t: ret}
+}
+
 func (t *Tensor) Sigmoid() *Tensor {
 	ret := t.t.Sigmoid()
 	return &Tensor{s: t.store1(ret), t: ret}

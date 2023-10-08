@@ -149,6 +149,13 @@ tensor tensor_gelu(char **err, tensor a, bool tanh)
                              err);
 }
 
+tensor tensor_leaky_relu(char **err, tensor a, double negative_slope)
+{
+    return auto_catch_tensor([a, negative_slope]()
+                             { return new torch::Tensor(torch::leaky_relu(*a, negative_slope)); },
+                             err);
+}
+
 tensor tensor_sigmoid(char **err, tensor a)
 {
     return auto_catch_tensor([a]()

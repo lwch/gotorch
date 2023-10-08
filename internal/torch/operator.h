@@ -30,6 +30,7 @@ extern "C"
     GOTORCH_API tensor tensor_var(char **err, tensor a, int64_t dim, bool unbiased, bool keepdim);
     GOTORCH_API tensor tensor_relu(char **err, tensor a);
     GOTORCH_API tensor tensor_gelu(char **err, tensor a, bool tanh);
+    GOTORCH_API tensor tensor_leaky_relu(char **err, tensor a, double negative_slope);
     GOTORCH_API tensor tensor_sigmoid(char **err, tensor a);
     GOTORCH_API tensor tensor_tanh(char **err, tensor a);
     GOTORCH_API tensor tensor_softmax(char **err, tensor a, int64_t dim);
