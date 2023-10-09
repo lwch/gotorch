@@ -116,3 +116,10 @@ tensor view_as_complex(char **err, tensor t)
                              { return new torch::Tensor(torch::view_as_complex(*t)); },
                              err);
 }
+
+tensor view_as_real(char **err, tensor t)
+{
+    return auto_catch_tensor([t]()
+                             { return new torch::Tensor(torch::view_as_real(*t)); },
+                             err);
+}

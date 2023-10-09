@@ -125,3 +125,15 @@ func (t *Tensor) ViewAsComplex() *Tensor {
 	}
 	return &Tensor{s: store, t: ret}
 }
+
+func (t *Tensor) ViewAsReal() *Tensor {
+	ret := torch.ViewAsReal(t.t)
+	var store *mmgr.Storage
+	if t.s != nil {
+		store = t.s
+	}
+	if store != nil {
+		store.Put(ret)
+	}
+	return &Tensor{s: store, t: ret}
+}
