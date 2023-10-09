@@ -46,6 +46,7 @@ extern "C"
     GOTORCH_API tensor tensor_cat(char **err, tensor *tensors, size_t tensors_len, int64_t dim);
     GOTORCH_API tensor tensor_embedding(char **err, tensor weight, tensor indices, int64_t padding_idx);
     GOTORCH_API void svd(char **err, tensor t, tensor *u, tensor *s, tensor *v);
+    GOTORCH_API tensor outer(char **err, tensor a, tensor b);
     // init
     GOTORCH_API void init_kaiming_uniform(char **err, tensor t, double a);
     GOTORCH_API void init_xaiver_uniform(char **err, tensor t, double gain);

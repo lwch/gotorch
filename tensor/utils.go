@@ -85,3 +85,17 @@ func SVD(t *Tensor) (*Tensor, *Tensor, *Tensor) {
 	}
 	return &Tensor{s: store, t: u}, &Tensor{s: store, t: s}, &Tensor{s: store, t: v}
 }
+
+func Outer(a, b *Tensor) *Tensor {
+	ret := torch.Outer(a.t, b.t)
+	var store *mmgr.Storage
+	if a.s != nil {
+		store = a.s
+	} else if b.s != nil {
+		store = b.s
+	}
+	if store != nil {
+		store.Put(ret)
+	}
+	return &Tensor{s: store, t: ret}
+}

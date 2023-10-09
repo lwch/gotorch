@@ -95,3 +95,10 @@ void svd(char **err, tensor t, tensor *u, tensor *s, tensor *v)
                                *v = new torch::Tensor(std::get<2>(result)); },
                            err);
 }
+
+tensor outer(char **err, tensor a, tensor b)
+{
+    return auto_catch_tensor([a, b]()
+                             { return new torch::Tensor(torch::outer(*a, *b)); },
+                             err);
+}
