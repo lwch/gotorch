@@ -113,3 +113,15 @@ func Polar(abs, angle *Tensor) *Tensor {
 	}
 	return &Tensor{s: store, t: ret}
 }
+
+func (t *Tensor) ViewAsComplex() *Tensor {
+	ret := torch.ViewAsComplex(t.t)
+	var store *mmgr.Storage
+	if t.s != nil {
+		store = t.s
+	}
+	if store != nil {
+		store.Put(ret)
+	}
+	return &Tensor{s: store, t: ret}
+}

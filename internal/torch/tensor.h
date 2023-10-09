@@ -48,6 +48,7 @@ extern "C"
     GOTORCH_API void svd(char **err, tensor t, tensor *u, tensor *s, tensor *v);
     GOTORCH_API tensor outer(char **err, tensor a, tensor b);
     GOTORCH_API tensor polar(char **err, tensor abs, tensor angle);
+    GOTORCH_API tensor view_as_complex(char **err, tensor t);
     // init
     GOTORCH_API void init_kaiming_uniform(char **err, tensor t, double a);
     GOTORCH_API void init_xaiver_uniform(char **err, tensor t, double gain);

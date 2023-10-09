@@ -109,3 +109,10 @@ tensor polar(char **err, tensor abs, tensor angle)
                              { return new torch::Tensor(torch::polar(*abs, *angle)); },
                              err);
 }
+
+tensor view_as_complex(char **err, tensor t)
+{
+    return auto_catch_tensor([t]()
+                             { return new torch::Tensor(torch::view_as_complex(*t)); },
+                             err);
+}
