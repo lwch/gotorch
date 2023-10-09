@@ -102,3 +102,10 @@ tensor outer(char **err, tensor a, tensor b)
                              { return new torch::Tensor(torch::outer(*a, *b)); },
                              err);
 }
+
+tensor polar(char **err, tensor abs, tensor angle)
+{
+    return auto_catch_tensor([abs, angle]()
+                             { return new torch::Tensor(torch::polar(*abs, *angle)); },
+                             err);
+}

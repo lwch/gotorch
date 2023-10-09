@@ -99,3 +99,17 @@ func Outer(a, b *Tensor) *Tensor {
 	}
 	return &Tensor{s: store, t: ret}
 }
+
+func Polar(abs, angle *Tensor) *Tensor {
+	ret := torch.Polar(abs.t, angle.t)
+	var store *mmgr.Storage
+	if abs.s != nil {
+		store = abs.s
+	} else if angle.s != nil {
+		store = angle.s
+	}
+	if store != nil {
+		store.Put(ret)
+	}
+	return &Tensor{s: store, t: ret}
+}
