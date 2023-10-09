@@ -191,6 +191,15 @@ func (t *Tensor) LeakyRelu(negativeSlope float64) *Tensor {
 	return &Tensor{data: ptr}
 }
 
+func (t *Tensor) Silu() *Tensor {
+	var err *C.char
+	ptr := C.tensor_silu(&err, t.data)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Tensor{data: ptr}
+}
+
 func (t *Tensor) Sigmoid() *Tensor {
 	var err *C.char
 	ptr := C.tensor_sigmoid(&err, t.data)

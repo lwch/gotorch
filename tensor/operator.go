@@ -152,6 +152,11 @@ func (t *Tensor) LeakyRelu(negSlope float64) *Tensor {
 	return &Tensor{s: t.store1(ret), t: ret}
 }
 
+func (t *Tensor) Silu() *Tensor {
+	ret := t.t.Silu()
+	return &Tensor{s: t.store1(ret), t: ret}
+}
+
 func (t *Tensor) Sigmoid() *Tensor {
 	ret := t.t.Sigmoid()
 	return &Tensor{s: t.store1(ret), t: ret}

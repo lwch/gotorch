@@ -156,6 +156,13 @@ tensor tensor_leaky_relu(char **err, tensor a, double negative_slope)
                              err);
 }
 
+tensor tensor_silu(char **err, tensor a)
+{
+    return auto_catch_tensor([a]()
+                             { return new torch::Tensor(torch::silu(*a)); },
+                             err);
+}
+
 tensor tensor_sigmoid(char **err, tensor a)
 {
     return auto_catch_tensor([a]()
