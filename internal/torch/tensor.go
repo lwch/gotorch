@@ -1,29 +1,24 @@
 package torch
 
 import (
-	"sync"
-
 	"github.com/lwch/gotorch/consts"
 )
 
 // #include "tensor.h"
 import "C"
 
-type Tensor struct {
-	mFree sync.Mutex
-	data  C.tensor
-}
+type Tensor C.tensor
 
-func ARange(n int, dtype consts.ScalarType, device consts.DeviceType) *Tensor {
+func ARange(n int, dtype consts.ScalarType, device consts.DeviceType) Tensor {
 	var err *C.char
 	ptr := C.tensor_arange(&err, C.int(n), C.int8_t(dtype), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func Zeros(shape []int64, dtype consts.ScalarType, device consts.DeviceType) *Tensor {
+func Zeros(shape []int64, dtype consts.ScalarType, device consts.DeviceType) Tensor {
 	shapes := make([]C.int64_t, len(shape))
 	for i, s := range shape {
 		shapes[i] = C.int64_t(s)
@@ -33,18 +28,11 @@ func Zeros(shape []int64, dtype consts.ScalarType, device consts.DeviceType) *Te
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Free() {
-	t.mFree.Lock()
-	defer t.mFree.Unlock()
-	// allready freed
-	if t.data == nil {
-		return
-	}
-	C.free_tensor(t.data)
-	t.data = nil
+func Free(t Tensor) {
+	C.free_tensor(t)
 }
 
 func (t *Tensor) ScalarType() consts.ScalarType {
