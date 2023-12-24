@@ -21,6 +21,13 @@ func New(t *torch.Tensor, s *mmgr.Storage) *Tensor {
 	}
 }
 
+func (t *Tensor) SetStorage(s *mmgr.Storage) {
+	if s != nil {
+		s.Put(t.t)
+	}
+	t.s = s
+}
+
 func (t *Tensor) Storage() *mmgr.Storage {
 	return t.s
 }
