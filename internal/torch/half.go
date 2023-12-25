@@ -39,11 +39,11 @@ func FromHalfRaw(data []uint16, shape []int64, device consts.DeviceType) Tensor 
 }
 
 func HalfValue(t Tensor) []float32 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KHalf {
+	tp := ScalarType(t)
+	if tp != consts.KHalf {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.uint16_t, t.ElemCount())
+	value := make([]C.uint16_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	ret := make([]float32, len(value))
 	for i, v := range value {
@@ -53,11 +53,11 @@ func HalfValue(t Tensor) []float32 {
 }
 
 func HalfRaw(t Tensor) []uint16 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KHalf {
+	tp := ScalarType(t)
+	if tp != consts.KHalf {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.uint16_t, t.ElemCount())
+	value := make([]C.uint16_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	ret := make([]uint16, len(value))
 	for i, v := range value {
@@ -94,11 +94,11 @@ func FromBFloat16Raw(data []uint16, shape []int64, device consts.DeviceType) Ten
 }
 
 func BFloat16Value(t Tensor) []float32 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KBFloat16 {
+	tp := ScalarType(t)
+	if tp != consts.KBFloat16 {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.uint16_t, t.ElemCount())
+	value := make([]C.uint16_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	ret := make([]float32, len(value))
 	for i, v := range value {
@@ -108,11 +108,11 @@ func BFloat16Value(t Tensor) []float32 {
 }
 
 func BFloat16Raw(t Tensor) []uint16 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KBFloat16 {
+	tp := ScalarType(t)
+	if tp != consts.KBFloat16 {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.uint16_t, t.ElemCount())
+	value := make([]C.uint16_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	ret := make([]uint16, len(value))
 	for i, v := range value {

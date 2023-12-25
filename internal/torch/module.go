@@ -5,16 +5,41 @@ package torch
 import "C"
 import (
 	"math"
+	"runtime"
 
 	"github.com/lwch/gotorch/consts"
+	"github.com/lwch/logging"
 )
 
-type module C.module
+type NormalForward interface {
+	Forward(Tensor) Tensor
+}
 
-func moduleParameters(m module, count int) []Tensor {
+type Module interface {
+	Parameters() []Tensor
+	ToDevice(consts.DeviceType)
+	ToScalarType(consts.ScalarType)
+}
+
+type module struct {
+	m C.module
+}
+
+func freeModule(m *module) error {
+	if m.m == nil {
+		return nil
+	}
+	logging.Debug("free module: %p", m)
+	C.free_module(m.m)
+	m.m = nil
+	runtime.SetFinalizer(m, nil)
+	return nil
+}
+
+func (m *module) Parameters(count int) []Tensor {
 	params := make([]C.tensor, count)
 	var err *C.char
-	C.module_parameters(&err, C.module(m), (*C.tensor)(&params[0]))
+	C.module_parameters(&err, m.m, (*C.tensor)(&params[0]))
 	if err != nil {
 		panic(C.GoString(err))
 	}
@@ -25,90 +50,118 @@ func moduleParameters(m module, count int) []Tensor {
 	return ret
 }
 
-func ModuleToDevice(m module, device consts.DeviceType) {
+func (m *module) ToDevice(device consts.DeviceType) {
 	var err *C.char
-	C.module_to_device(&err, C.module(m), C.int8_t(device))
+	C.module_to_device(&err, m.m, C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 }
 
-func ModuleToScalarType(m module, t consts.ScalarType) {
+func (m *module) ToScalarType(t consts.ScalarType) {
 	var err *C.char
-	C.module_to_scalar_type(&err, C.module(m), C.int8_t(t))
+	C.module_to_scalar_type(&err, m.m, C.int8_t(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 }
 
-type Linear module
+type Linear struct {
+	*module
+}
 
-func NewLinear(inFeatures, outFeatures int64) Linear {
+var _ Module = &Linear{}
+var _ NormalForward = &Linear{}
+
+func NewLinear(inFeatures, outFeatures int64) *Linear {
 	var err *C.char
 	l := C.new_linear(&err, C.int64_t(inFeatures), C.int64_t(outFeatures))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return Linear(l)
+	ret := &Linear{&module{l}}
+	logging.Debug("new linear layer: %p", ret.module)
+	runtime.SetFinalizer(ret.module, freeModule)
+	return ret
 }
 
-func LinearForward(l Linear, x Tensor) Tensor {
+func (l *Linear) Forward(x Tensor) Tensor {
 	var err *C.char
-	ptr := C.linear_forward(&err, C.module(l), C.tensor(x))
+	ptr := C.linear_forward(&err, l.m, C.tensor(x))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return Tensor(ptr)
 }
 
-func LinearParameters(l Linear) []Tensor {
-	return moduleParameters(module(l), 2)
+func (l *Linear) Parameters() []Tensor {
+	return l.module.Parameters(2)
 }
 
-type LayerNorm module
+type LayerNorm struct {
+	*module
+}
 
-func NewLayerNorm(shape []int64) LayerNorm {
+var _ Module = &LayerNorm{}
+var _ NormalForward = &LayerNorm{}
+
+func NewLayerNorm(shape []int64) *LayerNorm {
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
 	l := C.new_layer_norm(&err, shapes, size)
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return LayerNorm(l)
+	ret := &LayerNorm{&module{l}}
+	logging.Debug("new layer_norm layer: %p", ret.module)
+	runtime.SetFinalizer(ret.module, freeModule)
+	return ret
 }
 
-func LayerNormForward(l LayerNorm, x Tensor) Tensor {
+func (l *LayerNorm) Forward(x Tensor) Tensor {
 	var err *C.char
-	ptr := C.layer_norm_forward(&err, C.module(l), C.tensor(x))
+	ptr := C.layer_norm_forward(&err, l.m, C.tensor(x))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return Tensor(ptr)
 }
 
-func LayerNormParameters(l LayerNorm) []Tensor {
-	return moduleParameters(module(l), 2)
+func (l *LayerNorm) Parameters() []Tensor {
+	return l.module.Parameters(2)
 }
 
-type Attention module
+type AttentionForward interface {
+	Forward(Tensor, Tensor, Tensor, Tensor, bool) (Tensor, Tensor)
+}
 
-func NewAttention(embedDim, numHeads int64, dropout float64) Attention {
+type Attention struct {
+	*module
+}
+
+var _ Module = &Attention{}
+var _ AttentionForward = &Attention{}
+
+func NewAttention(embedDim, numHeads int64, dropout float64) *Attention {
 	var err *C.char
 	l := C.new_attention(&err, C.int64_t(embedDim), C.int64_t(numHeads), C.double(dropout))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return Attention(l)
+	ret := &Attention{&module{l}}
+	logging.Debug("new attention layer: %p", ret.module)
+	runtime.SetFinalizer(ret.module, freeModule)
+	return ret
 }
 
-func AttentionForward(l Attention, q, k, v, mask Tensor, isCausal bool) (Tensor, Tensor) {
+func (l *Attention) Forward(q, k, v, mask Tensor, isCausal bool) (Tensor, Tensor) {
 	if isCausal {
 		mask = attentionBuildCausal(q, k)
-		defer Free(mask)
+		defer FreeTensor(mask)
 	}
 	var err *C.char
 	var score C.tensor
-	ptr := C.attention_forward(&err, C.module(l), C.tensor(q), C.tensor(k), C.tensor(v), C.tensor(mask), &score)
+	ptr := C.attention_forward(&err, l.m, C.tensor(q), C.tensor(k), C.tensor(v), C.tensor(mask), &score)
 	if err != nil {
 		panic(C.GoString(err))
 	}
@@ -116,8 +169,8 @@ func AttentionForward(l Attention, q, k, v, mask Tensor, isCausal bool) (Tensor,
 }
 
 func attentionBuildCausal(q, k Tensor) Tensor {
-	l := q.Shapes()[0]
-	s := k.Shapes()[0]
+	l := Shapes(q)[0]
+	s := Shapes(k)[0]
 	mask := make([]float32, l*s)
 	for i := int64(0); i < l; i++ {
 		for j := int64(0); j < s; j++ {
@@ -126,33 +179,41 @@ func attentionBuildCausal(q, k Tensor) Tensor {
 			}
 		}
 	}
-	return FromFloat32(mask, []int64{l, s}, q.DeviceType())
+	return FromFloat32(mask, []int64{l, s}, DeviceType(q))
 }
 
-func AttentionParameters(l Attention) []Tensor {
-	return moduleParameters(module(l), 4)
+func (l *Attention) Parameters() []Tensor {
+	return l.module.Parameters(4)
 }
 
-type Embedding module
+type Embedding struct {
+	*module
+}
 
-func NewEmbedding(numEmbeddings, embeddingDim, paddingIdx int64) Embedding {
+var _ Module = &Embedding{}
+var _ NormalForward = &Embedding{}
+
+func NewEmbedding(numEmbeddings, embeddingDim, paddingIdx int64) *Embedding {
 	var err *C.char
 	l := C.new_embedding(&err, C.int64_t(numEmbeddings), C.int64_t(embeddingDim), C.int64_t(paddingIdx))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return Embedding(l)
+	ret := &Embedding{&module{l}}
+	logging.Debug("new embedding layer: %p", ret.module)
+	runtime.SetFinalizer(ret.module, freeModule)
+	return ret
 }
 
-func EmbeddingForward(l Embedding, x Tensor) Tensor {
+func (l *Embedding) Forward(x Tensor) Tensor {
 	var err *C.char
-	ptr := C.embedding_forward(&err, C.module(l), C.tensor(x))
+	ptr := C.embedding_forward(&err, l.m, C.tensor(x))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 	return Tensor(ptr)
 }
 
-func Parameters(l Embedding) []Tensor {
-	return moduleParameters(module(l), 1)
+func (l *Embedding) Parameters() []Tensor {
+	return l.module.Parameters(1)
 }

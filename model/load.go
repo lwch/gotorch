@@ -5,7 +5,6 @@ import (
 
 	"github.com/lwch/gotorch/internal/model"
 	"github.com/lwch/gotorch/internal/model/storage"
-	"github.com/lwch/gotorch/mmgr"
 	"github.com/lwch/gotorch/tensor"
 )
 
@@ -13,7 +12,7 @@ type Model struct {
 	params map[string]*tensor.Tensor
 }
 
-func Load(dir string, s *mmgr.Storage) (*Model, error) {
+func Load(dir string) (*Model, error) {
 	m, err := model.Load(dir)
 	if err != nil {
 		return nil, err
@@ -25,7 +24,7 @@ func Load(dir string, s *mmgr.Storage) (*Model, error) {
 	for k, v := range m.Params() {
 		go func(k string, v storage.Storage) {
 			defer wg.Done()
-			t := buildTensor(v, s)
+			t := buildTensor(v)
 			mu.Lock()
 			params[k] = t
 			mu.Unlock()
@@ -35,43 +34,43 @@ func Load(dir string, s *mmgr.Storage) (*Model, error) {
 	return &Model{params: params}, nil
 }
 
-func buildTensor(t storage.Storage, s *mmgr.Storage) *tensor.Tensor {
+func buildTensor(t storage.Storage) *tensor.Tensor {
 	switch t.Type() {
 	// float to bfloat16 tensor
 	case storage.TypeBFloat16:
-		return tensor.FromBFloat16Raw(s, t.Get().([]uint16),
+		return tensor.FromBFloat16Raw(t.Get().([]uint16),
 			tensor.WithShapes(t.GetShape()...))
 	// float to half tensor
 	case storage.TypeHalf:
-		return tensor.FromHalfRaw(s, t.Get().([]uint16),
+		return tensor.FromHalfRaw(t.Get().([]uint16),
 			tensor.WithShapes(t.GetShape()...))
 	// float to float32 tensor
 	case storage.TypeFloat:
-		return tensor.FromFloat32(s, t.Get().([]float32),
+		return tensor.FromFloat32(t.Get().([]float32),
 			tensor.WithShapes(t.GetShape()...))
 	// double to float64 tensor
 	case storage.TypeDouble:
-		return tensor.FromFloat64(s, t.Get().([]float64),
+		return tensor.FromFloat64(t.Get().([]float64),
 			tensor.WithShapes(t.GetShape()...))
 	// byte to uint8 tensor
 	case storage.TypeByte:
-		return tensor.FromUint8(s, t.Get().([]byte),
+		return tensor.FromUint8(t.Get().([]byte),
 			tensor.WithShapes(t.GetShape()...))
 	// char to int8 tensor
 	case storage.TypeChar:
-		return tensor.FromInt8(s, t.Get().([]int8),
+		return tensor.FromInt8(t.Get().([]int8),
 			tensor.WithShapes(t.GetShape()...))
 	// short to int16 tensor
 	case storage.TypeShort:
-		return tensor.FromInt16(s, t.Get().([]int16),
+		return tensor.FromInt16(t.Get().([]int16),
 			tensor.WithShapes(t.GetShape()...))
 	// int to int32 tensor
 	case storage.TypeInt:
-		return tensor.FromInt32(s, t.Get().([]int32),
+		return tensor.FromInt32(t.Get().([]int32),
 			tensor.WithShapes(t.GetShape()...))
 	// long to int64 tensor
 	case storage.TypeLong:
-		return tensor.FromInt64(s, t.Get().([]int64),
+		return tensor.FromInt64(t.Get().([]int64),
 			tensor.WithShapes(t.GetShape()...))
 	default:
 		panic("not supported")

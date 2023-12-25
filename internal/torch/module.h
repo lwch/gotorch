@@ -8,6 +8,8 @@ extern "C"
 {
 #endif
 
+    GOTORCH_API void free_module(module m);
+
     GOTORCH_API module new_linear(char **err, int64_t in_features, int64_t out_features);
     GOTORCH_API tensor linear_forward(char **err, module m, tensor x);
 
@@ -15,7 +17,8 @@ extern "C"
     GOTORCH_API tensor layer_norm_forward(char **err, module m, tensor x);
 
     GOTORCH_API module new_attention(char **err, int64_t embed_dim, int64_t num_heads, double dropout);
-    GOTORCH_API tensor attention_forward(char **err, module m, tensor q, tensor k, tensor v, tensor mask, tensor *score);
+    GOTORCH_API tensor attention_forward(char **err, module m, tensor q, tensor k, tensor v, tensor mask,
+                                         tensor *score);
 
     GOTORCH_API module new_embedding(char **err, int64_t num_embeddings, int64_t embedding_dim, int64_t padding_idx);
     GOTORCH_API tensor embedding_forward(char **err, module m, tensor x);

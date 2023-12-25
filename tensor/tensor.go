@@ -1,107 +1,83 @@
 package tensor
 
 import (
+	"runtime"
+
 	"github.com/lwch/gotorch/consts"
 	"github.com/lwch/gotorch/internal/torch"
-	"github.com/lwch/gotorch/mmgr"
+	"github.com/lwch/logging"
 )
 
 type Tensor struct {
-	s *mmgr.Storage
-	t *torch.Tensor
+	t torch.Tensor
 }
 
-func New(t *torch.Tensor, s *mmgr.Storage) *Tensor {
-	if s != nil {
-		s.Put(t)
+func New(t torch.Tensor) *Tensor {
+	ts := &Tensor{t: t}
+	logging.Debug("new tensor: %p", ts)
+	runtime.SetFinalizer(ts, freeTensor)
+	return ts
+}
+
+func freeTensor(t *Tensor) error {
+	if t == nil || t.t == nil {
+		return nil
 	}
-	return &Tensor{
-		t: t,
-		s: s,
-	}
+	logging.Debug("free tensor: %p", t)
+	torch.FreeTensor(t.t)
+	t.t = nil
+	runtime.SetFinalizer(t, nil)
+	return nil
 }
 
-func (t *Tensor) SetStorage(s *mmgr.Storage) {
-	if s != nil {
-		s.Put(t.t)
-	}
-	t.s = s
-}
-
-func (t *Tensor) Storage() *mmgr.Storage {
-	return t.s
-}
-
-func (t *Tensor) Tensor() *torch.Tensor {
+func (t *Tensor) Tensor() torch.Tensor {
 	return t.t
 }
 
-func (t *Tensor) UnFree() {
-	if t.s != nil {
-		t.s.Remove(t.t)
-	}
-}
-
-func (t *Tensor) Free() {
-	t.t.Free()
-}
-
 func (t *Tensor) Reshape(shape ...int64) *Tensor {
-	ret := t.t.Reshape(shape)
-	if t.s != nil {
-		t.s.Put(ret)
-	}
-	return &Tensor{s: t.s, t: ret}
+	ptr := torch.Reshape(t.t, shape)
+	return New(ptr)
 }
 
 func (t *Tensor) Transpose(dim1, dim2 int64) *Tensor {
-	ret := t.t.Transpose(dim1, dim2)
-	if t.s != nil {
-		t.s.Put(ret)
-	}
-	return &Tensor{s: t.s, t: ret}
+	ptr := torch.Transpose(t.t, dim1, dim2)
+	return New(ptr)
 }
 
 func (t *Tensor) ElemSize() int64 {
-	return t.t.ElemSize()
+	return torch.ElemSize(t.t)
 }
 
 func (t *Tensor) ElemCount() int64 {
-	return t.t.ElemCount()
+	return torch.ElemCount(t.t)
 }
 
 func (t *Tensor) Dims() int64 {
-	return t.t.Dims()
+	return torch.Dims(t.t)
 }
 
 func (t *Tensor) Shapes() []int64 {
-	return t.t.Shapes()
+	return torch.Shapes(t.t)
 }
 
 func (t *Tensor) ScalarType() consts.ScalarType {
-	return t.t.ScalarType()
+	return torch.ScalarType(t.t)
 }
 
 func (t *Tensor) DeviceType() consts.DeviceType {
-	return t.t.DeviceType()
+	return torch.DeviceType(t.t)
 }
 
 func (t *Tensor) SetRequiresGrad(b bool) {
-	t.t.SetRequiresGrad(b)
+	torch.SetRequiresGrad(t.t, b)
 }
 
 func (t *Tensor) ToDevice(device consts.DeviceType) *Tensor {
-	ret := t.t.ToDevice(device)
-	if t.s != nil {
-		t.s.Put(ret)
-	}
-	return &Tensor{s: t.s, t: ret}
+	ptr := torch.ToDevice(t.t, device)
+	return New(ptr)
 }
 
 func (t *Tensor) ToScalarType(scalarType consts.ScalarType) *Tensor {
-	ret := t.t.ToScalarType(scalarType)
-	if t.s != nil {
-		t.s.Put(ret)
-	}
-	return &Tensor{s: t.s, t: ret}
+	ptr := torch.ToScalarType(t.t, scalarType)
+	return New(ptr)
 }

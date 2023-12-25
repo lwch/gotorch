@@ -68,7 +68,7 @@ func NewAdam(opts ...AdamOpt) Optimizer {
 }
 
 func (optm *Adam) Step(params []*tensor.Tensor) {
-	list := make([]*torch.Tensor, len(params))
+	list := make([]torch.Tensor, len(params))
 	for i, t := range params {
 		list[i] = t.Tensor()
 	}

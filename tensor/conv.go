@@ -52,12 +52,12 @@ func (t *Tensor) Conv1D(weight, bias *Tensor, opts ...Conv1DOptFunc) *Tensor {
 	for _, o := range opts {
 		o(opt)
 	}
-	var b *torch.Tensor
+	var b torch.Tensor
 	if bias != nil {
 		b = bias.t
 	}
-	ret := t.t.Conv1D(weight.t, b, opt.stride, opt.padding, opt.dilation, opt.groups)
-	return &Tensor{s: t.store3(weight, bias, ret), t: ret}
+	ptr := torch.Conv1D(t.t, weight.t, b, opt.stride, opt.padding, opt.dilation, opt.groups)
+	return New(ptr)
 }
 
 type conv2DOpt struct {
@@ -114,15 +114,15 @@ func (t *Tensor) Conv2D(weight, bias *Tensor, opts ...Conv2DOptFunc) *Tensor {
 	for _, o := range opts {
 		o(opt)
 	}
-	var b *torch.Tensor
+	var b torch.Tensor
 	if bias != nil {
 		b = bias.t
 	}
-	ret := t.t.Conv2D(weight.t, b,
+	ptr := torch.Conv2D(t.t, weight.t, b,
 		[2]int{opt.stride1, opt.stride2},
 		[2]int{opt.padding1, opt.padding2},
 		opt.dilation, opt.groups)
-	return &Tensor{s: t.store3(weight, bias, ret), t: ret}
+	return New(ptr)
 }
 
 type conv3DOpt struct {
@@ -183,13 +183,13 @@ func (t *Tensor) Conv3D(weight, bias *Tensor, opts ...Conv3DOptFunc) *Tensor {
 	for _, o := range opts {
 		o(opt)
 	}
-	var b *torch.Tensor
+	var b torch.Tensor
 	if bias != nil {
 		b = bias.t
 	}
-	ret := t.t.Conv3D(weight.t, b,
+	ptr := torch.Conv3D(t.t, weight.t, b,
 		[3]int{opt.stride1, opt.stride2, opt.stride3},
 		[3]int{opt.padding1, opt.padding2, opt.padding3},
 		opt.dilation, opt.groups)
-	return &Tensor{s: t.store3(weight, bias, ret), t: ret}
+	return New(ptr)
 }

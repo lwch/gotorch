@@ -107,81 +107,81 @@ func FromBool(data []bool, shape []int64, device consts.DeviceType) Tensor {
 }
 
 func Uint8Value(t Tensor) []uint8 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KUint8 {
+	tp := ScalarType(t)
+	if tp != consts.KUint8 {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.uint8_t, t.ElemCount())
+	value := make([]C.uint8_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	return fromCInts[C.uint8_t, uint8](value)
 }
 
 func Int8Value(t Tensor) []int8 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KInt8 {
+	tp := ScalarType(t)
+	if tp != consts.KInt8 {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.int8_t, t.ElemCount())
+	value := make([]C.int8_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	return fromCInts[C.int8_t, int8](value)
 }
 
 func Int16Value(t Tensor) []int16 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KInt16 {
+	tp := ScalarType(t)
+	if tp != consts.KInt16 {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.int16_t, t.ElemCount())
+	value := make([]C.int16_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	return fromCInts[C.int16_t, int16](value)
 }
 
 func Int32Value(t Tensor) []int32 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KInt32 {
+	tp := ScalarType(t)
+	if tp != consts.KInt32 {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.int32_t, t.ElemCount())
+	value := make([]C.int32_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	return fromCInts[C.int32_t, int32](value)
 }
 
 func Int64Value(t Tensor) []int64 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KInt64 {
+	tp := ScalarType(t)
+	if tp != consts.KInt64 {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.int64_t, t.ElemCount())
+	value := make([]C.int64_t, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	return fromCInts[C.int64_t, int64](value)
 }
 
 func Float32Value(t Tensor) []float32 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KFloat {
+	tp := ScalarType(t)
+	if tp != consts.KFloat {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.float, t.ElemCount())
+	value := make([]C.float, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	return fromCFloats[C.float, float32](value)
 }
 
 func Float64Value(t Tensor) []float64 {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KDouble {
+	tp := ScalarType(t)
+	if tp != consts.KDouble {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.double, t.ElemCount())
+	value := make([]C.double, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	return fromCFloats[C.double, float64](value)
 }
 
 func BoolValue(t Tensor) []bool {
-	tp := t.ScalarType()
-	if t.ScalarType() != consts.KBool {
+	tp := ScalarType(t)
+	if tp != consts.KBool {
 		panic(fmt.Errorf("tensor type is %s", tp.String()))
 	}
-	value := make([]C.bool, t.ElemCount())
+	value := make([]C.bool, ElemCount(t))
 	C.tensor_copy_data(C.tensor(t), unsafe.Pointer(&value[0]))
 	return fromCBool(value)
 }

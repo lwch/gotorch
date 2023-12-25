@@ -6,10 +6,10 @@ import (
 
 	"github.com/lwch/gotorch/consts"
 	"github.com/lwch/gotorch/loss"
-	"github.com/lwch/gotorch/mmgr"
 	"github.com/lwch/gotorch/nn"
 	"github.com/lwch/gotorch/optimizer"
 	"github.com/lwch/gotorch/tensor"
+	"github.com/lwch/logging"
 )
 
 const hiddenSize = 10
@@ -24,24 +24,22 @@ func init() {
 }
 
 func main() {
-	s := mmgr.New()
-	defer s.GC()
+	logging.SetLevel(logging.LevelDebug)
 	optm := optimizer.NewAdam()
-	for i := 0; i < 10000; i++ {
-		x, y := getBatch(s, true)
+	for i := 0; i < 1000000000000; i++ {
+		x, y := getBatch(true)
 		// forward
 		pred := forward(x)
 		loss := loss.NewMse(pred, y)
 		// backward
 		loss.Backward()
 		// update
-		optm.Step(append(l1.Parameters(s), l2.Parameters(s)...))
+		optm.Step(append(l1.Parameters(), l2.Parameters()...))
 		if i%100 == 0 {
 			fmt.Printf("epoch: %d loss: %f\n", i, loss.Value())
-			s.GC()
 		}
 	}
-	x, _ := getBatch(s, false)
+	x, _ := getBatch(false)
 	pred := forward(x)
 	fmt.Println("pred:", pred.ToDevice(consts.KCPU).Float32Value())
 }
@@ -52,7 +50,7 @@ func forward(x *tensor.Tensor) *tensor.Tensor {
 	return l2.Forward(y)
 }
 
-func getBatch(s *mmgr.Storage, shuffle bool) (*tensor.Tensor, *tensor.Tensor) {
+func getBatch(shuffle bool) (*tensor.Tensor, *tensor.Tensor) {
 	x := []float32{
 		0, 0,
 		0, 1,
@@ -72,10 +70,10 @@ func getBatch(s *mmgr.Storage, shuffle bool) (*tensor.Tensor, *tensor.Tensor) {
 			y[i], y[j] = y[j], y[i]
 		})
 	}
-	return tensor.FromFloat32(s, x,
+	return tensor.FromFloat32(x,
 			tensor.WithShapes(4, 2),
 			tensor.WithDevice(device)),
-		tensor.FromFloat32(s, y,
+		tensor.FromFloat32(y,
 			tensor.WithShapes(4, 1),
 			tensor.WithDevice(device))
 }
