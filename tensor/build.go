@@ -5,6 +5,7 @@ import (
 	"io"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -38,9 +39,11 @@ func free(t *Tensor) {
 
 func WriteLeaks(w io.Writer) {
 	raw := make(map[uint64][]uintptr, len(leaks.data))
+	ids := make([]uint64, 0, len(leaks.data))
 	leaks.RLock()
 	for idx, pcs := range leaks.data {
 		raw[idx] = pcs
+		ids = append(ids, idx)
 	}
 	leaks.RUnlock()
 	writeStack := func(pcs []uintptr) {
@@ -57,8 +60,11 @@ func WriteLeaks(w io.Writer) {
 			}
 		}
 	}
-	for idx, pcs := range raw {
-		fmt.Fprintf(w, "tensor [>> tensor.%d <<] leaked:\n", idx)
-		writeStack(pcs)
+	sort.Slice(ids, func(i, j int) bool {
+		return ids[i] < ids[j]
+	})
+	for _, id := range ids {
+		fmt.Fprintf(w, "tensor [>> tensor.%d <<] leaked:\n", id)
+		writeStack(raw[id])
 	}
 }
