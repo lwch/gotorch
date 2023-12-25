@@ -16,6 +16,7 @@ func New(t torch.Tensor) *Tensor {
 	ts := &Tensor{t: t}
 	logging.Debug("new tensor: %p", ts)
 	runtime.SetFinalizer(ts, freeTensor)
+	logBuild(ts)
 	return ts
 }
 
@@ -26,6 +27,7 @@ func freeTensor(t *Tensor) error {
 	logging.Debug("free tensor: %p", t)
 	torch.FreeTensor(t.t)
 	t.t = nil
+	freeBuild(t)
 	runtime.SetFinalizer(t, nil)
 	return nil
 }
