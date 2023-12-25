@@ -32,7 +32,7 @@ func compareFloats[T float32 | float64](a []T) bool {
 }
 
 func TestUint8(t *testing.T) {
-	ts := FromUint8("uint8", buildInts[uint8](), WithShapes(2, 2))
+	ts := FromUint8(buildInts[uint8](), WithShapes(2, 2))
 	v := ts.Uint8Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -40,7 +40,7 @@ func TestUint8(t *testing.T) {
 }
 
 func TestInt8(t *testing.T) {
-	ts := FromInt8("int8", buildInts[int8](), WithShapes(2, 2))
+	ts := FromInt8(buildInts[int8](), WithShapes(2, 2))
 	v := ts.Int8Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -48,7 +48,7 @@ func TestInt8(t *testing.T) {
 }
 
 func TestInt16(t *testing.T) {
-	ts := FromInt16("int16", buildInts[int16](), WithShapes(2, 2))
+	ts := FromInt16(buildInts[int16](), WithShapes(2, 2))
 	v := ts.Int16Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -56,7 +56,7 @@ func TestInt16(t *testing.T) {
 }
 
 func TestInt32(t *testing.T) {
-	ts := FromInt32("int32", buildInts[int32](), WithShapes(2, 2))
+	ts := FromInt32(buildInts[int32](), WithShapes(2, 2))
 	v := ts.Int32Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -64,7 +64,7 @@ func TestInt32(t *testing.T) {
 }
 
 func TestInt64(t *testing.T) {
-	ts := FromInt64("int64", buildInts[int64](), WithShapes(2, 2))
+	ts := FromInt64(buildInts[int64](), WithShapes(2, 2))
 	v := ts.Int64Value()
 	if !compareInts(v) {
 		t.Fail()
@@ -72,7 +72,7 @@ func TestInt64(t *testing.T) {
 }
 
 func TestFloat32(t *testing.T) {
-	ts := FromFloat32("float32", buildFloats[float32](), WithShapes(2, 2))
+	ts := FromFloat32(buildFloats[float32](), WithShapes(2, 2))
 	v := ts.Float32Value()
 	if !compareFloats(v) {
 		t.Fail()
@@ -80,7 +80,7 @@ func TestFloat32(t *testing.T) {
 }
 
 func TestFloat64(t *testing.T) {
-	ts := FromFloat64("float64", buildFloats[float64](), WithShapes(2, 2))
+	ts := FromFloat64(buildFloats[float64](), WithShapes(2, 2))
 	v := ts.Float64Value()
 	if !compareFloats(v) {
 		t.Fail()
@@ -88,7 +88,7 @@ func TestFloat64(t *testing.T) {
 }
 
 func TestBool(t *testing.T) {
-	ts := FromBool("bool", []bool{true, true, false, false}, WithShapes(2, 2))
+	ts := FromBool([]bool{true, true, false, false}, WithShapes(2, 2))
 	v := ts.BoolValue()
 	if v[0] != true ||
 		v[1] != true ||

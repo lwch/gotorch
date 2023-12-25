@@ -8,11 +8,8 @@ type Embedding struct {
 	module
 }
 
-func NewEmbedding(name string, numEmbeddings, embeddingDim, paddingIdx int64) *Embedding {
+func NewEmbedding(numEmbeddings, embeddingDim, paddingIdx int64) *Embedding {
 	return &Embedding{
-		module{
-			name: name,
-			m:    torch.NewEmbedding(numEmbeddings, embeddingDim, paddingIdx),
-		},
+		module{torch.NewEmbedding(numEmbeddings, embeddingDim, paddingIdx)},
 	}
 }

@@ -10,7 +10,7 @@ import (
 
 func TestBuildInfo(t *testing.T) {
 	func() {
-		Zeros("zeros", consts.KFloat, WithShapes(2, 3))
+		Zeros(consts.KFloat, WithShapes(2, 3))
 		ShowLeaks()
 		logging.Info("============================")
 	}()

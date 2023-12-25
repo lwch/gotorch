@@ -8,11 +8,8 @@ type LayerNorm struct {
 	module
 }
 
-func NewLayerNorm(name string, shapes ...int64) *LayerNorm {
+func NewLayerNorm(shapes ...int64) *LayerNorm {
 	return &LayerNorm{
-		module{
-			name: name,
-			m:    torch.NewLayerNorm(shapes),
-		},
+		module{torch.NewLayerNorm(shapes)},
 	}
 }

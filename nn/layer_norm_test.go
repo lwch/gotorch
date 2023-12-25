@@ -9,8 +9,8 @@ import (
 )
 
 func TestLayerNorm(t *testing.T) {
-	l := NewLayerNorm("lm", 2)
-	x := tensor.ARange("x", 4, consts.KFloat).View(2, 2)
+	l := NewLayerNorm(2)
+	x := tensor.ARange(4, consts.KFloat).View(2, 2)
 	y := l.Forward(x)
 	fmt.Println(y.Float32Value())
 	for _, p := range l.Parameters() {

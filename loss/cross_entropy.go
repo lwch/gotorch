@@ -59,7 +59,7 @@ func NewCrossEntropy(pred, target *tensor.Tensor, opts ...CrossEntropyOpt) Loss 
 	}
 	ptr := torch.NewCrossEntropyLoss(pred.Tensor(), target.Tensor(),
 		weight, ret.reduction, ret.ignoreIdx, ret.labelSmoothing)
-	ret.t = tensor.New(ptr, "CrossEntropyLoss")
+	ret.t = tensor.New(ptr)
 	return &ret
 }
 

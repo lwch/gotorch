@@ -1,7 +1,6 @@
 package tensor
 
 import (
-	"fmt"
 	"runtime"
 	"time"
 
@@ -16,15 +15,14 @@ type Tensor struct {
 	t       torch.Tensor
 }
 
-func New(t torch.Tensor, name string) *Tensor {
+func New(t torch.Tensor) *Tensor {
 	ts := &Tensor{
-		name:    name,
 		created: time.Now(),
 		t:       t,
 	}
-	logging.Debug("new tensor: %p", ts)
-	runtime.SetFinalizer(ts, freeTensor)
 	logBuildInfo(ts)
+	logging.Debug("new tensor: %s", ts.name)
+	runtime.SetFinalizer(ts, freeTensor)
 	return ts
 }
 
@@ -32,7 +30,7 @@ func freeTensor(t *Tensor) error {
 	if t == nil || t.t == nil {
 		return nil
 	}
-	logging.Debug("free tensor: %p", t)
+	logging.Debug("free tensor: %s", t.name)
 	torch.FreeTensor(t.t)
 	t.t = nil
 	free(t)
@@ -54,12 +52,12 @@ func (t *Tensor) Name() string {
 
 func (t *Tensor) Reshape(shape ...int64) *Tensor {
 	ptr := torch.Reshape(t.t, shape)
-	return New(ptr, fmt.Sprintf("%s.reshape%v", t.name, shape))
+	return New(ptr)
 }
 
 func (t *Tensor) Transpose(dim1, dim2 int64) *Tensor {
 	ptr := torch.Transpose(t.t, dim1, dim2)
-	return New(ptr, fmt.Sprintf("%s.transpose[%d,%d]", t.name, dim1, dim2))
+	return New(ptr)
 }
 
 func (t *Tensor) ElemSize() int64 {
@@ -92,10 +90,10 @@ func (t *Tensor) SetRequiresGrad(b bool) {
 
 func (t *Tensor) ToDevice(device consts.DeviceType) *Tensor {
 	ptr := torch.ToDevice(t.t, device)
-	return New(ptr, fmt.Sprintf("%s.to(%s)", t.name, device))
+	return New(ptr)
 }
 
 func (t *Tensor) ToScalarType(scalarType consts.ScalarType) *Tensor {
 	ptr := torch.ToScalarType(t.t, scalarType)
-	return New(ptr, fmt.Sprintf("%s.to(%s)", t.name, scalarType))
+	return New(ptr)
 }

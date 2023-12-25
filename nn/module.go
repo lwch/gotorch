@@ -1,30 +1,27 @@
 package nn
 
 import (
-	"fmt"
-
 	"github.com/lwch/gotorch/consts"
 	"github.com/lwch/gotorch/internal/torch"
 	"github.com/lwch/gotorch/tensor"
 )
 
 type module struct {
-	name string
-	m    torch.Module
+	m torch.Module
 }
 
 func (m *module) Parameters() []*tensor.Tensor {
 	params := m.m.Parameters()
 	ret := make([]*tensor.Tensor, len(params))
 	for i, p := range params {
-		ret[i] = tensor.New(p, fmt.Sprintf("%s.%d", m.name, i))
+		ret[i] = tensor.New(p)
 	}
 	return ret
 }
 
 func (m *module) Forward(x *tensor.Tensor) *tensor.Tensor {
 	t := m.m.(torch.NormalForward).Forward(x.Tensor())
-	return tensor.New(t, fmt.Sprintf("%s.forward", m.name))
+	return tensor.New(t)
 }
 
 func (m *module) ToDevice(device consts.DeviceType) {

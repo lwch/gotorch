@@ -22,12 +22,13 @@ func init() {
 }
 
 func logBuildInfo(t *Tensor) {
+	if len(t.name) != 0 {
+		panic("tensor name must be empty")
+	}
+	t.name = fmt.Sprintf("ts.%d", leaks.idx.Add(1))
 	pcs := make([]uintptr, 32)
 	n := runtime.Callers(2, pcs)
 	leaks.Lock()
-	if _, ok := leaks.data[t.name]; ok {
-		t.name = fmt.Sprintf("%s_%d", t.name, leaks.idx.Add(1))
-	}
 	leaks.data[t.name] = pcs[:n]
 	leaks.Unlock()
 }

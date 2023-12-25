@@ -1,8 +1,6 @@
 package tensor
 
 import (
-	"fmt"
-
 	"github.com/lwch/gotorch/internal/torch"
 )
 
@@ -61,7 +59,7 @@ func (t *Tensor) Conv1D(weight, bias *Tensor, opts ...Conv1DOptFunc) *Tensor {
 		b = bias.t
 	}
 	ptr := torch.Conv1D(t.t, weight.t, b, opt.stride, opt.padding, opt.dilation, opt.groups)
-	return New(ptr, fmt.Sprintf("Conv1D(%v)", t.name))
+	return New(ptr)
 }
 
 type conv2DOpt struct {
@@ -126,7 +124,7 @@ func (t *Tensor) Conv2D(weight, bias *Tensor, opts ...Conv2DOptFunc) *Tensor {
 		[2]int{opt.stride1, opt.stride2},
 		[2]int{opt.padding1, opt.padding2},
 		opt.dilation, opt.groups)
-	return New(ptr, fmt.Sprintf("Conv2D(%v)", t.name))
+	return New(ptr)
 }
 
 type conv3DOpt struct {
@@ -195,5 +193,5 @@ func (t *Tensor) Conv3D(weight, bias *Tensor, opts ...Conv3DOptFunc) *Tensor {
 		[3]int{opt.stride1, opt.stride2, opt.stride3},
 		[3]int{opt.padding1, opt.padding2, opt.padding3},
 		opt.dilation, opt.groups)
-	return New(ptr, fmt.Sprintf("Conv3D(%v)", t.name))
+	return New(ptr)
 }
