@@ -10,7 +10,7 @@ import (
 )
 
 type Tensor struct {
-	name    string
+	idx     uint64
 	created time.Time
 	t       torch.Tensor
 }
@@ -21,7 +21,7 @@ func New(t torch.Tensor) *Tensor {
 		t:       t,
 	}
 	logBuildInfo(ts)
-	logging.Debug("new tensor: %s", ts.name)
+	logging.Debug("new tensor: %d", ts.idx)
 	runtime.SetFinalizer(ts, freeTensor)
 	return ts
 }
@@ -30,7 +30,7 @@ func freeTensor(t *Tensor) error {
 	if t == nil || t.t == nil {
 		return nil
 	}
-	logging.Debug("free tensor: %s", t.name)
+	logging.Debug("free tensor: %d", t.idx)
 	torch.FreeTensor(t.t)
 	t.t = nil
 	free(t)
@@ -44,10 +44,6 @@ func (t *Tensor) Created() time.Time {
 
 func (t *Tensor) Tensor() torch.Tensor {
 	return t.t
-}
-
-func (t *Tensor) Name() string {
-	return t.name
 }
 
 func (t *Tensor) Reshape(shape ...int64) *Tensor {

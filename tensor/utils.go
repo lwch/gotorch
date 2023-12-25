@@ -32,10 +32,8 @@ func (t *Tensor) Print() {
 
 func Cat(tensors []*Tensor, dim int) *Tensor {
 	list := make([]torch.Tensor, len(tensors))
-	names := make([]string, len(tensors))
 	for i, t := range tensors {
 		list[i] = t.t
-		names[i] = t.name
 	}
 	ptr := torch.Cat(list, dim)
 	return New(ptr)

@@ -2,52 +2,48 @@ package tensor
 
 import (
 	"fmt"
+	"io"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
 	"sync/atomic"
-
-	"github.com/lwch/logging"
 )
 
 var leaks struct {
 	sync.RWMutex
-	data map[string][]uintptr // don't ref to *Tensor
+	data map[uint64][]uintptr // don't ref to *Tensor
 	idx  atomic.Uint64
 }
 
 func init() {
-	leaks.data = make(map[string][]uintptr)
+	leaks.data = make(map[uint64][]uintptr)
 }
 
 func logBuildInfo(t *Tensor) {
-	if len(t.name) != 0 {
-		panic("tensor name must be empty")
-	}
-	t.name = fmt.Sprintf("ts.%d", leaks.idx.Add(1))
+	idx := leaks.idx.Add(1)
+	t.idx = idx
 	pcs := make([]uintptr, 32)
 	n := runtime.Callers(2, pcs)
 	leaks.Lock()
-	leaks.data[t.name] = pcs[:n]
+	leaks.data[idx] = pcs[:n]
 	leaks.Unlock()
 }
 
 func free(t *Tensor) {
 	leaks.Lock()
-	delete(leaks.data, t.name)
+	delete(leaks.data, t.idx)
 	leaks.Unlock()
 }
 
-func ShowLeaks() {
-	raw := make(map[string][]uintptr, len(leaks.data))
+func WriteLeaks(w io.Writer) {
+	raw := make(map[uint64][]uintptr, len(leaks.data))
 	leaks.RLock()
-	for name, pcs := range leaks.data {
-		raw[name] = pcs
+	for idx, pcs := range leaks.data {
+		raw[idx] = pcs
 	}
 	leaks.RUnlock()
-	stack := func(pcs []uintptr) string {
-		var rows []string
+	writeStack := func(pcs []uintptr) {
 		frames := runtime.CallersFrames(pcs)
 		for {
 			frame, more := frames.Next()
@@ -55,14 +51,14 @@ func ShowLeaks() {
 			if strings.HasPrefix(base, "tensor.") {
 				continue
 			}
-			rows = append(rows, fmt.Sprintf("  - %s:%d => %s", frame.File, frame.Line, frame.Function))
+			fmt.Fprintf(w, "  - %s:%d => %s\n", frame.File, frame.Line, frame.Function)
 			if !more {
 				break
 			}
 		}
-		return strings.Join(rows, "\n")
 	}
-	for name, pcs := range raw {
-		logging.Info("tensor [>> %s <<] leaked:\n%s", name, stack(pcs))
+	for idx, pcs := range raw {
+		fmt.Fprintf(w, "tensor [>> tensor.%d <<] leaked:\n", idx)
+		writeStack(pcs)
 	}
 }
