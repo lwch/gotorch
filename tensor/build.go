@@ -54,6 +54,9 @@ func WriteLeaks(w io.Writer) {
 			if strings.HasPrefix(base, "tensor.") {
 				continue
 			}
+			if strings.HasPrefix(base, "runtime.") {
+				continue
+			}
 			fmt.Fprintf(w, "  - %s:%d => %s\n", frame.File, frame.Line, frame.Function)
 			if !more {
 				break
