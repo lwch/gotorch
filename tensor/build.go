@@ -33,6 +33,9 @@ func logBuildInfo(t *Tensor) {
 
 func free(t *Tensor) {
 	leaks.Lock()
+	if _, ok := leaks.data[t.idx]; !ok {
+		panic("tensor: double free")
+	}
 	delete(leaks.data, t.idx)
 	leaks.Unlock()
 }

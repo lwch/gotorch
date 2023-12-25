@@ -31,9 +31,9 @@ func freeTensor(t *Tensor) error {
 		return nil
 	}
 	logging.Debug("free tensor: %d", t.idx)
+	free(t)
 	torch.FreeTensor(t.t)
 	t.t = nil
-	free(t)
 	runtime.SetFinalizer(t, nil)
 	return nil
 }
