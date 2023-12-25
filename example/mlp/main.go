@@ -9,7 +9,6 @@ import (
 	"github.com/lwch/gotorch/nn"
 	"github.com/lwch/gotorch/optimizer"
 	"github.com/lwch/gotorch/tensor"
-	"github.com/lwch/logging"
 )
 
 const hiddenSize = 10
@@ -24,9 +23,8 @@ func init() {
 }
 
 func main() {
-	logging.SetLevel(logging.LevelDebug)
 	optm := optimizer.NewAdam()
-	for i := 0; i < 1000000000000; i++ {
+	for i := 0; i < 1000; i++ {
 		x, y := getBatch(true)
 		// forward
 		pred := forward(x)
