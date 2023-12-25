@@ -8,8 +8,11 @@ type Linear struct {
 	module
 }
 
-func NewLinear(inFeatures, outFeatures int64) *Linear {
+func NewLinear(name string, inFeatures, outFeatures int64) *Linear {
 	return &Linear{
-		module{torch.NewLinear(inFeatures, outFeatures)},
+		module{
+			name: name,
+			m:    torch.NewLinear(inFeatures, outFeatures),
+		},
 	}
 }

@@ -1,16 +1,20 @@
 package tensor
 
 import (
-	"fmt"
+	"runtime"
 	"testing"
 
 	"github.com/lwch/gotorch/consts"
+	"github.com/lwch/logging"
 )
 
 func TestBuildInfo(t *testing.T) {
-	Zeros(consts.KFloat, WithShapes(2, 3))
-	list := TensorInUse()
-	for _, t := range list {
-		fmt.Println(t.Created(), t.Trace())
-	}
+	func() {
+		Zeros("zeros", consts.KFloat, WithShapes(2, 3))
+		ShowLeaks()
+		logging.Info("============================")
+	}()
+	runtime.GC() // tag
+	runtime.GC() // gc
+	ShowLeaks()
 }

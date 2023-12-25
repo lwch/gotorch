@@ -14,8 +14,8 @@ import (
 const hiddenSize = 10
 const device = consts.KCPU
 
-var l1 = nn.NewLinear(2, hiddenSize)
-var l2 = nn.NewLinear(hiddenSize, 1)
+var l1 = nn.NewLinear("l1", 2, hiddenSize)
+var l2 = nn.NewLinear("l2", hiddenSize, 1)
 
 func init() {
 	l1.ToDevice(device)
@@ -68,10 +68,10 @@ func getBatch(shuffle bool) (*tensor.Tensor, *tensor.Tensor) {
 			y[i], y[j] = y[j], y[i]
 		})
 	}
-	return tensor.FromFloat32(x,
+	return tensor.FromFloat32("x", x,
 			tensor.WithShapes(4, 2),
 			tensor.WithDevice(device)),
-		tensor.FromFloat32(y,
+		tensor.FromFloat32("y", y,
 			tensor.WithShapes(4, 1),
 			tensor.WithDevice(device))
 }

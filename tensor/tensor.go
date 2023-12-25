@@ -1,7 +1,9 @@
 package tensor
 
 import (
+	"fmt"
 	"runtime"
+	"time"
 
 	"github.com/lwch/gotorch/consts"
 	"github.com/lwch/gotorch/internal/torch"
@@ -9,14 +11,20 @@ import (
 )
 
 type Tensor struct {
-	t torch.Tensor
+	name    string
+	created time.Time
+	t       torch.Tensor
 }
 
-func New(t torch.Tensor) *Tensor {
-	ts := &Tensor{t: t}
+func New(t torch.Tensor, name string) *Tensor {
+	ts := &Tensor{
+		name:    name,
+		created: time.Now(),
+		t:       t,
+	}
 	logging.Debug("new tensor: %p", ts)
 	runtime.SetFinalizer(ts, freeTensor)
-	logBuild(ts)
+	logBuildInfo(ts)
 	return ts
 }
 
@@ -27,23 +35,31 @@ func freeTensor(t *Tensor) error {
 	logging.Debug("free tensor: %p", t)
 	torch.FreeTensor(t.t)
 	t.t = nil
-	freeBuild(t)
+	free(t)
 	runtime.SetFinalizer(t, nil)
 	return nil
+}
+
+func (t *Tensor) Created() time.Time {
+	return t.created
 }
 
 func (t *Tensor) Tensor() torch.Tensor {
 	return t.t
 }
 
+func (t *Tensor) Name() string {
+	return t.name
+}
+
 func (t *Tensor) Reshape(shape ...int64) *Tensor {
 	ptr := torch.Reshape(t.t, shape)
-	return New(ptr)
+	return New(ptr, fmt.Sprintf("%s.reshape%v", t.name, shape))
 }
 
 func (t *Tensor) Transpose(dim1, dim2 int64) *Tensor {
 	ptr := torch.Transpose(t.t, dim1, dim2)
-	return New(ptr)
+	return New(ptr, fmt.Sprintf("%s.transpose[%d,%d]", t.name, dim1, dim2))
 }
 
 func (t *Tensor) ElemSize() int64 {
@@ -76,10 +92,10 @@ func (t *Tensor) SetRequiresGrad(b bool) {
 
 func (t *Tensor) ToDevice(device consts.DeviceType) *Tensor {
 	ptr := torch.ToDevice(t.t, device)
-	return New(ptr)
+	return New(ptr, fmt.Sprintf("%s.to(%s)", t.name, device))
 }
 
 func (t *Tensor) ToScalarType(scalarType consts.ScalarType) *Tensor {
 	ptr := torch.ToScalarType(t.t, scalarType)
-	return New(ptr)
+	return New(ptr, fmt.Sprintf("%s.to(%s)", t.name, scalarType))
 }

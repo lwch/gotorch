@@ -6,82 +6,62 @@ import (
 	"runtime"
 	"strings"
 	"sync"
-	"time"
-)
+	"sync/atomic"
 
-type build struct {
-	created time.Time
-	pcs     []uintptr
-}
+	"github.com/lwch/logging"
+)
 
 var leaks struct {
 	sync.RWMutex
-	m map[*Tensor]build
+	data map[string][]uintptr // don't ref to *Tensor
+	idx  atomic.Uint64
 }
 
 func init() {
-	leaks.m = make(map[*Tensor]build)
+	leaks.data = make(map[string][]uintptr)
 }
 
-func logBuild(t *Tensor) {
+func logBuildInfo(t *Tensor) {
 	pcs := make([]uintptr, 32)
 	n := runtime.Callers(2, pcs)
-	lk := build{
-		created: time.Now(),
-		pcs:     pcs[:n],
-	}
 	leaks.Lock()
-	leaks.m[t] = lk
+	if _, ok := leaks.data[t.name]; ok {
+		t.name = fmt.Sprintf("%s_%d", t.name, leaks.idx.Add(1))
+	}
+	leaks.data[t.name] = pcs[:n]
 	leaks.Unlock()
 }
 
-func freeBuild(t *Tensor) {
+func free(t *Tensor) {
 	leaks.Lock()
-	delete(leaks.m, t)
+	delete(leaks.data, t.name)
 	leaks.Unlock()
 }
 
-type inUseTensor struct {
-	t    *Tensor
-	info build
-}
-
-func (t *inUseTensor) Tensor() *Tensor {
-	return t.t
-}
-
-func (t *inUseTensor) Created() time.Time {
-	return t.info.created
-}
-
-func (t *inUseTensor) Trace() []string {
-	var ret []string
-	frames := runtime.CallersFrames(t.info.pcs)
-	for {
-		frame, more := frames.Next()
-		if !more {
-			break
-		}
-		base := filepath.Base(frame.Function)
-		if strings.HasPrefix(base, "tensor.") {
-			continue
-		}
-		ret = append(ret, fmt.Sprintf("(%s:%d) %s", frame.File, frame.Line, frame.Function))
-	}
-	return ret
-}
-
-func TensorInUse() []*inUseTensor {
+func ShowLeaks() {
+	raw := make(map[string][]uintptr, len(leaks.data))
 	leaks.RLock()
-	defer leaks.RUnlock()
-	ts := make([]*inUseTensor, len(leaks.m))
-	i := 0
-	for t, info := range leaks.m {
-		ts[i] = &inUseTensor{
-			t:    t,
-			info: info,
-		}
-		i++
+	for name, pcs := range leaks.data {
+		raw[name] = pcs
 	}
-	return ts
+	leaks.RUnlock()
+	stack := func(pcs []uintptr) string {
+		var rows []string
+		frames := runtime.CallersFrames(pcs)
+		for {
+			frame, more := frames.Next()
+			base := filepath.Base(frame.Function)
+			if strings.HasPrefix(base, "tensor.") {
+				continue
+			}
+			rows = append(rows, fmt.Sprintf("  - %s:%d => %s", frame.File, frame.Line, frame.Function))
+			if !more {
+				break
+			}
+		}
+		return strings.Join(rows, "\n")
+	}
+	for name, pcs := range raw {
+		logging.Info("tensor [>> %s <<] leaked:\n%s", name, stack(pcs))
+	}
 }

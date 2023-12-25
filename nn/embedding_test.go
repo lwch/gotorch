@@ -9,8 +9,8 @@ import (
 )
 
 func TestEmbedding(t *testing.T) {
-	l := NewEmbedding(4, 16, -1)
-	x := tensor.ARange(4, consts.KInt64).View(2, 2)
+	l := NewEmbedding("embd", 4, 16, -1)
+	x := tensor.ARange("x", 4, consts.KInt64).View(2, 2)
 	y := l.Forward(x)
 	fmt.Println(y.Float32Value())
 	for _, p := range l.Parameters() {

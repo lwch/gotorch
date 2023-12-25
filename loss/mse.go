@@ -27,7 +27,7 @@ func NewMse(pred, target *tensor.Tensor, opts ...MseOpt) Loss {
 		opt(&ret)
 	}
 	ptr := torch.NewMseLoss(pred.Tensor(), target.Tensor(), ret.reduction)
-	ret.t = tensor.New(ptr)
+	ret.t = tensor.New(ptr, "Mse Loss")
 	return &ret
 }
 
