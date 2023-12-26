@@ -8,20 +8,20 @@ import (
 
 func TestHalf(t *testing.T) {
 	ts := FromHalf([]float32{1, 2, 3, 4}, []int64{2, 2}, consts.KCPU)
-	defer ts.Free()
-	if ts.ScalarType() != consts.KHalf {
+	defer FreeTensor(ts)
+	if ScalarType(ts) != consts.KHalf {
 		t.Fatal("invalid scalar type")
 	}
-	if ts.Dims() != 2 {
+	if Dims(ts) != 2 {
 		t.Fatal("invalid dim")
 	}
-	if ts.Shapes()[0] != 2 || ts.Shapes()[1] != 2 {
+	if Shapes(ts)[0] != 2 || Shapes(ts)[1] != 2 {
 		t.Fatal("invalid shape")
 	}
-	if ts.ElemCount() != 4 {
+	if ElemCount(ts) != 4 {
 		t.Fatal("invalid elem count")
 	}
-	values := ts.HalfValue()
+	values := HalfValue(ts)
 	if len(values) != 4 {
 		t.Fatal("invalid value")
 	}
@@ -34,20 +34,20 @@ func TestHalf(t *testing.T) {
 
 func TestBFloat16(t *testing.T) {
 	ts := FromBFloat16([]float32{1, 2, 3, 4}, []int64{2, 2}, consts.KCPU)
-	defer ts.Free()
-	if ts.ScalarType() != consts.KBFloat16 {
+	defer FreeTensor(ts)
+	if ScalarType(ts) != consts.KBFloat16 {
 		t.Fatal("invalid scalar type")
 	}
-	if ts.Dims() != 2 {
+	if Dims(ts) != 2 {
 		t.Fatal("invalid dim")
 	}
-	if ts.Shapes()[0] != 2 || ts.Shapes()[1] != 2 {
+	if Shapes(ts)[0] != 2 || Shapes(ts)[1] != 2 {
 		t.Fatal("invalid shape")
 	}
-	if ts.ElemCount() != 4 {
+	if ElemCount(ts) != 4 {
 		t.Fatal("invalid elem count")
 	}
-	values := ts.BFloat16Value()
+	values := BFloat16Value(ts)
 	if len(values) != 4 {
 		t.Fatal("invalid value")
 	}

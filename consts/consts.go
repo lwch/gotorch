@@ -56,7 +56,7 @@ func (t ScalarType) String() string {
 	case KBFloat16:
 		return "bfloat16"
 	default:
-		return "unknown"
+		return "unknown scalar type"
 	}
 }
 
@@ -84,6 +84,53 @@ const (
 	KIPU
 	KMTIA
 )
+
+func (t DeviceType) String() string {
+	switch t {
+	case KCPU:
+		return "cpu"
+	case KCUDA:
+		return "cuda"
+	case KMKLDNN:
+		return "mkldnn"
+	case KOPENGL:
+		return "opengl"
+	case KOPENCL:
+		return "opencl"
+	case KIDEEP:
+		return "ideep"
+	case KHIP:
+		return "hip"
+	case KFPGA:
+		return "fpga"
+	case KORT:
+		return "ort"
+	case KXLA:
+		return "xla"
+	case KVulkan:
+		return "vulkan"
+	case KMetal:
+		return "metal"
+	case KXPU:
+		return "xpu"
+	case KMPS:
+		return "mps"
+	case KMeta:
+		return "meta"
+	case KHPU:
+		return "hpu"
+	case KVE:
+		return "ve"
+	case KLazy:
+		return "lazy"
+	case KIPU:
+		return "ipu"
+	case KMTIA:
+		return "mtia"
+	default:
+		return "unknown device"
+	}
+}
 
 type Reduction byte
 

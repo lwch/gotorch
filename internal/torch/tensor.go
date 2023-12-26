@@ -1,29 +1,24 @@
 package torch
 
 import (
-	"sync"
-
 	"github.com/lwch/gotorch/consts"
 )
 
 // #include "tensor.h"
 import "C"
 
-type Tensor struct {
-	mFree sync.Mutex
-	data  C.tensor
-}
+type Tensor C.tensor
 
-func ARange(n int, dtype consts.ScalarType, device consts.DeviceType) *Tensor {
+func ARange(n int, dtype consts.ScalarType, device consts.DeviceType) Tensor {
 	var err *C.char
 	ptr := C.tensor_arange(&err, C.int(n), C.int8_t(dtype), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func Zeros(shape []int64, dtype consts.ScalarType, device consts.DeviceType) *Tensor {
+func Zeros(shape []int64, dtype consts.ScalarType, device consts.DeviceType) Tensor {
 	shapes := make([]C.int64_t, len(shape))
 	for i, s := range shape {
 		shapes[i] = C.int64_t(s)
@@ -33,50 +28,43 @@ func Zeros(shape []int64, dtype consts.ScalarType, device consts.DeviceType) *Te
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Free() {
-	t.mFree.Lock()
-	defer t.mFree.Unlock()
-	// allready freed
-	if t.data == nil {
-		return
-	}
-	C.free_tensor(t.data)
-	t.data = nil
+func FreeTensor(t Tensor) {
+	C.free_tensor(C.tensor(t))
 }
 
-func (t *Tensor) ScalarType() consts.ScalarType {
-	return consts.ScalarType(C.tensor_scalar_type(t.data))
+func ScalarType(t Tensor) consts.ScalarType {
+	return consts.ScalarType(C.tensor_scalar_type(C.tensor(t)))
 }
 
-func (t *Tensor) DeviceType() consts.DeviceType {
-	return consts.DeviceType(C.tensor_device_type(t.data))
+func DeviceType(t Tensor) consts.DeviceType {
+	return consts.DeviceType(C.tensor_device_type(C.tensor(t)))
 }
 
-func (t *Tensor) SetRequiresGrad(b bool) {
+func SetRequiresGrad(t Tensor, b bool) {
 	var err *C.char
-	C.tensor_set_requires_grad(&err, t.data, C.bool(b))
+	C.tensor_set_requires_grad(&err, C.tensor(t), C.bool(b))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 }
 
-func (t *Tensor) ToDevice(device consts.DeviceType) *Tensor {
+func ToDevice(t Tensor, device consts.DeviceType) Tensor {
 	var err *C.char
-	ptr := C.tensor_to_device(&err, t.data, C.int8_t(device))
+	ptr := C.tensor_to_device(&err, C.tensor(t), C.int8_t(device))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) ToScalarType(dtype consts.ScalarType) *Tensor {
+func ToScalarType(t Tensor, dtype consts.ScalarType) Tensor {
 	var err *C.char
-	ptr := C.tensor_to_scalar_type(&err, t.data, C.int8_t(dtype))
+	ptr := C.tensor_to_scalar_type(&err, C.tensor(t), C.int8_t(dtype))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }

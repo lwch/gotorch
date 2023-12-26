@@ -5,21 +5,21 @@ import "unsafe"
 // #include "tensor.h"
 import "C"
 
-func (t *Tensor) ElemSize() int64 {
-	return int64(C.tensor_elem_size(t.data))
+func ElemSize(t Tensor) int64 {
+	return int64(C.tensor_elem_size(C.tensor(t)))
 }
 
-func (t *Tensor) ElemCount() int64 {
-	return int64(C.tensor_elem_count(t.data))
+func ElemCount(t Tensor) int64 {
+	return int64(C.tensor_elem_count(C.tensor(t)))
 }
 
-func (t *Tensor) Dims() int64 {
-	return int64(C.tensor_dims(t.data))
+func Dims(t Tensor) int64 {
+	return int64(C.tensor_dims(C.tensor(t)))
 }
 
-func (t *Tensor) Shapes() []int64 {
-	size := t.Dims()
+func Shapes(t Tensor) []int64 {
+	size := Dims(t)
 	shapes := make([]C.int64_t, size)
-	C.tensor_shapes(t.data, (*C.int64_t)(unsafe.Pointer(&shapes[0])))
+	C.tensor_shapes(C.tensor(t), (*C.int64_t)(unsafe.Pointer(&shapes[0])))
 	return fromCInts[C.int64_t, int64](shapes)
 }

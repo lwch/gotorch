@@ -1,5 +1,9 @@
 package tensor
 
+import (
+	"github.com/lwch/gotorch/internal/torch"
+)
+
 type poolOpt struct {
 	stride   int
 	padding  int
@@ -55,8 +59,8 @@ func (t *Tensor) MaxPool1D(kernel int, opt ...PoolOpt) *Tensor {
 	for _, o := range opt {
 		o(p)
 	}
-	ret := t.t.MaxPool1D(kernel, p.stride, p.padding, p.dilation, p.ceil)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.MaxPool1D(t.t, kernel, p.stride, p.padding, p.dilation, p.ceil)
+	return New(ptr)
 }
 
 // MaxPool2D returns a new tensor with the result of applying a 2D max pooling
@@ -76,8 +80,8 @@ func (t *Tensor) MaxPool2D(kernel int, opt ...PoolOpt) *Tensor {
 	for _, o := range opt {
 		o(p)
 	}
-	ret := t.t.MaxPool2D(kernel, p.stride, p.padding, p.dilation, p.ceil)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.MaxPool2D(t.t, kernel, p.stride, p.padding, p.dilation, p.ceil)
+	return New(ptr)
 }
 
 // MaxPool3D returns a new tensor with the result of applying a 3D max pooling
@@ -97,8 +101,8 @@ func (t *Tensor) MaxPool3D(kernel int, opt ...PoolOpt) *Tensor {
 	for _, o := range opt {
 		o(p)
 	}
-	ret := t.t.MaxPool3D(kernel, p.stride, p.padding, p.dilation, p.ceil)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.MaxPool3D(t.t, kernel, p.stride, p.padding, p.dilation, p.ceil)
+	return New(ptr)
 }
 
 // AvgPool1D returns a new tensor with the result of applying a 1D average pooling
@@ -118,8 +122,8 @@ func (t *Tensor) AvgPool1D(kernel int, opt ...PoolOpt) *Tensor {
 	for _, o := range opt {
 		o(p)
 	}
-	ret := t.t.AvgPool1D(kernel, p.stride, p.padding, p.dilation, p.ceil)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.AvgPool1D(t.t, kernel, p.stride, p.padding, p.dilation, p.ceil)
+	return New(ptr)
 }
 
 // AvgPool2D returns a new tensor with the result of applying a 2D average pooling
@@ -139,8 +143,8 @@ func (t *Tensor) AvgPool2D(kernel int, opt ...PoolOpt) *Tensor {
 	for _, o := range opt {
 		o(p)
 	}
-	ret := t.t.AvgPool2D(kernel, p.stride, p.padding, p.dilation, p.ceil)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.AvgPool2D(t.t, kernel, p.stride, p.padding, p.dilation, p.ceil)
+	return New(ptr)
 }
 
 // AvgPool3D returns a new tensor with the result of applying a 3D average pooling
@@ -160,6 +164,6 @@ func (t *Tensor) AvgPool3D(kernel int, opt ...PoolOpt) *Tensor {
 	for _, o := range opt {
 		o(p)
 	}
-	ret := t.t.AvgPool3D(kernel, p.stride, p.padding, p.dilation, p.ceil)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.AvgPool3D(t.t, kernel, p.stride, p.padding, p.dilation, p.ceil)
+	return New(ptr)
 }

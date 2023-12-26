@@ -2,11 +2,13 @@
 #define __GOTORCH_API_H__
 
 #ifdef __cplusplus
+#include <torch/torch.h>
 extern "C"
 {
-	typedef torch::Tensor *tensor;
-	typedef torch::optim::Optimizer *optimizer;
-	typedef torch::nn::Module *module;
+
+    typedef torch::Tensor *tensor;
+    typedef torch::optim::Optimizer *optimizer;
+    typedef torch::nn::Module *module;
 #else
 typedef void *tensor;
 typedef void *optimizer;

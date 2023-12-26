@@ -3,68 +3,68 @@ package torch
 // #include "tensor.h"
 import "C"
 
-func (t *Tensor) Reshape(shape []int64) *Tensor {
+func Reshape(t Tensor, shape []int64) Tensor {
 	shapes, size := cInts[int64, C.int64_t](shape)
 	var err *C.char
-	ptr := C.tensor_reshape(&err, t.data, shapes, size)
+	ptr := C.tensor_reshape(&err, C.tensor(t), shapes, size)
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Transpose(dim1, dim2 int64) *Tensor {
+func Transpose(t Tensor, dim1, dim2 int64) Tensor {
 	var err *C.char
-	ptr := C.tensor_transpose(&err, t.data, C.int64_t(dim1), C.int64_t(dim2))
+	ptr := C.tensor_transpose(&err, C.tensor(t), C.int64_t(dim1), C.int64_t(dim2))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func VStack(a, b *Tensor) *Tensor {
+func VStack(a, b Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_vstack(&err, a.data, b.data)
+	ptr := C.tensor_vstack(&err, C.tensor(a), C.tensor(b))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func HStack(a, b *Tensor) *Tensor {
+func HStack(a, b Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_hstack(&err, a.data, b.data)
+	ptr := C.tensor_hstack(&err, C.tensor(a), C.tensor(b))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) NArrow(dim, start, length int64) *Tensor {
+func NArrow(t Tensor, dim, start, length int64) Tensor {
 	var err *C.char
-	ptr := C.tensor_narrow(&err, t.data, C.int64_t(dim), C.int64_t(start), C.int64_t(length))
+	ptr := C.tensor_narrow(&err, C.tensor(t), C.int64_t(dim), C.int64_t(start), C.int64_t(length))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) View(shapes []int64) *Tensor {
+func View(t Tensor, shapes []int64) Tensor {
 	pointer, size := cInts[int64, C.int64_t](shapes)
 	var err *C.char
-	ptr := C.tensor_view(&err, t.data, pointer, size)
+	ptr := C.tensor_view(&err, C.tensor(t), pointer, size)
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Permute(dims []int64) *Tensor {
+func Permute(t Tensor, dims []int64) Tensor {
 	pointer, size := cInts[int64, C.int64_t](dims)
 	var err *C.char
-	ptr := C.tensor_permute(&err, t.data, pointer, size)
+	ptr := C.tensor_permute(&err, C.tensor(t), pointer, size)
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }

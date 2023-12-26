@@ -31,10 +31,10 @@ func NewAdamWOptimizer(lr, beta1, beta2, eps, weightDecay float64, amsgrad bool)
 	return &Optimizer{data: ptr}
 }
 
-func (optm *Optimizer) Step(params []*Tensor) {
+func (optm *Optimizer) Step(params []Tensor) {
 	list := make([]C.tensor, len(params))
 	for i, p := range params {
-		list[i] = p.data
+		list[i] = C.tensor(p)
 	}
 	optm.m.Lock()
 	defer optm.m.Unlock()

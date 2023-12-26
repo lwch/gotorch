@@ -3,281 +3,281 @@ package torch
 // #include "operator.h"
 import "C"
 
-func (t *Tensor) Backward(retain bool) {
+func Backward(t Tensor, retain bool) {
 	var err *C.char
-	C.tensor_backward(&err, t.data, C.bool(retain))
+	C.tensor_backward(&err, C.tensor(t), C.bool(retain))
 	if err != nil {
 		panic(C.GoString(err))
 	}
 }
 
-func (t *Tensor) MatMul(t2 *Tensor) *Tensor {
+func MatMul(t, t2 Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_matmul(&err, t.data, t2.data)
+	ptr := C.tensor_matmul(&err, C.tensor(t), C.tensor(t2))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Add(t2 *Tensor) *Tensor {
+func Add(t, t2 Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_add(&err, t.data, t2.data)
+	ptr := C.tensor_add(&err, C.tensor(t), C.tensor(t2))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Sub(t2 *Tensor) *Tensor {
+func Sub(t, t2 Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_sub(&err, t.data, t2.data)
+	ptr := C.tensor_sub(&err, C.tensor(t), C.tensor(t2))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Mul(t2 *Tensor) *Tensor {
+func Mul(t, t2 Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_mul(&err, t.data, t2.data)
+	ptr := C.tensor_mul(&err, C.tensor(t), C.tensor(t2))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Div(t2 *Tensor) *Tensor {
+func Div(t, t2 Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_div(&err, t.data, t2.data)
+	ptr := C.tensor_div(&err, C.tensor(t), C.tensor(t2))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Pow(n float64) *Tensor {
+func Pow(t Tensor, n float64) Tensor {
 	var err *C.char
-	ptr := C.tensor_pow(&err, t.data, C.double(n))
+	ptr := C.tensor_pow(&err, C.tensor(t), C.double(n))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Sqrt() *Tensor {
+func Sqrt(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_sqrt(&err, t.data)
+	ptr := C.tensor_sqrt(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) RSqrt() *Tensor {
+func RSqrt(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_rsqrt(&err, t.data)
+	ptr := C.tensor_rsqrt(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Log() *Tensor {
+func Log(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_log(&err, t.data)
+	ptr := C.tensor_log(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Exp() *Tensor {
+func Exp(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_exp(&err, t.data)
+	ptr := C.tensor_exp(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Neg() *Tensor {
+func Neg(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_neg(&err, t.data)
+	ptr := C.tensor_neg(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Abs() *Tensor {
+func Abs(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_abs(&err, t.data)
+	ptr := C.tensor_abs(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Max(dim int64, keepdim bool) *Tensor {
+func Max(t Tensor, dim int64, keepdim bool) Tensor {
 	var err *C.char
-	ptr := C.tensor_max(&err, t.data, C.int64_t(dim), C.bool(keepdim))
+	ptr := C.tensor_max(&err, C.tensor(t), C.int64_t(dim), C.bool(keepdim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Min(dim int64, keepdim bool) *Tensor {
+func Min(t Tensor, dim int64, keepdim bool) Tensor {
 	var err *C.char
-	ptr := C.tensor_min(&err, t.data, C.int64_t(dim), C.bool(keepdim))
+	ptr := C.tensor_min(&err, C.tensor(t), C.int64_t(dim), C.bool(keepdim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Sum(dim int64, keepdim bool) *Tensor {
+func Sum(t Tensor, dim int64, keepdim bool) Tensor {
 	var err *C.char
-	ptr := C.tensor_sum(&err, t.data, C.int64_t(dim), C.bool(keepdim))
+	ptr := C.tensor_sum(&err, C.tensor(t), C.int64_t(dim), C.bool(keepdim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Mean(dim int64, keepdim bool) *Tensor {
+func Mean(t Tensor, dim int64, keepdim bool) Tensor {
 	var err *C.char
-	ptr := C.tensor_mean(&err, t.data, C.int64_t(dim), C.bool(keepdim))
+	ptr := C.tensor_mean(&err, C.tensor(t), C.int64_t(dim), C.bool(keepdim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Var(dim int64, unbiased, keepdim bool) *Tensor {
+func Var(t Tensor, dim int64, unbiased, keepdim bool) Tensor {
 	var err *C.char
-	ptr := C.tensor_var(&err, t.data, C.int64_t(dim), C.bool(unbiased), C.bool(keepdim))
+	ptr := C.tensor_var(&err, C.tensor(t), C.int64_t(dim), C.bool(unbiased), C.bool(keepdim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Relu() *Tensor {
+func Relu(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_relu(&err, t.data)
+	ptr := C.tensor_relu(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Gelu(tanh bool) *Tensor {
+func Gelu(t Tensor, tanh bool) Tensor {
 	var err *C.char
-	ptr := C.tensor_gelu(&err, t.data, C.bool(tanh))
+	ptr := C.tensor_gelu(&err, C.tensor(t), C.bool(tanh))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) LeakyRelu(negativeSlope float64) *Tensor {
+func LeakyRelu(t Tensor, negativeSlope float64) Tensor {
 	var err *C.char
-	ptr := C.tensor_leaky_relu(&err, t.data, C.double(negativeSlope))
+	ptr := C.tensor_leaky_relu(&err, C.tensor(t), C.double(negativeSlope))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Silu() *Tensor {
+func Silu(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_silu(&err, t.data)
+	ptr := C.tensor_silu(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Sigmoid() *Tensor {
+func Sigmoid(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_sigmoid(&err, t.data)
+	ptr := C.tensor_sigmoid(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Tanh() *Tensor {
+func Tanh(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_tanh(&err, t.data)
+	ptr := C.tensor_tanh(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Softmax(dim int64) *Tensor {
+func Softmax(t Tensor, dim int64) Tensor {
 	var err *C.char
-	ptr := C.tensor_softmax(&err, t.data, C.int64_t(dim))
+	ptr := C.tensor_softmax(&err, C.tensor(t), C.int64_t(dim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Softmax1(dim int64) *Tensor {
+func Softmax1(t Tensor, dim int64) Tensor {
 	var err *C.char
-	ptr := C.tensor_softmax1(&err, t.data, C.int64_t(dim))
+	ptr := C.tensor_softmax1(&err, C.tensor(t), C.int64_t(dim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Dropout(p float64, train bool) *Tensor {
+func Dropout(t Tensor, p float64, train bool) Tensor {
 	var err *C.char
-	ptr := C.tensor_dropout(&err, t.data, C.double(p), C.bool(train))
+	ptr := C.tensor_dropout(&err, C.tensor(t), C.double(p), C.bool(train))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Unsqueeze(dim int64) *Tensor {
+func Unsqueeze(t Tensor, dim int64) Tensor {
 	var err *C.char
-	ptr := C.tensor_unsqueeze(&err, t.data, C.int64_t(dim))
+	ptr := C.tensor_unsqueeze(&err, C.tensor(t), C.int64_t(dim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Squeeze(dim int64) *Tensor {
+func Squeeze(t Tensor, dim int64) Tensor {
 	var err *C.char
-	ptr := C.tensor_squeeze(&err, t.data, C.int64_t(dim))
+	ptr := C.tensor_squeeze(&err, C.tensor(t), C.int64_t(dim))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Contiguous() *Tensor {
+func Contiguous(t Tensor) Tensor {
 	var err *C.char
-	ptr := C.tensor_contiguous(&err, t.data)
+	ptr := C.tensor_contiguous(&err, C.tensor(t))
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }
 
-func (t *Tensor) Expand(sizes []int64) *Tensor {
+func Expand(t Tensor, sizes []int64) Tensor {
 	var err *C.char
 	sz, size := cInts[int64, C.int64_t](sizes)
-	ptr := C.tensor_expand(&err, t.data, sz, size)
+	ptr := C.tensor_expand(&err, C.tensor(t), sz, size)
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Tensor{data: ptr}
+	return Tensor(ptr)
 }

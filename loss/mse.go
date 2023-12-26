@@ -8,7 +8,7 @@ import (
 
 type Mse struct {
 	reduction consts.Reduction
-	t         *torch.Tensor
+	t         *tensor.Tensor
 }
 
 type MseOpt func(*Mse)
@@ -26,26 +26,21 @@ func NewMse(pred, target *tensor.Tensor, opts ...MseOpt) Loss {
 	for _, opt := range opts {
 		opt(&ret)
 	}
-	ret.t = torch.NewMseLoss(pred.Tensor(), target.Tensor(), ret.reduction)
-	if pred.Storage() != nil {
-		pred.Storage().Put(ret.t)
-	} else if target.Storage() != nil {
-		target.Storage().Put(ret.t)
-	}
+	ptr := torch.NewMseLoss(pred.Tensor(), target.Tensor(), ret.reduction)
+	ret.t = tensor.New(ptr)
 	return &ret
 }
 
 func (loss *Mse) Backward() {
-	loss.t.Backward(false)
+	loss.t.Backward()
 }
 
 func (loss *Mse) BackwardRetained() {
-	loss.t.Backward(true)
+	loss.t.BackwardRetained()
 }
 
 func (loss *Mse) Value() float64 {
 	l := loss.t.ToDevice(consts.KCPU)
-	defer l.Free()
 	switch loss.t.ScalarType() {
 	case consts.KFloat:
 		return float64(l.Float32Value()[0])

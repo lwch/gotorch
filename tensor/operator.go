@@ -2,202 +2,162 @@ package tensor
 
 import (
 	"github.com/lwch/gotorch/internal/torch"
-	"github.com/lwch/gotorch/mmgr"
 )
 
 func (t *Tensor) Backward() {
-	t.t.Backward(false)
+	torch.Backward(t.t, false)
 }
 
 func (t *Tensor) BackwardRetained() {
-	t.t.Backward(true)
-}
-
-func (t *Tensor) store1(ret *torch.Tensor) *mmgr.Storage {
-	var s *mmgr.Storage
-	if t.s != nil {
-		s = t.s
-	}
-	if s != nil {
-		s.Put(ret)
-	}
-	return s
-}
-
-func (t *Tensor) store2(t2 *Tensor, ret *torch.Tensor) *mmgr.Storage {
-	var s *mmgr.Storage
-	if t.s != nil {
-		s = t.s
-	} else if t2 != nil && t2.s != nil {
-		s = t2.s
-	}
-	if s != nil {
-		s.Put(ret)
-	}
-	return s
-}
-
-func (t *Tensor) store3(t2, t3 *Tensor, ret *torch.Tensor) *mmgr.Storage {
-	var s *mmgr.Storage
-	if t.s != nil {
-		s = t.s
-	} else if t2 != nil && t2.s != nil {
-		s = t2.s
-	} else if t3 != nil && t3.s != nil {
-		s = t3.s
-	}
-	if s != nil {
-		s.Put(ret)
-	}
-	return s
+	torch.Backward(t.t, true)
 }
 
 func (t *Tensor) MatMul(t2 *Tensor) *Tensor {
-	ret := t.t.MatMul(t2.t)
-	return &Tensor{s: t.store2(t2, ret), t: ret}
+	ptr := torch.MatMul(t.t, t2.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Add(t2 *Tensor) *Tensor {
-	ret := t.t.Add(t2.t)
-	return &Tensor{s: t.store2(t2, ret), t: ret}
+	ptr := torch.Add(t.t, t2.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Sub(t2 *Tensor) *Tensor {
-	ret := t.t.Sub(t2.t)
-	return &Tensor{s: t.store2(t2, ret), t: ret}
+	ptr := torch.Sub(t.t, t2.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Mul(t2 *Tensor) *Tensor {
-	ret := t.t.Mul(t2.t)
-	return &Tensor{s: t.store2(t2, ret), t: ret}
+	ptr := torch.Mul(t.t, t2.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Div(t2 *Tensor) *Tensor {
-	ret := t.t.Div(t2.t)
-	return &Tensor{s: t.store2(t2, ret), t: ret}
+	ptr := torch.Div(t.t, t2.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Pow(n float64) *Tensor {
-	ret := t.t.Pow(n)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Pow(t.t, n)
+	return New(ptr)
 }
 
 func (t *Tensor) Sqrt() *Tensor {
-	ret := t.t.Sqrt()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Sqrt(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) RSqrt() *Tensor {
-	ret := t.t.RSqrt()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.RSqrt(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Log() *Tensor {
-	ret := t.t.Log()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Log(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Exp() *Tensor {
-	ret := t.t.Exp()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Exp(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Neg() *Tensor {
-	ret := t.t.Neg()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Neg(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Abs() *Tensor {
-	ret := t.t.Abs()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Abs(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Max(dim int64, keepdim bool) *Tensor {
-	ret := t.t.Max(dim, keepdim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Max(t.t, dim, keepdim)
+	return New(ptr)
 }
 
 func (t *Tensor) Min(dim int64, keepdim bool) *Tensor {
-	ret := t.t.Min(dim, keepdim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Min(t.t, dim, keepdim)
+	return New(ptr)
 }
 
 func (t *Tensor) Sum(dim int64, keepdim bool) *Tensor {
-	ret := t.t.Sum(dim, keepdim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Sum(t.t, dim, keepdim)
+	return New(ptr)
 }
 
 func (t *Tensor) Mean(dim int64, keepdim bool) *Tensor {
-	ret := t.t.Mean(dim, keepdim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Mean(t.t, dim, keepdim)
+	return New(ptr)
 }
 
 func (t *Tensor) Var(dim int64, unbiased, keepdim bool) *Tensor {
-	ret := t.t.Var(dim, unbiased, keepdim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Var(t.t, dim, unbiased, keepdim)
+	return New(ptr)
 }
 
 func (t *Tensor) Relu() *Tensor {
-	ret := t.t.Relu()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Relu(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Gelu(tanh bool) *Tensor {
-	ret := t.t.Gelu(tanh)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Gelu(t.t, tanh)
+	return New(ptr)
 }
 
 func (t *Tensor) LeakyRelu(negSlope float64) *Tensor {
-	ret := t.t.LeakyRelu(negSlope)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.LeakyRelu(t.t, negSlope)
+	return New(ptr)
 }
 
 func (t *Tensor) Silu() *Tensor {
-	ret := t.t.Silu()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Silu(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Sigmoid() *Tensor {
-	ret := t.t.Sigmoid()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Sigmoid(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Tanh() *Tensor {
-	ret := t.t.Tanh()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Tanh(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Softmax(dim int64) *Tensor {
-	ret := t.t.Softmax(dim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Softmax(t.t, dim)
+	return New(ptr)
 }
 
 func (t *Tensor) Softmax1(dim int64) *Tensor {
-	ret := t.t.Softmax1(dim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Softmax1(t.t, dim)
+	return New(ptr)
 }
 
 func (t *Tensor) Dropout(p float64, train bool) *Tensor {
-	ret := t.t.Dropout(p, train)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Dropout(t.t, p, train)
+	return New(ptr)
 }
 
 func (t *Tensor) Unsqueeze(dim int64) *Tensor {
-	ret := t.t.Unsqueeze(dim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Unsqueeze(t.t, dim)
+	return New(ptr)
 }
 
 func (t *Tensor) Squeeze(dim int64) *Tensor {
-	ret := t.t.Squeeze(dim)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Squeeze(t.t, dim)
+	return New(ptr)
 }
 
 func (t *Tensor) Contiguous() *Tensor {
-	ret := t.t.Contiguous()
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Contiguous(t.t)
+	return New(ptr)
 }
 
 func (t *Tensor) Expand(sizes ...int64) *Tensor {
-	ret := t.t.Expand(sizes)
-	return &Tensor{s: t.store1(ret), t: ret}
+	ptr := torch.Expand(t.t, sizes)
+	return New(ptr)
 }
