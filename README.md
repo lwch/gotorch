@@ -63,6 +63,8 @@ c := a.MatMul(b)
 fmt.Println(c.ToDevice(consts.KCPU).Float32Value()) // 注意：显存中的数据无法直接读取，需将其转换到CPU后才可读取
 ```
 
+**注意: 由于大部分tensor对象在C栈中创建，在go中无法正确捕获内存用量，因此建议在长期运行的服务中（如模型训练）使用debug.SetGCPercent将go的GC关闭并在每个迭代中手动调用runtime.GC进行内存释放**
+
 ## 模型的checkpoint加载
 
 ```go
