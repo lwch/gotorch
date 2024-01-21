@@ -13,9 +13,14 @@ import (
 
 const hiddenSize = 10
 const device = consts.KCPU
+const accumulationSteps = 4
 
 var l1 = nn.NewLinear(2, hiddenSize)
 var l2 = nn.NewLinear(hiddenSize, 1)
+var accumulationValue = tensor.FromFloat32(
+	[]float32{accumulationSteps},
+	tensor.WithShapes(1),
+	tensor.WithDevice(device))
 
 func init() {
 	l1.ToDevice(device)
@@ -29,12 +34,15 @@ func main() {
 		// forward
 		pred := forward(x)
 		loss := loss.NewMse(pred, y)
+		loss = loss.Div(accumulationValue)
 		// backward
 		loss.Backward()
 		// update
-		optm.Step(append(l1.Parameters(), l2.Parameters()...))
+		if i > 0 && i%accumulationSteps == 0 {
+			optm.Step(append(l1.Parameters(), l2.Parameters()...))
+		}
 		if i%100 == 0 {
-			fmt.Printf("epoch: %d loss: %f\n", i, loss.Value())
+			fmt.Printf("epoch: %d loss: %f\n", i, loss.Float32Value()[0])
 		}
 	}
 	x, _ := getBatch(false)
