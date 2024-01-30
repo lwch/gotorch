@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.11
+        uses: Jimver/cuda-toolkit@v0.2.14
         with:
             cuda: '11.8.0'
             method: network
@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.11
+        uses: Jimver/cuda-toolkit@v0.2.14
         with:
             cuda: '11.8.0'
             method: network
@@ -72,7 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.11
+        uses: Jimver/cuda-toolkit@v0.2.14
         with:
             cuda: '11.8.0'
             method: network
@@ -101,7 +101,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.11
+        uses: Jimver/cuda-toolkit@v0.2.14
         with:
             cuda: '12.1.0'
             method: network
