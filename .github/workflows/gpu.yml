@@ -26,7 +26,7 @@ jobs:
           wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu118.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
-          make
+          make -j
           mv libgotorch.so libgotorch_gpu.cu118.glibc232.so
 
       - name: upload
@@ -55,7 +55,7 @@ jobs:
           wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu121.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
-          make
+          make -j
           mv libgotorch.so libgotorch_gpu.cu121.glibc232.so
 
       - name: upload
@@ -84,7 +84,7 @@ jobs:
           wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu118.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
-          make
+          make -j
           mv libgotorch.so libgotorch_gpu.cu118.glibc231.so
 
       - name: upload
@@ -113,7 +113,7 @@ jobs:
           wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu121.zip
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
-          make
+          make -j
           mv libgotorch.so libgotorch_gpu.cu121.glibc231.so
 
       - name: upload
