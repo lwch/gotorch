@@ -6,7 +6,7 @@ on:
       - "v*.*.*"
 
 env:
-  libtorch_version: 2.1.0
+  libtorch_version: 2.2.0
 
 jobs:
   release_linux_glibc232:
