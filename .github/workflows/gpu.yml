@@ -108,6 +108,8 @@ jobs:
 
       - name: make
         working-directory: ./lib
+        env:
+          TORCH_CUDA_ARCH_LIST: "8.0 8.6 8.9 9.0"
         run: |
           apt-get install -y cmake
           wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu121.zip
