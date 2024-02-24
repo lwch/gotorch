@@ -152,6 +152,11 @@ func (t *Tensor) Squeeze(dim int64) *Tensor {
 	return New(ptr)
 }
 
+func (t *Tensor) Flatten(startDim, endDim int64) *Tensor {
+	ptr := torch.Flatten(t.t, startDim, endDim)
+	return New(ptr)
+}
+
 func (t *Tensor) Contiguous() *Tensor {
 	ptr := torch.Contiguous(t.t)
 	return New(ptr)

@@ -263,6 +263,15 @@ func Squeeze(t Tensor, dim int64) Tensor {
 	return Tensor(ptr)
 }
 
+func Flatten(t Tensor, startDim, endDim int64) Tensor {
+	var err *C.char
+	ptr := C.tensor_flatten(&err, C.tensor(t), C.int64_t(startDim), C.int64_t(endDim))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return Tensor(ptr)
+}
+
 func Contiguous(t Tensor) Tensor {
 	var err *C.char
 	ptr := C.tensor_contiguous(&err, C.tensor(t))
