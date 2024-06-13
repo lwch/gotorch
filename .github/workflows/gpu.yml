@@ -6,11 +6,11 @@ on:
       - "v*.*.*"
 
 env:
-  libtorch_version: 2.2.2
+  libtorch_version: 2.3.1
 
 jobs:
   release_linux_118_glibc232:
-    runs-on: self-ubuntu22
+    runs-on: ubuntu22.04
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
@@ -39,7 +39,7 @@ jobs:
           omitBody: true
 
   release_linux_121_glibc232:
-    runs-on: self-ubuntu22
+    runs-on: ubuntu22.04
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
@@ -68,7 +68,7 @@ jobs:
           omitBody: true
 
   release_linux_118_glibc231:
-    runs-on: self-ubuntu20
+    runs-on: ubuntu20.04
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
@@ -97,7 +97,7 @@ jobs:
           omitBody: true
 
   release_linux_121_glibc231:
-    runs-on: self-ubuntu20
+    runs-on: ubuntu20.04
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda

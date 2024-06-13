@@ -15,7 +15,10 @@
 ## 安装
 
 1. 下载[libtorch](https://pytorch.org/get-started/locally/)，windows下解压到D盘，linux和mac下解压到/usr/local/lib目录下
-2. 下载[libgotorch](https://github.com/lwch/gotorch/releases/latest)并放置在libtorch的lib目录下，windows系统使用dll，linux系统使用so(请选择正确的glibc版本并将其更名为libgotorch.so)，macos系统使用dylib
+2. 下载[libgotorch](https://github.com/lwch/gotorch/releases/latest)并放置在libtorch的lib目录下
+  - windows操作系统请更名为gotorch.dll
+  - linux操作系统请根据glibc版本下载对应so文件并更名为libgotorch.so
+  - macos最新版本仅支持arm64架构，下载后请更名为libgotorch.dylib
 
 注：由于官方提供的windows版本libtorch使用msvc进行编译，通过mingw无法正常链接，因此增加libgotorch库来进行转换，有关libgotorch库的编译请看[libgotorch编译](docs/libgotorch.md)，另外也可参考[release.yml](.github/workflows/release.yml)中的命令。
 
@@ -49,8 +52,6 @@ Path="D:\libtorch\lib;<mingw所在路径>\bin"
 ## 使用
 
 可查看[mlp](example/mlp)中的示例
-
-注意：由于cgo中创建的对象无法被go GC所捕获并释放，因此在实际使用过程中需要通过[mmgr](mmgr)库来捕获创建的tensor对象并通过GC接口来手动释放内存，在From系列接口中生成tensor对象允许给定空的storage对象，该对象一般被用来作为模型参数，因此不会被GC所释放。运算过程中产生的新tensor对象会继承自他的子集的storage，因此在运算工程中生成的临时对象可被storage所捕获并释放。
 
 ```go
 a := tensor.ARange(nil, 6, consts.KFloat,
