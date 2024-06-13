@@ -10,7 +10,7 @@ env:
 
 jobs:
   release_linux_118_glibc232:
-    runs-on: ubuntu22.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
@@ -39,7 +39,7 @@ jobs:
           omitBody: true
 
   release_linux_121_glibc232:
-    runs-on: ubuntu22.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
@@ -68,7 +68,7 @@ jobs:
           omitBody: true
 
   release_linux_118_glibc231:
-    runs-on: ubuntu20.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda
@@ -97,7 +97,7 @@ jobs:
           omitBody: true
 
   release_linux_121_glibc231:
-    runs-on: ubuntu20.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - name: setup cuda

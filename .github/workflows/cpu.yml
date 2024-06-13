@@ -79,7 +79,7 @@ jobs:
   #         omitBody: true
 
   release_macos_arm64:
-    runs-on: macos-13-xlarge
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
 
