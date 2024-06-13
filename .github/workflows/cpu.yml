@@ -12,7 +12,7 @@ jobs:
   release_linux_glibc232:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: make
         working-directory: ./lib
@@ -35,7 +35,7 @@ jobs:
   release_linux_glibc231:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: make
         working-directory: ./lib
@@ -58,7 +58,7 @@ jobs:
   # release_macos_x86_64:
   #   runs-on: macos-11
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
 
   #     - name: make
   #       working-directory: ./lib
@@ -81,7 +81,7 @@ jobs:
   release_macos_arm64:
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: make
         working-directory: ./lib
@@ -104,8 +104,8 @@ jobs:
   release_windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: microsoft/setup-msbuild@v1.3.1
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
 
       - name: make
         working-directory: ./lib

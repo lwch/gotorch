@@ -12,12 +12,12 @@ jobs:
   release_linux_118_glibc232:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.14
+        uses: Jimver/cuda-toolkit@v0.2.15
         with:
             cuda: '11.8.0'
-            method: network
+            # method: network
 
       - name: make
         working-directory: ./lib
@@ -41,12 +41,12 @@ jobs:
   release_linux_121_glibc232:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.14
+        uses: Jimver/cuda-toolkit@v0.2.15
         with:
-            cuda: '11.8.0'
-            method: network
+            cuda: '12.1.0'
+            # method: network
 
       - name: make
         working-directory: ./lib
@@ -70,12 +70,12 @@ jobs:
   release_linux_118_glibc231:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.14
+        uses: Jimver/cuda-toolkit@v0.2.15
         with:
             cuda: '11.8.0'
-            method: network
+            # method: network
 
       - name: make
         working-directory: ./lib
@@ -99,12 +99,12 @@ jobs:
   release_linux_121_glibc231:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.14
+        uses: Jimver/cuda-toolkit@v0.2.15
         with:
             cuda: '12.1.0'
-            method: network
+            # method: network
 
       - name: make
         working-directory: ./lib
