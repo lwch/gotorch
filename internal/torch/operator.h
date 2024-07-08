@@ -52,6 +52,19 @@ extern "C"
                                      int64_t stride1, int64_t stride2, int64_t stride3,
                                      int64_t padding1, int64_t padding2, int64_t padding3,
                                      int64_t dilation, int64_t groups);
+    // transpose conv
+    GOTORCH_API tensor tensor_transpose_conv1d(char **err, tensor input, tensor weight, tensor bias,
+                                               int64_t stride, int64_t padding, int64_t output_padding, int64_t dilation, int64_t groups);
+    GOTORCH_API tensor tensor_transpose_conv2d(char **err, tensor input, tensor weight, tensor bias,
+                                               int64_t stride1, int64_t stride2,
+                                               int64_t padding1, int64_t padding2,
+                                               int64_t output_padding1, int64_t output_padding2,
+                                               int64_t dilation, int64_t groups);
+    GOTORCH_API tensor tensor_transpose_conv3d(char **err, tensor input, tensor weight, tensor bias,
+                                               int64_t stride1, int64_t stride2, int64_t stride3,
+                                               int64_t padding1, int64_t padding2, int64_t padding3,
+                                               int64_t output_padding1, int64_t output_padding2, int64_t output_padding3,
+                                               int64_t dilation, int64_t groups);
     // pool
     GOTORCH_API tensor tensor_max_pool1d(char **err, tensor self,
                                          int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,

@@ -58,6 +58,71 @@ tensor tensor_conv3d(char **err, tensor input, tensor weight, tensor bias,
                            err);
 }
 
+tensor tensor_transpose_conv1d(char **err, tensor input, tensor weight, tensor bias,
+                               int64_t stride, int64_t padding, int64_t output_padding, int64_t dilation, int64_t groups)
+{
+  return auto_catch_tensor([input, weight, bias, stride, padding, output_padding, groups, dilation]()
+                           { if (bias) {
+                                return new torch::Tensor(torch::conv_transpose1d(*input, *weight, *bias, stride, padding, output_padding, groups, dilation));
+                              } else{
+                                return new torch::Tensor(torch::conv_transpose1d(*input, *weight, torch::nullopt, stride, padding, output_padding, groups, dilation));
+                              } },
+                           err);
+}
+
+tensor tensor_transpose_conv2d(char **err, tensor input, tensor weight, tensor bias,
+                               int64_t stride1, int64_t stride2,
+                               int64_t padding1, int64_t padding2,
+                               int64_t output_padding1, int64_t output_padding2,
+                               int64_t dilation, int64_t groups)
+{
+  return auto_catch_tensor([input, weight, bias, stride1, stride2, padding1, padding2, output_padding1, output_padding2, groups, dilation]()
+                           {
+                              std::vector<int64_t> stride;
+                              stride.push_back(stride1);
+                              stride.push_back(stride2);
+                              std::vector<int64_t> padding;
+                              padding.push_back(padding1);
+                              padding.push_back(padding2);
+                              std::vector<int64_t> output_padding;
+                              output_padding.push_back(output_padding1);
+                              output_padding.push_back(output_padding2);
+                              if (bias) {
+                                return new torch::Tensor(torch::conv_transpose2d(*input, *weight, *bias, stride, padding, output_padding, groups, dilation));
+                              } else{
+                                return new torch::Tensor(torch::conv_transpose2d(*input, *weight, torch::nullopt, stride, padding, output_padding, groups, dilation));
+                              } },
+                           err);
+}
+
+tensor tensor_transpose_conv3d(char **err, tensor input, tensor weight, tensor bias,
+                               int64_t stride1, int64_t stride2, int64_t stride3,
+                               int64_t padding1, int64_t padding2, int64_t padding3,
+                               int64_t output_padding1, int64_t output_padding2, int64_t output_padding3,
+                               int64_t dilation, int64_t groups)
+{
+  return auto_catch_tensor([input, weight, bias, stride1, stride2, stride3, padding1, padding2, padding3, output_padding1, output_padding2, output_padding3, groups, dilation]()
+                           {
+                              std::vector<int64_t> stride;
+                              stride.push_back(stride1);
+                              stride.push_back(stride2);
+                              stride.push_back(stride3);
+                              std::vector<int64_t> padding;
+                              padding.push_back(padding1);
+                              padding.push_back(padding2);
+                              padding.push_back(padding3);
+                              std::vector<int64_t> output_padding;
+                              output_padding.push_back(output_padding1);
+                              output_padding.push_back(output_padding2);
+                              output_padding.push_back(output_padding3);
+                              if (bias) {
+                                return new torch::Tensor(torch::conv_transpose3d(*input, *weight, *bias, stride, padding, output_padding, groups, dilation));
+                              } else{
+                                return new torch::Tensor(torch::conv_transpose3d(*input, *weight, torch::nullopt, stride, padding, output_padding, groups, dilation));
+                              } },
+                           err);
+}
+
 tensor tensor_max_pool1d(char **err, tensor self,
                          int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation, bool ceil_mode)
 {
