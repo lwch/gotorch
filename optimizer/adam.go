@@ -1,48 +1,63 @@
 package optimizer
 
 import (
+	"encoding/binary"
+	"io"
+
 	"github.com/lwch/gotorch/internal/torch"
 	"github.com/lwch/gotorch/tensor"
 )
 
+type adamOptions struct {
+	Lr          float64
+	WeightDecay float64
+	Beta1       float64
+	Beta2       float64
+	Eps         float64
+}
+
+func (opts *adamOptions) WriteTo(w io.Writer) (int64, error) {
+	return 5 * 8, binary.Write(w, binary.LittleEndian, opts)
+}
+
+func (opts *adamOptions) ReadFrom(r io.Reader) (int64, error) {
+	return 5 * 8, binary.Read(r, binary.LittleEndian, opts)
+}
+
 type Adam struct {
-	lr          float64
-	weightDecay float64
-	beta1       float64
-	beta2       float64
-	eps         float64
-	optm        *torch.Optimizer
+	options adamOptions
+	optm    *torch.Optimizer
 }
 
 type AdamOpt func(*Adam)
 
 func WithAdamLr(lr float64) AdamOpt {
 	return func(adam *Adam) {
-		adam.lr = lr
+		adam.options.Lr = lr
 	}
 }
 
 func WithAdamWeightDecay(weightDecay float64) AdamOpt {
 	return func(adam *Adam) {
-		adam.weightDecay = weightDecay
+		adam.options.WeightDecay = weightDecay
 	}
 }
 
 func WithAdamBeta1(beta1 float64) AdamOpt {
 	return func(adam *Adam) {
-		adam.beta1 = beta1
+		adam.options.Beta1 = beta1
 	}
 }
 
 func WithAdamBeta2(beta2 float64) AdamOpt {
 	return func(adam *Adam) {
-		adam.beta2 = beta2
+		adam.options.Beta2 = beta2
 	}
 }
 
 func WithAdamEps(eps float64) AdamOpt {
 	return func(adam *Adam) {
-		adam.eps = eps
+		adam.options.Eps = eps
 	}
 }
 
@@ -59,15 +74,18 @@ func NewAdam(params []*tensor.Tensor, opts ...AdamOpt) Optimizer {
 		list[i] = t.Tensor()
 	}
 	var adam Adam
-	adam.lr = 1e-3
-	adam.weightDecay = 0
-	adam.beta1 = 0.9
-	adam.beta2 = 0.999
-	adam.eps = 1e-8
+	adam.options.Lr = 1e-3
+	adam.options.WeightDecay = 0
+	adam.options.Beta1 = 0.9
+	adam.options.Beta2 = 0.999
+	adam.options.Eps = 1e-8
 	for _, opt := range opts {
 		opt(&adam)
 	}
-	adam.optm = torch.NewAdamOptimizer(list, adam.lr, adam.beta1, adam.beta2, adam.eps, adam.weightDecay)
+	adam.optm = torch.NewAdamOptimizer(list,
+		adam.options.Lr,
+		adam.options.Beta1, adam.options.Beta2,
+		adam.options.Eps, adam.options.WeightDecay)
 	return &adam
 }
 
@@ -109,4 +127,8 @@ func (optm *Adam) SetState(values [][]*tensor.Tensor) {
 		}
 		state.Set(i, tmp)
 	}
+}
+
+func (optm *Adam) GetOptions() Options {
+	return &optm.options
 }

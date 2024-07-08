@@ -148,11 +148,17 @@ size_t optimizer_state_size(char **err, optimizer_state state, size_t index)
                                 torch::optim::OptimizerParamState* ptr = state->data[index];
                                 {
                                     torch::optim::AdamParamState* p = dynamic_cast<torch::optim::AdamParamState*>(ptr);
-                                    if (p) return 4;
+                                    if (p) {
+                                        if (p->max_exp_avg_sq().numel()) return 4;
+                                        return 3;
+                                    }
                                 }
                                 {
                                     torch::optim::AdamWParamState* p = dynamic_cast<torch::optim::AdamWParamState*>(ptr);
-                                    if (p) return 4;
+                                    if (p) {
+                                        if (p->max_exp_avg_sq().numel()) return 4;
+                                        return 3;
+                                    }
                                 }
                                 return 0; },
                              err);

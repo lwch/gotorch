@@ -1,49 +1,70 @@
 package optimizer
 
 import (
+	"encoding/binary"
+	"io"
+
 	"github.com/lwch/gotorch/internal/torch"
 	"github.com/lwch/gotorch/tensor"
 )
 
+type adamWOptions struct {
+	Lr          float64
+	WeightDecay float64
+	Beta1       float64
+	Beta2       float64
+	Eps         float64
+	Amsgrad     bool
+}
+
+func (opts *adamWOptions) WriteTo(w io.Writer) (int64, error) {
+	return 5*8 + 1, binary.Write(w, binary.LittleEndian, opts)
+}
+
+func (opts *adamWOptions) ReadFrom(r io.Reader) (int64, error) {
+	return 5*8 + 1, binary.Read(r, binary.LittleEndian, opts)
+}
+
 type AdamW struct {
-	lr          float64
-	weightDecay float64
-	beta1       float64
-	beta2       float64
-	eps         float64
-	amsgrad     bool
-	optm        *torch.Optimizer
+	options adamWOptions
+	optm    *torch.Optimizer
 }
 
 type AdamWOpt func(*AdamW)
 
 func WithAdamWLr(lr float64) AdamWOpt {
 	return func(adam *AdamW) {
-		adam.lr = lr
+		adam.options.Lr = lr
 	}
 }
 
 func WithAdamWWeightDecay(weightDecay float64) AdamWOpt {
 	return func(adam *AdamW) {
-		adam.weightDecay = weightDecay
+		adam.options.WeightDecay = weightDecay
 	}
 }
 
 func WithAdamWBeta1(beta1 float64) AdamWOpt {
 	return func(adam *AdamW) {
-		adam.beta1 = beta1
+		adam.options.Beta1 = beta1
 	}
 }
 
 func WithAdamWBeta2(beta2 float64) AdamWOpt {
 	return func(adam *AdamW) {
-		adam.beta2 = beta2
+		adam.options.Beta2 = beta2
 	}
 }
 
 func WithAdamWEps(eps float64) AdamWOpt {
 	return func(adam *AdamW) {
-		adam.eps = eps
+		adam.options.Eps = eps
+	}
+}
+
+func WithAdamWAmsgrad(amsgrad bool) AdamWOpt {
+	return func(adam *AdamW) {
+		adam.options.Amsgrad = amsgrad
 	}
 }
 
@@ -61,15 +82,21 @@ func NewAdamW(params []*tensor.Tensor, opts ...AdamWOpt) Optimizer {
 		list[i] = t.Tensor()
 	}
 	var adamW AdamW
-	adamW.lr = 1e-3
-	adamW.weightDecay = 1e-2
-	adamW.beta1 = 0.9
-	adamW.beta2 = 0.999
-	adamW.eps = 1e-8
+	adamW.options.Lr = 1e-3
+	adamW.options.WeightDecay = 1e-2
+	adamW.options.Beta1 = 0.9
+	adamW.options.Beta2 = 0.999
+	adamW.options.Eps = 1e-8
+	adamW.options.Amsgrad = false
 	for _, opt := range opts {
 		opt(&adamW)
 	}
-	adamW.optm = torch.NewAdamWOptimizer(list, adamW.lr, adamW.beta1, adamW.beta2, adamW.eps, adamW.weightDecay, adamW.amsgrad)
+	adamW.optm = torch.NewAdamWOptimizer(list,
+		adamW.options.Lr,
+		adamW.options.Beta1, adamW.options.Beta2,
+		adamW.options.Eps,
+		adamW.options.WeightDecay,
+		adamW.options.Amsgrad)
 	return &adamW
 }
 
@@ -111,4 +138,8 @@ func (optm *AdamW) SetState(values [][]*tensor.Tensor) {
 		}
 		state.Set(i, tmp)
 	}
+}
+
+func (optm *AdamW) GetOptions() Options {
+	return &optm.options
 }

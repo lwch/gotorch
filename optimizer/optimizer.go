@@ -1,6 +1,15 @@
 package optimizer
 
-import "github.com/lwch/gotorch/tensor"
+import (
+	"io"
+
+	"github.com/lwch/gotorch/tensor"
+)
+
+type Options interface {
+	io.WriterTo
+	io.ReaderFrom
+}
 
 type Optimizer interface {
 	GetName() string
@@ -9,4 +18,5 @@ type Optimizer interface {
 	SetLr(float64)
 	GetState() [][]*tensor.Tensor
 	SetState([][]*tensor.Tensor)
+	GetOptions() Options
 }
