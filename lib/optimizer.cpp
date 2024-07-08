@@ -110,6 +110,27 @@ void optimizer_set_lr(char **err, optimizer optm, double lr)
                     err);
 }
 
+static void *build_optimizer_param_state(optimizer optm, void *ptr)
+{
+    {
+        torch::optim::Adam *op = dynamic_cast<torch::optim::Adam *>(optm);
+        if (op)
+        {
+            optm->state()[ptr] = std::make_unique<torch::optim::AdamParamState>();
+            return optm->state()[ptr].get();
+        }
+    }
+    {
+        torch::optim::AdamW *op = dynamic_cast<torch::optim::AdamW *>(optm);
+        if (op)
+        {
+            optm->state()[ptr] = std::make_unique<torch::optim::AdamWParamState>();
+            return optm->state()[ptr].get();
+        }
+    }
+    return nullptr;
+}
+
 optimizer_state optimizer_get_state(char **err, optimizer optm)
 {
     return auto_catch_optimizer_state([optm]()
@@ -123,6 +144,10 @@ optimizer_state optimizer_get_state(char **err, optimizer optm)
                                         std::vector<torch::optim::OptimizerParamState*> tmp;
                                         for (auto p: params)
                                         {
+                                            torch::optim::OptimizerParamState* ptr = optm->state()[p].get();
+                                            if (!ptr) {
+                                                ptr = reinterpret_cast<torch::optim::OptimizerParamState*>(build_optimizer_param_state(optm, p));
+                                            }
                                             tmp.push_back(optm->state()[p].get());
                                         }
                                         return new _optimizer_state{tmp}; },

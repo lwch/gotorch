@@ -11,9 +11,8 @@ import (
 import "C"
 
 type Optimizer struct {
-	m      sync.Mutex
-	data   C.optimizer
-	steped bool
+	m    sync.Mutex
+	data C.optimizer
 }
 
 func NewAdamOptimizer(params []Tensor, lr, beta1, beta2, eps, weightDecay float64) *Optimizer {
@@ -75,9 +74,6 @@ type OptimizerState struct {
 }
 
 func (optm *Optimizer) GetState() *OptimizerState {
-	if !optm.steped {
-		optm.Step()
-	}
 	var err *C.char
 	data := C.optimizer_get_state(&err, optm.data)
 	if err != nil {
