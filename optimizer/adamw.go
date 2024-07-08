@@ -73,6 +73,10 @@ func NewAdamW(params []*tensor.Tensor, opts ...AdamWOpt) Optimizer {
 	return &adamW
 }
 
+func (optm *AdamW) GetName() string {
+	return "AdamW"
+}
+
 func (optm *AdamW) Step() {
 	optm.optm.Step()
 }
