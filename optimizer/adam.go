@@ -83,7 +83,7 @@ func (optm *Adam) SetLr(lr float64) {
 	optm.optm.SetLr(lr)
 }
 
-func (optm *Adam) State() [][]*tensor.Tensor {
+func (optm *Adam) GetState() [][]*tensor.Tensor {
 	state := optm.optm.GetState()
 	ret := make([][]*tensor.Tensor, state.Size())
 	for i := range ret {
@@ -94,4 +94,15 @@ func (optm *Adam) State() [][]*tensor.Tensor {
 		}
 	}
 	return ret
+}
+
+func (optm *Adam) SetState(values [][]*tensor.Tensor) {
+	state := optm.optm.GetState()
+	for i, values := range values {
+		tmp := make([]torch.Tensor, len(values))
+		for j, t := range values {
+			tmp[j] = t.Tensor()
+		}
+		state.Set(i, tmp)
+	}
 }

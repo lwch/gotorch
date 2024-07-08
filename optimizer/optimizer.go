@@ -6,5 +6,6 @@ type Optimizer interface {
 	Step()
 	GetLr() float64
 	SetLr(float64)
-	State() [][]*tensor.Tensor
+	GetState() [][]*tensor.Tensor
+	SetState([][]*tensor.Tensor)
 }

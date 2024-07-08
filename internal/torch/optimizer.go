@@ -11,8 +11,9 @@ import (
 import "C"
 
 type Optimizer struct {
-	m    sync.Mutex
-	data C.optimizer
+	m      sync.Mutex
+	data   C.optimizer
+	steped bool
 }
 
 func NewAdamOptimizer(params []Tensor, lr, beta1, beta2, eps, weightDecay float64) *Optimizer {
@@ -74,6 +75,9 @@ type OptimizerState struct {
 }
 
 func (optm *Optimizer) GetState() *OptimizerState {
+	if !optm.steped {
+		optm.Step()
+	}
 	var err *C.char
 	data := C.optimizer_get_state(&err, optm.data)
 	if err != nil {
@@ -122,4 +126,22 @@ func (os *OptimizerState) Get(index int) []Tensor {
 		tensors = append(tensors, Tensor(tensor))
 	}
 	return tensors
+}
+
+func (os *OptimizerState) Set(index int, values []Tensor) {
+	var err *C.char
+	size := C.optimizer_state_size(&err, os.data, C.size_t(index))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	if len(values) != int(size) {
+		panic("invalid size")
+	}
+	for i := 0; i < int(size); i++ {
+		var err *C.char
+		C.optimizer_state_set(&err, os.data, C.size_t(index), C.size_t(i), C.tensor(values[i]))
+		if err != nil {
+			panic(C.GoString(err))
+		}
+	}
 }

@@ -19,6 +19,7 @@ extern "C"
     GOTORCH_API size_t optimizer_state_count(char **err, optimizer_state state);
     GOTORCH_API size_t optimizer_state_size(char **err, optimizer_state state, size_t index);
     GOTORCH_API tensor optimizer_state_get(char **err, optimizer_state state, size_t index, size_t key);
+    GOTORCH_API void optimizer_state_set(char **err, optimizer_state state, size_t index, size_t key, tensor value);
 
 #ifdef __cplusplus
 }
