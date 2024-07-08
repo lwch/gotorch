@@ -134,7 +134,7 @@ func (os *OptimizerState) Set(index int, values []Tensor) {
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	if len(values) != int(size) {
+	if size != 0 && len(values) != int(size) {
 		panic("invalid size")
 	}
 	for i := 0; i < int(size); i++ {
