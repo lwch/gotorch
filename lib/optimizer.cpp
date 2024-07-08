@@ -109,3 +109,85 @@ void optimizer_set_lr(char **err, optimizer optm, double lr)
                     { optm->defaults().set_lr(lr); },
                     err);
 }
+
+optimizer_state optimizer_get_state(char **err, optimizer optm)
+{
+    return auto_catch_optimizer_state([optm]()
+                                      {
+                                        std::vector<void*> params;
+                                        for (auto group : optm->param_groups())
+                                        {
+                                            for (auto p : group.params())
+                                                params.push_back(p.unsafeGetTensorImpl());
+                                        }
+                                        std::vector<torch::optim::OptimizerParamState*> tmp;
+                                        for (auto p: params)
+                                        {
+                                            tmp.push_back(optm->state()[p].get());
+                                        }
+                                        return new _optimizer_state{tmp}; },
+                                      err);
+}
+
+void optimizer_state_free(optimizer_state state)
+{
+    delete state;
+}
+
+size_t optimizer_state_count(char **err, optimizer_state state)
+{
+    return auto_catch_size_t([state]()
+                             { return state->data.size(); },
+                             err);
+}
+
+size_t optimizer_state_size(char **err, optimizer_state state, size_t index)
+{
+    return auto_catch_size_t([state, index]()
+                             {
+                                torch::optim::OptimizerParamState* ptr = state->data[index];
+                                {
+                                    torch::optim::AdamParamState* p = reinterpret_cast<torch::optim::AdamParamState*>(ptr);
+                                    if (p) return 4;
+                                }
+                                {
+                                    torch::optim::AdamWParamState* p = reinterpret_cast<torch::optim::AdamWParamState*>(ptr);
+                                    if (p) return 4;
+                                }
+                                return 0; },
+                             err);
+}
+
+template <typename T>
+tensor get_adam_state(T ptr, size_t key)
+{
+    switch (key)
+    {
+    case 0:
+        return new torch::Tensor(torch::tensor({ptr->step()}));
+    case 1:
+        return new torch::Tensor(ptr->exp_avg());
+    case 2:
+        return new torch::Tensor(ptr->exp_avg_sq());
+    case 3:
+        return new torch::Tensor(ptr->max_exp_avg_sq());
+    }
+    return nullptr;
+}
+
+tensor optimizer_state_get(char **err, optimizer_state state, size_t index, size_t key)
+{
+    return auto_catch_tensor([state, index, key]()
+                             {
+                                torch::optim::OptimizerParamState* ptr = state->data[index];
+                                {
+                                    torch::optim::AdamParamState *p = reinterpret_cast<torch::optim::AdamParamState*>(ptr);
+                                    if (p) return get_adam_state(p, key);
+                                }
+                                {
+                                    torch::optim::AdamWParamState *p = reinterpret_cast<torch::optim::AdamWParamState*>(ptr);
+                                    if (p) return get_adam_state(p, key);
+                                }
+                                return new torch::Tensor(); },
+                             err);
+}

@@ -82,3 +82,16 @@ func (optm *Adam) GetLr() float64 {
 func (optm *Adam) SetLr(lr float64) {
 	optm.optm.SetLr(lr)
 }
+
+func (optm *Adam) State() [][]*tensor.Tensor {
+	state := optm.optm.GetState()
+	ret := make([][]*tensor.Tensor, state.Size())
+	for i := range ret {
+		tensors := state.Get(i)
+		ret[i] = make([]*tensor.Tensor, len(tensors))
+		for j, t := range tensors {
+			ret[i][j] = tensor.New(t)
+		}
+	}
+	return ret
+}

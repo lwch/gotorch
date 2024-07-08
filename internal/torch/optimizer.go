@@ -1,7 +1,9 @@
 package torch
 
 import (
+	"runtime"
 	"sync"
+	"time"
 	"unsafe"
 )
 
@@ -64,4 +66,60 @@ func (optm *Optimizer) SetLr(lr float64) {
 	if err != nil {
 		panic(C.GoString(err))
 	}
+}
+
+type OptimizerState struct {
+	created time.Time
+	data    C.optimizer_state
+}
+
+func (optm *Optimizer) GetState() *OptimizerState {
+	var err *C.char
+	data := C.optimizer_get_state(&err, optm.data)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	os := &OptimizerState{
+		created: time.Now(),
+		data:    data,
+	}
+	runtime.SetFinalizer(os, freeOptimizerState)
+	return os
+}
+
+func freeOptimizerState(os *OptimizerState) error {
+	if os == nil || os.data == nil {
+		return nil
+	}
+	C.optimizer_state_free(os.data)
+	os.data = nil
+	runtime.SetFinalizer(os, nil)
+	return nil
+}
+
+func (os *OptimizerState) Size() int {
+	var err *C.char
+	size := C.optimizer_state_count(&err, os.data)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return int(size)
+}
+
+func (os *OptimizerState) Get(index int) []Tensor {
+	var err *C.char
+	size := C.optimizer_state_size(&err, os.data, C.size_t(index))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	var tensors []Tensor
+	for i := 0; i < int(size); i++ {
+		var err *C.char
+		tensor := C.optimizer_state_get(&err, os.data, C.size_t(index), C.size_t(i))
+		if err != nil {
+			panic(C.GoString(err))
+		}
+		tensors = append(tensors, Tensor(tensor))
+	}
+	return tensors
 }
