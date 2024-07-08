@@ -28,7 +28,7 @@ func init() {
 }
 
 func main() {
-	optm := optimizer.NewAdam()
+	optm := optimizer.NewAdam(append(l1.Parameters(), l2.Parameters()...))
 	for i := 0; i < 10000; i++ {
 		x, y := getBatch(true)
 		// forward
@@ -39,7 +39,7 @@ func main() {
 		loss.Backward()
 		// update
 		if i > 0 && i%accumulationSteps == 0 {
-			optm.Step(append(l1.Parameters(), l2.Parameters()...))
+			optm.Step()
 		}
 		if i%100 == 0 {
 			fmt.Printf("epoch: %d loss: %f\n", i, loss.Float32Value()[0])

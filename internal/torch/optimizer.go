@@ -13,33 +13,37 @@ type Optimizer struct {
 	data C.optimizer
 }
 
-func NewAdamOptimizer(lr, beta1, beta2, eps, weightDecay float64) *Optimizer {
-	var err *C.char
-	ptr := C.new_adam_optimizer(&err, C.double(lr), C.double(beta1), C.double(beta2), C.double(eps), C.double(weightDecay))
-	if err != nil {
-		panic(C.GoString(err))
-	}
-	return &Optimizer{data: ptr}
-}
-
-func NewAdamWOptimizer(lr, beta1, beta2, eps, weightDecay float64, amsgrad bool) *Optimizer {
-	var err *C.char
-	ptr := C.new_adamw_optimizer(&err, C.double(lr), C.double(beta1), C.double(beta2), C.double(eps), C.bool(amsgrad), C.double(weightDecay))
-	if err != nil {
-		panic(C.GoString(err))
-	}
-	return &Optimizer{data: ptr}
-}
-
-func (optm *Optimizer) Step(params []Tensor) {
+func NewAdamOptimizer(params []Tensor, lr, beta1, beta2, eps, weightDecay float64) *Optimizer {
 	list := make([]C.tensor, len(params))
 	for i, p := range params {
 		list[i] = C.tensor(p)
 	}
+	var err *C.char
+	ptr := C.new_adam_optimizer(&err, (*C.tensor)(unsafe.Pointer(&list[0])), C.size_t(len(params)), C.double(lr), C.double(beta1), C.double(beta2), C.double(eps), C.double(weightDecay))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Optimizer{data: ptr}
+}
+
+func NewAdamWOptimizer(params []Tensor, lr, beta1, beta2, eps, weightDecay float64, amsgrad bool) *Optimizer {
+	list := make([]C.tensor, len(params))
+	for i, p := range params {
+		list[i] = C.tensor(p)
+	}
+	var err *C.char
+	ptr := C.new_adamw_optimizer(&err, (*C.tensor)(unsafe.Pointer(&list[0])), C.size_t(len(params)), C.double(lr), C.double(beta1), C.double(beta2), C.double(eps), C.bool(amsgrad), C.double(weightDecay))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return &Optimizer{data: ptr}
+}
+
+func (optm *Optimizer) Step() {
 	optm.m.Lock()
 	defer optm.m.Unlock()
 	var err *C.char
-	C.optimizer_step(&err, optm.data, (*C.tensor)(unsafe.Pointer(&list[0])), C.size_t(len(params)))
+	C.optimizer_step(&err, optm.data)
 	if err != nil {
 		panic(C.GoString(err))
 	}

@@ -2,7 +2,7 @@
 #include "exception.hpp"
 #include "optimizer.h"
 
-optimizer new_adam_optimizer(char **err, double lr, double beta1, double beta2, double eps, double weight_decay)
+optimizer new_adam_optimizer(char **err, tensor *params, size_t params_count, double lr, double beta1, double beta2, double eps, double weight_decay)
 {
     if (lr <= 0)
     {
@@ -29,17 +29,22 @@ optimizer new_adam_optimizer(char **err, double lr, double beta1, double beta2, 
         *err = strdup("weight_decay must be positive");
         return nullptr;
     }
-    return auto_catch_optimizer([lr, beta1, beta2, eps, weight_decay]()
+    return auto_catch_optimizer([params, params_count, lr, beta1, beta2, eps, weight_decay]()
                                 {
                                     auto options = torch::optim::AdamOptions(lr);
                                     options.betas(std::make_tuple(beta1, beta2));
                                     options.weight_decay(weight_decay);
                                     options.eps(eps);
-                                    return new torch::optim::Adam(std::vector<torch::optim::OptimizerParamGroup>(), options); },
+                                    torch::autograd::variable_list data;
+                                    for (size_t i = 0; i < params_count; i++)
+                                    {
+                                        data.push_back(*params[i]);
+                                    }
+                                    return new torch::optim::Adam(data, options); },
                                 err);
 }
 
-optimizer new_adamw_optimizer(char **err, double lr, double beta1, double beta2, double eps, bool amsgrad, double weight_decay)
+optimizer new_adamw_optimizer(char **err, tensor *params, size_t params_count, double lr, double beta1, double beta2, double eps, bool amsgrad, double weight_decay)
 {
     if (lr <= 0)
     {
@@ -66,31 +71,26 @@ optimizer new_adamw_optimizer(char **err, double lr, double beta1, double beta2,
         *err = strdup("weight_decay must be positive");
         return nullptr;
     }
-    return auto_catch_optimizer([lr, beta1, beta2, eps, amsgrad, weight_decay]()
+    return auto_catch_optimizer([params, params_count, lr, beta1, beta2, eps, amsgrad, weight_decay]()
                                 {
                                     auto options = torch::optim::AdamWOptions(lr);
                                     options.betas(std::make_tuple(beta1, beta2));
                                     options.weight_decay(weight_decay);
                                     options.eps(eps);
                                     options.amsgrad(amsgrad);
-                                    return new torch::optim::AdamW(std::vector<torch::optim::OptimizerParamGroup>(), options); },
+                                    torch::autograd::variable_list data;
+                                    for (size_t i = 0; i < params_count; i++)
+                                    {
+                                        data.push_back(*params[i]);
+                                    }
+                                    return new torch::optim::AdamW(data, options); },
                                 err);
 }
 
-void optimizer_step(char **err, optimizer optm, tensor *params, size_t params_count)
+void optimizer_step(char **err, optimizer optm)
 {
-    auto_catch_void([optm, params, params_count]()
+    auto_catch_void([optm]()
                     {
-                        std::vector<torch::Tensor> data;
-                        for (size_t i = 0; i < params_count; i++)
-                        {
-                            data.push_back(*params[i]);
-                        }
-                        std::vector<torch::optim::OptimizerParamGroup> &groups = optm->param_groups();
-                        groups.clear();
-                        torch::optim::OptimizerParamGroup group(data);
-                        group.set_options(optm->defaults().clone());
-                        groups.push_back(group);
                         optm->step();
                         optm->zero_grad(); },
                     err);

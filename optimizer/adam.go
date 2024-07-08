@@ -53,7 +53,11 @@ func WithAdamEps(eps float64) AdamOpt {
 //	beta1默认为0.9
 //	beta2默认为0.999
 //	eps默认为1e-8
-func NewAdam(opts ...AdamOpt) Optimizer {
+func NewAdam(params []*tensor.Tensor, opts ...AdamOpt) Optimizer {
+	list := make([]torch.Tensor, len(params))
+	for i, t := range params {
+		list[i] = t.Tensor()
+	}
 	var adam Adam
 	adam.lr = 1e-3
 	adam.weightDecay = 0
@@ -63,16 +67,12 @@ func NewAdam(opts ...AdamOpt) Optimizer {
 	for _, opt := range opts {
 		opt(&adam)
 	}
-	adam.optm = torch.NewAdamOptimizer(adam.lr, adam.beta1, adam.beta2, adam.eps, adam.weightDecay)
+	adam.optm = torch.NewAdamOptimizer(list, adam.lr, adam.beta1, adam.beta2, adam.eps, adam.weightDecay)
 	return &adam
 }
 
-func (optm *Adam) Step(params []*tensor.Tensor) {
-	list := make([]torch.Tensor, len(params))
-	for i, t := range params {
-		list[i] = t.Tensor()
-	}
-	optm.optm.Step(list)
+func (optm *Adam) Step() {
+	optm.optm.Step()
 }
 
 func (optm *Adam) GetLr() float64 {

@@ -55,7 +55,11 @@ func WithAdamWEps(eps float64) AdamWOpt {
 //	beta2默认为0.999
 //	eps默认为1e-8
 //	amsgrad默认为false
-func NewAdamW(opts ...AdamWOpt) Optimizer {
+func NewAdamW(params []*tensor.Tensor, opts ...AdamWOpt) Optimizer {
+	list := make([]torch.Tensor, len(params))
+	for i, t := range params {
+		list[i] = t.Tensor()
+	}
 	var adamW AdamW
 	adamW.lr = 1e-3
 	adamW.weightDecay = 1e-2
@@ -65,16 +69,12 @@ func NewAdamW(opts ...AdamWOpt) Optimizer {
 	for _, opt := range opts {
 		opt(&adamW)
 	}
-	adamW.optm = torch.NewAdamWOptimizer(adamW.lr, adamW.beta1, adamW.beta2, adamW.eps, adamW.weightDecay, adamW.amsgrad)
+	adamW.optm = torch.NewAdamWOptimizer(list, adamW.lr, adamW.beta1, adamW.beta2, adamW.eps, adamW.weightDecay, adamW.amsgrad)
 	return &adamW
 }
 
-func (optm *AdamW) Step(params []*tensor.Tensor) {
-	list := make([]torch.Tensor, len(params))
-	for i, t := range params {
-		list[i] = t.Tensor()
-	}
-	optm.optm.Step(list)
+func (optm *AdamW) Step() {
+	optm.optm.Step()
 }
 
 func (optm *AdamW) GetLr() float64 {
