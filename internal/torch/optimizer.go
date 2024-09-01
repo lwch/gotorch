@@ -1,6 +1,7 @@
 package torch
 
 import (
+	"errors"
 	"runtime"
 	"sync"
 	"time"
@@ -25,7 +26,9 @@ func NewAdamOptimizer(params []Tensor, lr, beta1, beta2, eps, weightDecay float6
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Optimizer{data: ptr}
+	optm := &Optimizer{data: ptr}
+	runtime.SetFinalizer(optm, freeOptimizer)
+	return optm
 }
 
 func NewAdamWOptimizer(params []Tensor, lr, beta1, beta2, eps, weightDecay float64, amsgrad bool) *Optimizer {
@@ -38,7 +41,23 @@ func NewAdamWOptimizer(params []Tensor, lr, beta1, beta2, eps, weightDecay float
 	if err != nil {
 		panic(C.GoString(err))
 	}
-	return &Optimizer{data: ptr}
+	optm := &Optimizer{data: ptr}
+	runtime.SetFinalizer(optm, freeOptimizer)
+	return optm
+}
+
+func freeOptimizer(optm *Optimizer) error {
+	if optm == nil || optm.data == nil {
+		return nil
+	}
+	var err *C.char
+	C.free_optimizer(&err, optm.data)
+	if err != nil {
+		return errors.New(C.GoString(err))
+	}
+	optm.data = nil
+	runtime.SetFinalizer(optm, nil)
+	return nil
 }
 
 func (optm *Optimizer) Step() {
