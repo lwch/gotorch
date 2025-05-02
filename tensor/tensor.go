@@ -93,3 +93,8 @@ func (t *Tensor) ToScalarType(scalarType consts.ScalarType) *Tensor {
 	ptr := torch.ToScalarType(t.t, scalarType)
 	return New(ptr)
 }
+
+func (t *Tensor) Detach() *Tensor {
+	ptr := torch.Detach(t.t)
+	return New(ptr)
+}

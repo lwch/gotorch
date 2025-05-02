@@ -68,3 +68,12 @@ func ToScalarType(t Tensor, dtype consts.ScalarType) Tensor {
 	}
 	return Tensor(ptr)
 }
+
+func Detach(t Tensor) Tensor {
+	var err *C.char
+	ptr := C.tensor_detach(&err, C.tensor(t))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return Tensor(ptr)
+}
