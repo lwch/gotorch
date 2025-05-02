@@ -6,7 +6,7 @@ on:
       - "v*.*.*"
 
 env:
-  libtorch_version: 2.6.0
+  libtorch_version: 2.7.0
 
 jobs:
   release_linux_cu118:
@@ -51,16 +51,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        cuda: [12.4.0, 12.6.0]
+        cuda: [12.6.0, 12.8.0]
         include:
           - os: ubuntu-20.04
             oname: glibc231
           - os: ubuntu-22.04
             oname: glibc232
-          - cuda: 12.4.0
-            cname: cu124
           - cuda: 12.6.0
             cname: cu126
+          - cuda: 12.8.0
+            cname: cu128
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
