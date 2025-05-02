@@ -14,8 +14,8 @@ jobs:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
         include:
-          - os: ubuntu-20.04
-            name: glibc231
+          # - os: ubuntu-20.04
+          #   name: glibc231
           - os: ubuntu-22.04
             name: glibc232
     runs-on: ${{ matrix.os }}
@@ -53,8 +53,8 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04]
         cuda: [12.6.0, 12.8.0]
         include:
-          - os: ubuntu-20.04
-            oname: glibc231
+          # - os: ubuntu-20.04
+          #   oname: glibc231
           - os: ubuntu-22.04
             oname: glibc232
           - cuda: 12.6.0
