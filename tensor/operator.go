@@ -176,3 +176,13 @@ func (t *Tensor) Clamp(min, max float64) *Tensor {
 	ptr := torch.Clamp(t.t, min, max)
 	return New(ptr)
 }
+
+func Min(a, b *Tensor) *Tensor {
+	ptr := torch.MinTensor(a.t, b.t)
+	return New(ptr)
+}
+
+func Max(a, b *Tensor) *Tensor {
+	ptr := torch.MaxTensor(a.t, b.t)
+	return New(ptr)
+}

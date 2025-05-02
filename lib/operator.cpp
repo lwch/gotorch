@@ -196,3 +196,13 @@ tensor tensor_clamp(char **err, tensor a, double min, double max)
 {
     return auto_catch_tensor([a, min, max]() { return new torch::Tensor(a->clamp(min, max)); }, err);
 }
+
+tensor tensor_min_tensor(char **err, tensor a, tensor b)
+{
+    return auto_catch_tensor([a, b]() { return new torch::Tensor(torch::min(*a, *b)); }, err);
+}
+
+tensor tensor_max_tensor(char **err, tensor a, tensor b)
+{
+    return auto_catch_tensor([a, b]() { return new torch::Tensor(torch::max(*a, *b)); }, err);
+}

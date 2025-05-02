@@ -308,3 +308,21 @@ func Clamp(t Tensor, min, max float64) Tensor {
 	}
 	return Tensor(ptr)
 }
+
+func MinTensor(a, b Tensor) Tensor {
+	var err *C.char
+	ptr := C.tensor_min_tensor(&err, C.tensor(a), C.tensor(b))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return Tensor(ptr)
+}
+
+func MaxTensor(a, b Tensor) Tensor {
+	var err *C.char
+	ptr := C.tensor_max_tensor(&err, C.tensor(a), C.tensor(b))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return Tensor(ptr)
+}
