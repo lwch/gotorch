@@ -1,9 +1,9 @@
 #ifndef __GOTORCH_OPERATOR_H__
 #define __GOTORCH_OPERATOR_H__
 
-#include <stdint.h>
-#include <stdbool.h>
 #include "tensor.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -41,49 +41,41 @@ extern "C"
     GOTORCH_API tensor tensor_squeeze(char **err, tensor a, int64_t dim);
     GOTORCH_API tensor tensor_contiguous(char **err, tensor a);
     GOTORCH_API tensor tensor_expand(char **err, tensor a, int64_t *sizes, size_t len);
+    GOTORCH_API tensor tensor_gather(char **err, tensor a, int64_t dim, tensor index);
     // conv
-    GOTORCH_API tensor tensor_conv1d(char **err, tensor input, tensor weight, tensor bias,
-                                     int64_t stride, int64_t padding, int64_t dilation, int64_t groups);
-    GOTORCH_API tensor tensor_conv2d(char **err, tensor input, tensor weight, tensor bias,
-                                     int64_t stride1, int64_t stride2,
-                                     int64_t padding1, int64_t padding2,
-                                     int64_t dilation, int64_t groups);
-    GOTORCH_API tensor tensor_conv3d(char **err, tensor input, tensor weight, tensor bias,
-                                     int64_t stride1, int64_t stride2, int64_t stride3,
-                                     int64_t padding1, int64_t padding2, int64_t padding3,
-                                     int64_t dilation, int64_t groups);
+    GOTORCH_API tensor tensor_conv1d(char **err, tensor input, tensor weight, tensor bias, int64_t stride,
+                                     int64_t padding, int64_t dilation, int64_t groups);
+    GOTORCH_API tensor tensor_conv2d(char **err, tensor input, tensor weight, tensor bias, int64_t stride1,
+                                     int64_t stride2, int64_t padding1, int64_t padding2, int64_t dilation,
+                                     int64_t groups);
+    GOTORCH_API tensor tensor_conv3d(char **err, tensor input, tensor weight, tensor bias, int64_t stride1,
+                                     int64_t stride2, int64_t stride3, int64_t padding1, int64_t padding2,
+                                     int64_t padding3, int64_t dilation, int64_t groups);
     // transpose conv
-    GOTORCH_API tensor tensor_transpose_conv1d(char **err, tensor input, tensor weight, tensor bias,
-                                               int64_t stride, int64_t padding, int64_t output_padding, int64_t dilation, int64_t groups);
-    GOTORCH_API tensor tensor_transpose_conv2d(char **err, tensor input, tensor weight, tensor bias,
-                                               int64_t stride1, int64_t stride2,
-                                               int64_t padding1, int64_t padding2,
-                                               int64_t output_padding1, int64_t output_padding2,
-                                               int64_t dilation, int64_t groups);
-    GOTORCH_API tensor tensor_transpose_conv3d(char **err, tensor input, tensor weight, tensor bias,
-                                               int64_t stride1, int64_t stride2, int64_t stride3,
-                                               int64_t padding1, int64_t padding2, int64_t padding3,
-                                               int64_t output_padding1, int64_t output_padding2, int64_t output_padding3,
-                                               int64_t dilation, int64_t groups);
+    GOTORCH_API tensor tensor_transpose_conv1d(char **err, tensor input, tensor weight, tensor bias, int64_t stride,
+                                               int64_t padding, int64_t output_padding, int64_t dilation,
+                                               int64_t groups);
+    GOTORCH_API tensor tensor_transpose_conv2d(char **err, tensor input, tensor weight, tensor bias, int64_t stride1,
+                                               int64_t stride2, int64_t padding1, int64_t padding2,
+                                               int64_t output_padding1, int64_t output_padding2, int64_t dilation,
+                                               int64_t groups);
+    GOTORCH_API tensor tensor_transpose_conv3d(char **err, tensor input, tensor weight, tensor bias, int64_t stride1,
+                                               int64_t stride2, int64_t stride3, int64_t padding1, int64_t padding2,
+                                               int64_t padding3, int64_t output_padding1, int64_t output_padding2,
+                                               int64_t output_padding3, int64_t dilation, int64_t groups);
     // pool
-    GOTORCH_API tensor tensor_max_pool1d(char **err, tensor self,
-                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
-                                         bool ceil_mode);
-    GOTORCH_API tensor tensor_max_pool2d(char **err, tensor self,
-                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
-                                         bool ceil_mode);
-    GOTORCH_API tensor tensor_max_pool3d(char **err, tensor self,
-                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
-                                         bool ceil_mode);
-    GOTORCH_API tensor tensor_avg_pool1d(char **err, tensor self,
-                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
-                                         bool ceil_mode);
-    GOTORCH_API tensor tensor_avg_pool2d(char **err, tensor self,
-                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
-                                         bool ceil_mode);
-    GOTORCH_API tensor tensor_avg_pool3d(char **err, tensor self,
-                                         int64_t kernel_size, int64_t stride, int64_t padding, int64_t dilation,
-                                         bool ceil_mode);
+    GOTORCH_API tensor tensor_max_pool1d(char **err, tensor self, int64_t kernel_size, int64_t stride, int64_t padding,
+                                         int64_t dilation, bool ceil_mode);
+    GOTORCH_API tensor tensor_max_pool2d(char **err, tensor self, int64_t kernel_size, int64_t stride, int64_t padding,
+                                         int64_t dilation, bool ceil_mode);
+    GOTORCH_API tensor tensor_max_pool3d(char **err, tensor self, int64_t kernel_size, int64_t stride, int64_t padding,
+                                         int64_t dilation, bool ceil_mode);
+    GOTORCH_API tensor tensor_avg_pool1d(char **err, tensor self, int64_t kernel_size, int64_t stride, int64_t padding,
+                                         int64_t dilation, bool ceil_mode);
+    GOTORCH_API tensor tensor_avg_pool2d(char **err, tensor self, int64_t kernel_size, int64_t stride, int64_t padding,
+                                         int64_t dilation, bool ceil_mode);
+    GOTORCH_API tensor tensor_avg_pool3d(char **err, tensor self, int64_t kernel_size, int64_t stride, int64_t padding,
+                                         int64_t dilation, bool ceil_mode);
 
 #ifdef __cplusplus
 }

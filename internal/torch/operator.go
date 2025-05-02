@@ -290,3 +290,12 @@ func Expand(t Tensor, sizes []int64) Tensor {
 	}
 	return Tensor(ptr)
 }
+
+func Gather(t Tensor, dim int64, index Tensor) Tensor {
+	var err *C.char
+	ptr := C.tensor_gather(&err, C.tensor(t), C.int64_t(dim), C.tensor(index))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return Tensor(ptr)
+}

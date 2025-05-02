@@ -166,3 +166,8 @@ func (t *Tensor) Expand(sizes ...int64) *Tensor {
 	ptr := torch.Expand(t.t, sizes)
 	return New(ptr)
 }
+
+func (t *Tensor) Gather(dim int64, index *Tensor) *Tensor {
+	ptr := torch.Gather(t.t, dim, index.t)
+	return New(ptr)
+}
