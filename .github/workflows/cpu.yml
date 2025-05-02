@@ -9,31 +9,8 @@ env:
   libtorch_version: 2.7.0
 
 jobs:
-  # release_linux_glibc232:
-  #   runs-on: ubuntu-22.04
-  #   steps:
-  #     - uses: actions/checkout@v4
-
-  #     - name: make
-  #       working-directory: ./lib
-  #       run: |
-  #         wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcpu.zip
-  #         unzip -qq libtorch.zip
-  #         cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
-  #         make -j
-  #         mv libgotorch.so libgotorch_cpu.glibc232.so
-
-  #     - name: upload
-  #       uses: ncipollo/release-action@v1
-  #       with:
-  #         artifacts: ./lib/libgotorch_cpu.glibc232.so
-  #         allowUpdates: true
-  #         generateReleaseNotes: true
-  #         token: ${{ secrets.MY_GITHUB_TOKEN }}
-  #         omitBody: true
-
-  release_linux_glibc231:
-    runs-on: ubuntu-20.04
+  release_linux_glibc232:
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
@@ -44,16 +21,39 @@ jobs:
           unzip -qq libtorch.zip
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
           make -j
-          mv libgotorch.so libgotorch_cpu.glibc231.so
+          mv libgotorch.so libgotorch_cpu.glibc232.so
 
       - name: upload
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./lib/libgotorch_cpu.glibc231.so
+          artifacts: ./lib/libgotorch_cpu.glibc232.so
           allowUpdates: true
           generateReleaseNotes: true
           token: ${{ secrets.MY_GITHUB_TOKEN }}
           omitBody: true
+
+  # release_linux_glibc231:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: make
+  #       working-directory: ./lib
+  #       run: |
+  #         wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcpu.zip
+  #         unzip -qq libtorch.zip
+  #         cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
+  #         make -j
+  #         mv libgotorch.so libgotorch_cpu.glibc231.so
+
+  #     - name: upload
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         artifacts: ./lib/libgotorch_cpu.glibc231.so
+  #         allowUpdates: true
+  #         generateReleaseNotes: true
+  #         token: ${{ secrets.MY_GITHUB_TOKEN }}
+  #         omitBody: true
 
   # release_macos_x86_64:
   #   runs-on: macos-11
