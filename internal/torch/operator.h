@@ -42,6 +42,7 @@ extern "C"
     GOTORCH_API tensor tensor_contiguous(char **err, tensor a);
     GOTORCH_API tensor tensor_expand(char **err, tensor a, int64_t *sizes, size_t len);
     GOTORCH_API tensor tensor_gather(char **err, tensor a, int64_t dim, tensor index);
+    GOTORCH_API tensor tensor_clamp(char **err, tensor a, double min, double max);
     // conv
     GOTORCH_API tensor tensor_conv1d(char **err, tensor input, tensor weight, tensor bias, int64_t stride,
                                      int64_t padding, int64_t dilation, int64_t groups);

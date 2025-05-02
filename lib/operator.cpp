@@ -191,3 +191,8 @@ tensor tensor_gather(char **err, tensor a, int64_t dim, tensor index)
 {
     return auto_catch_tensor([a, dim, index]() { return new torch::Tensor(a->gather(dim, *index, false)); }, err);
 }
+
+tensor tensor_clamp(char **err, tensor a, double min, double max)
+{
+    return auto_catch_tensor([a, min, max]() { return new torch::Tensor(a->clamp(min, max)); }, err);
+}

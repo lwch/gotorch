@@ -299,3 +299,12 @@ func Gather(t Tensor, dim int64, index Tensor) Tensor {
 	}
 	return Tensor(ptr)
 }
+
+func Clamp(t Tensor, min, max float64) Tensor {
+	var err *C.char
+	ptr := C.tensor_clamp(&err, C.tensor(t), C.double(min), C.double(max))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return Tensor(ptr)
+}
