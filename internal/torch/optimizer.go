@@ -70,6 +70,16 @@ func (optm *Optimizer) Step() {
 	}
 }
 
+func (optm *Optimizer) ZeroGrad() {
+	optm.m.Lock()
+	defer optm.m.Unlock()
+	var err *C.char
+	C.optimizer_zero_grad(&err, optm.data)
+	if err != nil {
+		panic(C.GoString(err))
+	}
+}
+
 func (optm *Optimizer) GetLr() float64 {
 	var err *C.char
 	lr := C.optimizer_get_lr(&err, optm.data)

@@ -106,6 +106,11 @@ void optimizer_step(char **err, optimizer optm)
         err);
 }
 
+void optimizer_zero_grad(char **err, optimizer optm)
+{
+    auto_catch_void([optm]() { optm->zero_grad(); }, err);
+}
+
 double optimizer_get_lr(char **err, optimizer optm)
 {
     return auto_catch_double([optm]() { return optm->defaults().get_lr(); }, err);

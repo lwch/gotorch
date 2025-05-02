@@ -108,6 +108,10 @@ func (optm *AdamW) Step() {
 	optm.optm.Step()
 }
 
+func (optm *AdamW) ZeroGrad() {
+	optm.optm.ZeroGrad()
+}
+
 func (optm *AdamW) GetLr() float64 {
 	return optm.optm.GetLr()
 }

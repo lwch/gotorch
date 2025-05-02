@@ -14,6 +14,7 @@ type Options interface {
 type Optimizer interface {
 	GetName() string
 	Step()
+	ZeroGrad()
 	GetLr() float64
 	SetLr(float64)
 	GetState() [][]*tensor.Tensor

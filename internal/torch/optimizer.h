@@ -15,6 +15,7 @@ extern "C"
                                               double beta2, double eps, bool amsgrad, double weight_decay);
     GOTORCH_API void free_optimizer(char **err, optimizer optm);
     GOTORCH_API void optimizer_step(char **err, optimizer optm);
+    GOTORCH_API void optimizer_zero_grad(char **err, optimizer optm);
     GOTORCH_API double optimizer_get_lr(char **err, optimizer optm);
     GOTORCH_API void optimizer_set_lr(char **err, optimizer optm, double lr);
     GOTORCH_API optimizer_state optimizer_get_state(char **err, optimizer optm);
