@@ -98,3 +98,8 @@ func (t *Tensor) Detach() *Tensor {
 	ptr := torch.Detach(t.t)
 	return New(ptr)
 }
+
+func (t *Tensor) Clone() *Tensor {
+	ptr := torch.Clone(t.t)
+	return New(ptr)
+}

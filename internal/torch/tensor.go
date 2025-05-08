@@ -73,3 +73,12 @@ func Detach(t Tensor) Tensor {
 	ptr := C.tensor_detach(C.tensor(t))
 	return Tensor(ptr)
 }
+
+func Clone(t Tensor) Tensor {
+	var err *C.char
+	ptr := C.tensor_clone(&err, C.tensor(t))
+	if err != nil {
+		panic(C.GoString(err))
+	}
+	return Tensor(ptr)
+}
