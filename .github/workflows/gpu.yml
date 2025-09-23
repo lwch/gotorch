@@ -9,51 +9,51 @@ env:
   libtorch_version: 2.8.0
 
 jobs:
-  release_linux_cu118:
-    strategy:
-      matrix:
-        # os: [ubuntu-20.04, ubuntu-22.04]
-        os: [ubuntu-22.04]
-        include:
-          # - os: ubuntu-20.04
-          #   name: glibc231
-          - os: ubuntu-22.04
-            name: glibc232
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.27
-        with:
-            cuda: '11.8.0'
-            method: network
+  # release_linux_cu118:
+  #   strategy:
+  #     matrix:
+  #       # os: [ubuntu-20.04, ubuntu-22.04]
+  #       os: [ubuntu-22.04]
+  #       include:
+  #         # - os: ubuntu-20.04
+  #         #   name: glibc231
+  #         - os: ubuntu-22.04
+  #           name: glibc232
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: setup cuda
+  #       uses: Jimver/cuda-toolkit@v0.2.27
+  #       with:
+  #           cuda: '11.8.0'
+  #           method: network
 
-      - name: make
-        working-directory: ./lib
-        run: |
-          sudo apt-get clean
-          sudo apt-get install -y cmake
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu118.zip
-          unzip -qq libtorch.zip
-          cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
-          make -j
-          mv libgotorch.so libgotorch_gpu.cu118.${{ matrix.name }}.so
+  #     - name: make
+  #       working-directory: ./lib
+  #       run: |
+  #         sudo apt-get clean
+  #         sudo apt-get install -y cmake
+  #         wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2Bcu118.zip
+  #         unzip -qq libtorch.zip
+  #         cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
+  #         make -j
+  #         mv libgotorch.so libgotorch_gpu.cu118.${{ matrix.name }}.so
 
-      - name: upload
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: ./lib/libgotorch_gpu.cu118.${{ matrix.name }}.so
-          allowUpdates: true
-          generateReleaseNotes: true
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
-          omitBody: true
+  #     - name: upload
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         artifacts: ./lib/libgotorch_gpu.cu118.${{ matrix.name }}.so
+  #         allowUpdates: true
+  #         generateReleaseNotes: true
+  #         token: ${{ secrets.MY_GITHUB_TOKEN }}
+  #         omitBody: true
 
   release_linux_cu12x:
     strategy:
       matrix:
         # os: [ubuntu-20.04, ubuntu-22.04]
         os: [ubuntu-22.04]
-        cuda: [12.6.0, 12.8.0]
+        cuda: [12.6.0, 12.8.0, 12.9.0]
         include:
           # - os: ubuntu-20.04
           #   oname: glibc231
@@ -63,6 +63,8 @@ jobs:
             cname: cu126
           - cuda: 12.8.0
             cname: cu128
+          - cuda: 12.9.0
+            cname: cu129
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -77,7 +79,7 @@ jobs:
         run: |
           sudo apt-get clean
           sudo apt-get install -y cmake
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/${{ matrix.cname }}/libtorch-cxx11-abi-shared-with-deps-${{ env.libtorch_version }}%2B${{ matrix.cname }}.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/${{ matrix.cname }}/libtorch-shared-with-deps-${{ env.libtorch_version }}%2B${{ matrix.cname }}.zip
           unzip -qq libtorch.zip
           export TORCH_CUDA_ARCH_LIST="5.0 8.0 8.6 8.9 9.0"
           cmake -DCMAKE_PREFIX_PATH=./libtorch -DCMAKE_BUILD_TYPE=Release .
