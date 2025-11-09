@@ -6,7 +6,7 @@ on:
       - "v*.*.*"
 
 env:
-  libtorch_version: 2.8.0
+  libtorch_version: 2.9.0
 
 jobs:
   # release_linux_cu118:
@@ -48,12 +48,12 @@ jobs:
   #         token: ${{ secrets.MY_GITHUB_TOKEN }}
   #         omitBody: true
 
-  release_linux_cu12x:
+  release_linux:
     strategy:
       matrix:
         # os: [ubuntu-20.04, ubuntu-22.04]
         os: [ubuntu-22.04]
-        cuda: [12.6.0, 12.8.0, 12.9.0]
+        cuda: [12.6.0, 12.8.0, 13.0.0]
         include:
           # - os: ubuntu-20.04
           #   oname: glibc231
@@ -69,7 +69,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: setup cuda
-        uses: Jimver/cuda-toolkit@v0.2.27
+        uses: Jimver/cuda-toolkit@v0.2.29
         with:
             cuda: ${{ matrix.cuda }}
             method: network
