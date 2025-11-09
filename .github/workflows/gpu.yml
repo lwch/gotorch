@@ -21,8 +21,8 @@ jobs:
             cname: cu126
           - cuda: 12.8.0
             cname: cu128
-          - cuda: 12.9.0
-            cname: cu129
+          - cuda: 13.0.0
+            cname: cu130
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
